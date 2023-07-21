@@ -1,10 +1,12 @@
 import { useState, useEffect, createContext} from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
-import { Header, Help, Login, Account, Registration, Info, UTM, Training, CreateTraining, Admin, UserAccon } from './components';
+import { 
+  Header, Help, Login, Account, Registration, RequiredTraining, UTM, 
+  Training, CreateTraining, Admin, UserAccount, CreateUserAccount 
+} from './components';
 
 export const AppContext = createContext();
-
 
 const App = ()=> {
 
@@ -30,12 +32,18 @@ const App = ()=> {
                     <HeaderContainer><Header /></HeaderContainer>
                     <BodyContainer>
                         <Routes>
-                            <Route path='/' element={<Home />} />
-                            <Route path='/inventory' element={<Inventory />} />
-                            <Route path='/sign-in/*' element={<SignIn />} />
-                            <Route path='/sign-up/*' element={<SignUp />} />
-                            <Route path='/inventory/:item/*' element={<Item />} />
-                            <Route path='/*' element={<Home />} /> catch all
+                            <Route path='/' element={<Help />} />
+                            <Route path='/login/*' element={<Login />} />
+                            <Route path='/account/*' element={<Account />} />
+                            <Route path='/registration/*' element={<Registration />} />
+                            <Route path='/required-training/' element={<RequiredTraining />} />
+                            <Route path='/required-training/:training/*' element={<Training />} />
+                            <Route path='/create-training/*' element={<CreateTraining />} />
+                            <Route path='/unit-training-manager/*' element={<UTM />} />
+                            <Route path='/administrator/*' element={<Admin />} />
+                            <Route path='/accounts/:user/*' element={<UserAccount />} />
+                            <Route path='/create-account/*' element={<CreateUserAccount />} />
+                            <Route path='/*' element={<Help />} /> catch all
                         </Routes>
                     </BodyContainer>
                 </BrowserRouter>
@@ -52,7 +60,7 @@ const AppWrapper = styled.div`
   overflow-y: hidden;
   display: grid;
   grid-template-rows: 10% 90%;
-  background-color: #ffffff;
+  background-color: Cornsilk;
 `;
 
 const HeaderContainer = styled.div`
