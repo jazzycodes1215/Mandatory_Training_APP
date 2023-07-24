@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
 
@@ -8,11 +8,9 @@ import SchoolIcon from '@mui/icons-material/School';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-
-const pages = ['Dashboard'];
-const settings = ['Account', 'Logout'];
-
 export default function Header() {
+  const {setUser, isVerified, setIsVerified, setFirstName, setLastName} = useContext(AppContext);
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -31,8 +29,17 @@ export default function Header() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    setIsVerified(false);
+    setUser('');
+    setFirstName('');
+    setLastName('');
+    alert('You are logged out');
+    navigate('/login');
+  }
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: 'MidnightBlue' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -83,11 +90,9 @@ export default function Header() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={() => navigate('/required-training')}>
+                <Typography textAlign="center">Dashboard</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <SchoolIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -95,7 +100,7 @@ export default function Header() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -110,21 +115,18 @@ export default function Header() {
             UTM Tool
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => navigate('/required-training')}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                Dashboard
               </Button>
-            ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Account
+                <AccountCircleIcon sx={{color: 'White'}} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -143,11 +145,18 @@ export default function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              <MenuItem onClick={() => {isVerified ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
+                <Typography  textAlign="center">Account</Typography>
+              </MenuItem>
+              {isVerified ?
+                <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
+                  <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
-              ))}
+                :
+                <MenuItem onClick={() => {navigate('/login'); handleCloseUserMenu()}}>
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>
+              }
             </Menu>
           </Box>
         </Toolbar>

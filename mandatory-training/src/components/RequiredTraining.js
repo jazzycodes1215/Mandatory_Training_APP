@@ -44,14 +44,14 @@ export default function RequiredTraining() {
     return (
         <RequiredTrainingWrapper>
             <InfoContainer>
+                <ListHeading>
+                    <ListTitle>
+                        <StarIcon sx={{fontSize: 'xxx-large'}} />
+                        <ListHeader>My Mandatory Training</ListHeader>
+                    </ListTitle>
+                    <ListSubHeader>Access your mandatory training courses</ListSubHeader>
+                </ListHeading>
                 <ListContainer>
-                    <ListHeading>
-                        <ListTitle>
-                            <StarIcon sx={{fontSize: 'xxx-large'}} />
-                            <ListHeader>My Mandatory Training</ListHeader>
-                        </ListTitle>
-                        <ListSubHeader>Access your mandatory training courses</ListSubHeader>
-                    </ListHeading>
                     <List sx={{ width: '100%', height: '100%', bgcolor: 'background.paper' }}>
                         {requiredTraining.map((training, index) => (
                             <ListItem
@@ -115,6 +115,8 @@ height: 100%;
 const ListContainer = styled.div`
 flex-grow: 1;
 overflow: auto;
+border-radius: 10px;
+border: 2px solid black;
 `;
 const InfoContainer = styled.div`
 width: 100%;

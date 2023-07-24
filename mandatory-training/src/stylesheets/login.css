@@ -1,0 +1,36 @@
+.body {
+  width: 100%;
+  height: 100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("https://www.epiloguesystems.com/wp-content/uploads/2022/10/training-systems.webp");
+  background-size: cover;
+}
+
+.container {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  color: crimson;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+p {
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  display:flex;
+  flex-direction: column;
+}
+
+.button {
+  margin: 1rem;
+}

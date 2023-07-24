@@ -15,12 +15,14 @@ const App = ()=> {
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [isSupervisor, setIsSupervisor] = useState(false);
+    const [registered, setRegistered] = useState(false);
 
     const ContextObject = { user, setUser,
                             isVerified,  setIsVerified,  
                             firstName, setFirstName,
                             lastName, setLastName,
                             isSupervisor, setIsSupervisor,
+                            registered, setRegistered,
                             testStr: `I'm using context!`
                           }
     
@@ -62,7 +64,7 @@ const AppWrapper = styled.div`
   overflow-y: hidden;
   display: grid;
   grid-template-rows: 10% 90%;
-  background-color: Cornsilk;
+  background-color: White;
 `;
 
 const HeaderContainer = styled.div`

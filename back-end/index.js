@@ -7,27 +7,20 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-//middleware
-app.use(cors());
-app.use(express.json());
+//required endpoint functionalities
+{/* <Route path='/' element={<Help />} />
+/////////////////<Route path='/login/*' element={<Login />} />
+<Route path='/account/*' element={<Account />} />
+/////////////////<Route path='/registration/*' element={<Registration />} />
+<Route path='/required-training/' element={<RequiredTraining />} />
+<Route path='/required-training/:training/*' element={<Training />} />
+<Route path='/create-training/*' element={<CreateTraining />} />
+<Route path='/unit-training-manager/*' element={<UTM />} />
+<Route path='/administrator/*' element={<Admin />} />
+<Route path='/accounts/:user/*' element={<UserAccount />} />
+/////////////////<Route path='/create-account/*' element={<CreateUserAccount />} />
+<Route path='/*' element={<Help />} /> catch all */}
 
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-//endpoint for getting all user data
-app.get('/users', async (req, res) => {
-  try {
-    const users = await knex('users')
-    .select('*')
-    .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ 
-      message: 'Error retrieving users', error 
-    });
-  }
-});
 
 /* Data is printed in this format 
  [
@@ -45,6 +38,31 @@ app.get('/users', async (req, res) => {
     }
 ]
 */
+
+
+//middleware
+app.use(cors());
+app.use(express.json());
+
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+///////////////////////////////////////////////////////////////////ADMINISTRATION////////////////////////////////////////////////////////////
+//endpoint for getting all user data
+app.get('/users', async (req, res) => {
+  try {
+    const users = await knex('users')
+    .select('*')
+    .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error retrieving users', error 
+    });
+  }
+});
+
+
 // endpoint for adding in a new user
 app.post('/users', async (req, res) => {
   const newUser = req.body; // Assuming the request body contains the necessary user data
@@ -78,7 +96,7 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
-//endpoint for updating a user
+//endpoint for updating a user. Admin will most likely use this
 app.patch('/users/:id', async (req, res) => {
   const userId = req.params.id;
   const updatedUser = req.body; // Assuming the request body contains the updated user data
@@ -113,7 +131,9 @@ app.delete('/users/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting user', error });
   }
 });
+//////////////////////////////////////////////////ADMINISTRATION//////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 //endpoint that allows UTM/admin to create an account
 app.post('/createAccount', async (req, res) => {
   const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id} = req.body
@@ -189,7 +209,7 @@ app.post('/login', async (req, res) => {
       const passwordCheck = bcrypt.compareSync(password, user.password);
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = jwt.sign({ id: user.id }, { algorithm: 'RS256' }, function(err, token) {
+        const token = jwt.sign({ id: user.id }, /*secretKey*/ { algorithm: 'RS256' }, function(err, token) {
           console.log('token',token);
       })
       res.status(201).json({id: user.id, token: token});
@@ -199,23 +219,46 @@ app.post('/login', async (req, res) => {
     } else {
       res.status(402).json({  message: 'User not detected' });
     }
-  } catch  (error) {
-    console.error('login error detected:', error);
+  } catch (error) {
+    //console.error('login error detected:', error);
           res.status(500).json({ message: 'login error detected' });
   }
 })
+//////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////TRAINING REGISTRATION///////////////////////////////////////////////////////////////////////////
+//GET training
+app.get('/requiredTraining/:id', async (req, res) => {
+  const dutyId = req.params.id;
+  //
+  try {
+    // Fetch the training requirements for the given duty ID
+    const trainingRequirements = await knex('duty_trainings')
+      .where('duty_id', dutyId)
+      .join('duty_trainings', 'trainings.id', '=', 'duty_trainings.id')
+      .select('trainings.name', 'trainings.interval', 'trainings.source');
+  
+    if (trainingRequirements.length === 0) {
+      return res.status(404).json({ message: 'No training requirements found for the given duty ID' });
+    }
+  
+    res.json(trainingRequirements);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training requirements', error });
+  }
+  });
+  
 
-//return require training
+//GET specific training
 app.get('/required-training/:user-id', async (req, res) => {
-const dutyId = req.query.dutyId;
-
+const dutyId = req.query.id;
+//
 try {
   // Fetch the training requirements for the given duty ID
-  const trainingRequirements = await knex('duty_training')
+  const trainingRequirements = await knex('duty_trainings')
     .where('duty_id', dutyId)
-    .join('training', 'duty_training.training_id', '=', 'training.id')
-    .select('training.name', 'training.interval', 'training.source');
+    .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
+    .select('trainings.name', 'trainings.interval', 'trainings.source');
 
   if (trainingRequirements.length === 0) {
     return res.status(404).json({ message: 'No training requirements found for the given duty ID' });
