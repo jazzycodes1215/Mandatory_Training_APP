@@ -6,16 +6,14 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
+//middleware
 app.use(cors());
 app.use(express.json());
 
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
 })
 
 //endpoint for getting all user data
@@ -116,10 +114,10 @@ app.delete('/user/:id', async (req, res) => {
   }
 });
 
-//endpoint for creating an account
-app.post('./create-account', async (req, res) => {
+//endpoint that allows UTM/admin to create an account
+app.post('./createAccount', async (req, res) => {
   const {id,first_name, last_name, rank_id, email, password, dodID, role_id, supervisor_id, unit_id} = req.body
-  const hashedPass = await bcrypt.hashSync(password, 10)
+  const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
       id: id,
@@ -127,16 +125,16 @@ app.post('./create-account', async (req, res) => {
       last_name: last_name,
       rank_id: rank_id,
       email: email,
-      password: hashedPass,
+      password: password,
       dodID: dodID,
       role_id:role_id,
-      supervisor_id, supervisor_id,
+      supervisor_id: supervisor_id,
       unit_id: unit_id
     }
     console.log(newUser)
     const addedUser = await knex('user')
     .insert(newUser)
-    .returning('*')
+    .returning('*');
     addedUser = addedUser.map(user => {
       delete user.password;
       return user;
@@ -147,7 +145,24 @@ app.post('./create-account', async (req, res) => {
   }
 })
 
-//endpoint for user login
+//endpoint for users to register their account that was already created
+app.patch('./registration/:id', async (req, res) => {
+  const userId = req.params.id
+  console.log(userId)
+    const user = await knex('user')
+    .where('id', userId)
+    .update(req.body)
+    .then(() => {
+        res.status(200).json({userId });
+      })
+    .catch(err => 
+        res.status(404).json({
+            message: 'Your request was denied'
+        })
+    );
+})
+
+//endpoint for users to login
 app.post('./login', async (req, res) => {
   const {email, password} = req.body
   try {
@@ -219,3 +234,11 @@ try {
 }
 });
 */
+
+
+
+
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
