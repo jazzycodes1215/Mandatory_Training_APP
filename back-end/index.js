@@ -17,9 +17,9 @@ app.get('/', (req, res) => {
 })
 
 //endpoint for getting all user data
-app.get('/user', async (req, res) => {
+app.get('/users', async (req, res) => {
   try {
-    const users = await knex('user')
+    const users = await knex('users')
     .select('*')
     .then(data => res.status(200).json(data));
   } catch (error) {
@@ -46,13 +46,13 @@ app.get('/user', async (req, res) => {
 ]
 */
 // endpoint for adding in a new user
-app.post('/user', async (req, res) => {
+app.post('/users', async (req, res) => {
   const newUser = req.body; // Assuming the request body contains the necessary user data
   try {
-    const insertedUser = await knex('user')
+    const insertedUser = await knex('users')
     .insert(newUser)
     .then(() => {
-      res.json({ id: insertedUser[0], ...newUser });
+      res.status(200).json({message: successful});
     })
   } catch (error) {
     res.status(500).json({ 
@@ -62,10 +62,10 @@ app.post('/user', async (req, res) => {
 });
 
 //endpoint for getting a specific user
-app.get('/user/:id', async (req, res) => {
+app.get('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await knex('user')
+    const user = await knex('users')
     .where('id', userId)
     .first();
     if (user) {
@@ -79,11 +79,11 @@ app.get('/user/:id', async (req, res) => {
 });
 
 //endpoint for updating a user
-app.patch('/user/:id', async (req, res) => {
+app.patch('/users/:id', async (req, res) => {
   const userId = req.params.id;
   const updatedUser = req.body; // Assuming the request body contains the updated user data
   try {
-    const userUpdate = await knex('user')
+    const userUpdate = await knex('users')
     .where('id', userId)
     .update(updatedUser);
     
@@ -98,10 +98,10 @@ app.patch('/user/:id', async (req, res) => {
 });
 
 //endpoint for deleting a user
-app.delete('/user/:id', async (req, res) => {
+app.delete('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
-    const userDelete = await knex('user')
+    const userDelete = await knex('users')
     .where('id', userId)
     .del();
     if (userDelete) {
@@ -115,58 +115,73 @@ app.delete('/user/:id', async (req, res) => {
 });
 
 //endpoint that allows UTM/admin to create an account
-app.post('./createAccount', async (req, res) => {
-  const {id,first_name, last_name, rank_id, email, password, dodID, role_id, supervisor_id, unit_id} = req.body
-  const hashedPass = bcrypt.hashSync(password, 10)
+app.post('/createAccount', async (req, res) => {
+  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id} = req.body
+  // const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
-      id: id,
+      // id: id,
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
-      password: password,
+      // password: hashPass,
       dodID: dodID,
       role_id:role_id,
       supervisor_id: supervisor_id,
       unit_id: unit_id
     }
     console.log(newUser)
-    const addedUser = await knex('user')
+    const addedUser = await knex('users')
     .insert(newUser)
     .returning('*');
     addedUser = addedUser.map(user => {
-      delete user.password;
+      delete user/*.password*/;
       return user;
     })
       res.status(200).json({message: "Account creation Success", addedUser});
   } catch  (error) {
+    // console.error('Registration error:', error)
           res.status(500).json({ message: 'Error: account creation failed' });
   }
 })
 
-//endpoint for users to register their account that was already created
-app.patch('./registration/:id', async (req, res) => {
+//endpoint for account to register their account that was already created
+app.patch('/registration/:id', async (req, res) => {
   const userId = req.params.id
   console.log(userId)
-    const user = await knex('user')
+  try{
+    const user = await knex('users')
+    .select('id', 'email')
+    .where('id', userId);
+    if(!user) {
+    return res.status(404).json({ message: 'User not found'})
+    }
+    const {password} = req.body
+    if(!password) {
+      return res.status(400).json({ message: 'Password is required'})
+    }
+    const hashedPass = bcrypt.hashSync(password, 10)
+    await knex('users')
     .where('id', userId)
-    .update(req.body)
+    .update({password: hashedPass})
     .then(() => {
-        res.status(200).json({userId });
+        res.status(200).json({message: 'Accout creation successfull' });
       })
-    .catch(err => 
-        res.status(404).json({
+
+    } catch (error) {
+        res.status(500).json({
             message: 'Your request was denied'
         })
-    );
-})
+      }
+    });
 
-//endpoint for users to login
-app.post('./login', async (req, res) => {
+
+//endpoint for account to login
+app.post('/login', async (req, res) => {
   const {email, password} = req.body
   try {
-    const user = await knex('user')
+    const user = await knex('users')
     .select('id', 'email', 'password')
     .where('email', email)
     .first();
@@ -220,17 +235,17 @@ const supervisorId = req.query.supervisorId;
 
 try {
   // Fetch all users with the specified supervisor ID
-  const users = await knex('user')
+  const users = await knex('users')
     .where('supervisor_id', supervisorId)
     .select('*');
 
   if (users.length === 0) {
-    return res.status(404).json({ message: 'No users found with the specified supervisor ID' });
+    return res.status(404).json({ message: 'No account found with the specified supervisor ID' });
   }
 
   res.json(users);
 } catch (error) {
-  res.status(500).json({ message: 'Error retrieving users', error });
+  res.status(500).json({ message: 'Error retrieving account', error });
 }
 });
 */

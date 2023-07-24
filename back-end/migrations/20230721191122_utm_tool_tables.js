@@ -4,56 +4,56 @@
 */
 exports.up = function(knex) {
     return knex.schema
-    .createTable('duty', table => {
+    .createTable('duties', table => {
         table.increments('id').primary();
         table.string('title');
     })
-    .createTable('role', table => {
+    .createTable('roles', table => {
         table.increments('id').primary();
         table.string('role_name');
     })
-    .createTable('rank', table => {
+    .createTable('ranks', table => {
         table.increments('id').primary();
         table.string('name');
     })
-    .createTable('unit', table => {
+    .createTable('units', table => {
       table.increments('id').primary();
       table.string('name');
     })
-    .createTable('user', table => {
+    .createTable('users', table => {
       table.increments('id').primary();
       table.string('first_name');
       table.string('last_name');
       table.integer('rank_id').unsigned();
-      table.foreign('rank_id').references('rank.id');
+      table.foreign('rank_id').references('ranks.id');
       table.string('email');
       table.string('password');
       table.integer('dodID');
       table.integer('role_id').unsigned();
-      table.foreign('role_id').references('role.id');
+      table.foreign('role_id').references('roles.id');
       table.integer('supervisor_id');
       table.integer('unit_id').unsigned();
-      table.foreign('unit_id').references('unit.id');
+      table.foreign('unit_id').references('units.id');
     })
-    .createTable('training', table => {
+    .createTable('trainings', table => {
       table.increments('id').primary();
       table.string('name');
       table.integer('interval');
       table.string('source', 500);
     })
-    .createTable('user_duty', table => {
+    .createTable('user_duties', table => {
       table.increments('id').primary();
       table.integer('user_id').unsigned();
-      table.foreign('user_id').references('user.id');
+      table.foreign('user_id').references('users.id');
       table.integer('duty_id').unsigned();
-      table.foreign('duty_id').references('duty.id');
+      table.foreign('duty_id').references('duties.id');
     })
-    .createTable('duty_training', table => {
+    .createTable('duty_trainings', table => {
       table.increments('id').primary();
       table.integer('duty_id').unsigned();
-      table.foreign('duty_id').references('duty.id');
+      table.foreign('duty_id').references('duties.id');
       table.integer('training_id').unsigned();
-      table.foreign('training_id').references('training.id');
+      table.foreign('training_id').references('trainings.id');
     });
 };
 
@@ -63,12 +63,12 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
   return knex.schema
-  .dropTableIfExists('duty_training')
-  .dropTableIfExists('user_duty')
-  .dropTableIfExists('training')
-  .dropTableIfExists('user')
-  .dropTableIfExists('unit')
-  .dropTableIfExists('rank')
-  .dropTableIfExists('role')
-  .dropTableIfExists('duty')
+  .dropTableIfExists('duty_trainings')
+  .dropTableIfExists('user_duties')
+  .dropTableIfExists('trainings')
+  .dropTableIfExists('users')
+  .dropTableIfExists('units')
+  .dropTableIfExists('ranks')
+  .dropTableIfExists('roles')
+  .dropTableIfExists('duties')
 };
