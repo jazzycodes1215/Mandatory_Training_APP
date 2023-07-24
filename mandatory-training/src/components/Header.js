@@ -16,7 +16,7 @@ export default function Header() {
 const HeaderWrapper = styled.div`
 background-color: BurlyWood;
 height: 100%;
-width: 90%;
+width: 100%;
 padding-left: 5%;
 padding-right: 5%;
 
@@ -25,5 +25,4 @@ flex-direction: row;
 flex-wrap: nowrap;
 justify-content: space-between;
 align-items: center;
-font-size: large;
 `

@@ -1,30 +1,39 @@
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
- */
+*/
 exports.up = function(knex) {
-  return knex.schema
+    return knex.schema
     .createTable('duty', table => {
-      table.increments('id').primary();
-      table.string('title');
+        table.increments('id').primary();
+        table.string('title');
     })
     .createTable('role', table => {
+        table.increments('id').primary();
+        table.string('role_name');
+    })
+    .createTable('rank', table => {
+        table.increments('id').primary();
+        table.string('name');
+    })
+    .createTable('unit', table => {
       table.increments('id').primary();
-      table.string('role_name');
+      table.string('name');
     })
     .createTable('user', table => {
       table.increments('id').primary();
       table.string('first_name');
       table.string('last_name');
+      table.integer('rank_id').unsigned();
+      table.foreign('rank_id').references('rank.id');
       table.string('email');
       table.string('password');
       table.integer('dodID');
       table.integer('role_id').unsigned();
       table.foreign('role_id').references('role.id');
-      table.integer('supervisor_id').unsigned();
-      table.foreign('supervisor_id').references('supervisor.id');
-      table.integer('training_manager_id').unsigned();
-      table.foreign('training_manager_id').references('supervisor.id');
+      table.integer('supervisor_id');
+      table.integer('unit_id').unsigned();
+      table.foreign('unit_id').references('unit.id');
     })
     .createTable('training', table => {
       table.increments('id').primary();
@@ -58,6 +67,8 @@ exports.down = function(knex) {
   .dropTableIfExists('user_duty')
   .dropTableIfExists('training')
   .dropTableIfExists('user')
+  .dropTableIfExists('unit')
+  .dropTableIfExists('rank')
   .dropTableIfExists('role')
   .dropTableIfExists('duty')
 };
