@@ -14,11 +14,13 @@ const App = ()=> {
     const [isVerified, setIsVerified] = useState(false)
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
+    const [isSupervisor, setIsSupervisor] = useState(false);
 
     const ContextObject = { user, setUser,
                             isVerified,  setIsVerified,  
                             firstName, setFirstName,
                             lastName, setLastName,
+                            isSupervisor, setIsSupervisor,
                             testStr: `I'm using context!`
                           }
     
