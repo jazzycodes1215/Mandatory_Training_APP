@@ -11,12 +11,17 @@ import CancelIcon from '@mui/icons-material/Cancel';
 export default function Account() {
     const { registered, setRegistered, user } = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
-    const [account, setAccount] = useState(null);
+    const [account, setAccount] = useState({});
+    const [supervisor, setSupervisor] = useState({});
 
     useEffect(() => {
-        setRegistered(false);
+        setRegistered(true);
         fetchAccount();
     }, []);
+
+    useEffect(() => {
+        fetchSupervisor();
+    }, [account]);
 
     const fetchAccount = async () => {
         try {
@@ -28,8 +33,14 @@ export default function Account() {
         }
     };
 
-    const fetchUTM = () => {
-
+    const fetchSupervisor = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/users/${account.supervisor_id}`);
+            const data = await response.json();
+            setSupervisor(data);
+        } catch (error) {
+            console.error('Error fetching the item', error);
+        }
     }
 
     const handleEditModeOn = () => {
@@ -123,6 +134,12 @@ export default function Account() {
                 <AccountInfoContainer>
                     <Row>
                         <Column>
+                            <Label for="email">Email:</Label>
+                            <AccountInfo id="email">{account.email}</AccountInfo>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column>
                             <Label for="firstName">First Name:</Label>
                             <AccountInfo id="firstName">{account.first_name}</AccountInfo>
                         </Column>
@@ -133,18 +150,18 @@ export default function Account() {
                     </Row>
                     <Row>
                         <Column>
-                            <Label for="email">Email:</Label>
-                            <AccountInfo id="email">{account.email}</AccountInfo>
+                            <Label for="rank">Rank:</Label>
+                            <AccountInfo id="rank">{account.rank_name}</AccountInfo>
                         </Column>
                         <Column>
-                            <Label for="password">Password:</Label>
-                            <AccountInfo id="password">{account.password}</AccountInfo>
+                            <Label for="supervisor">Supervisor:</Label>
+                            <AccountInfo id="supervisor">{`${supervisor.first_name} ${supervisor.last_name}`}</AccountInfo>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
                             <Label for="unit">Unit:</Label>
-                            <AccountInfo id="unit">{}</AccountInfo>
+                            <AccountInfo id="unit">{account.unit_name}</AccountInfo>
                         </Column>
                         <Column>
                             <Label for="duties">Duties:</Label>

@@ -3,30 +3,64 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
 
+import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import StarIcon from '@mui/icons-material/Star';
+import PeopleIcon from '@mui/icons-material/People';
+
 export default function Training() {
 
     const [selectedTab, setSelectedTab] = useState('notifications');
+    const [requiredTraining, setRequiredTraining] = useState([])
     const { testStr } = useContext(AppContext);
 
     const TRContainer = styled.div`
     display: grid; 
     grid-template-columns: 20% 80%; 
-    grid-template-rows: 30% 70%; 
+    grid-template-rows: 30%; 
     grid-column-gap: 0px;
     grid-row-gap: 0px; 
   `;
 
-    const subhead =styled.div`
-    grid-area: 1 / 1 / 2 / 2;`
+    const Subhead =styled.div`
+    grid-area: 1 / 1 / 2 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;`
 
-    const type =styled.div`
-    display: none`
+    const Type =styled.div`
+    grid-area: 2 / 1 / 3 / 2;
+    display: flex;
+    flex-direction: column;`
 
-    const toggle =styled.div`
-    display: none`
+    const Toggle =styled.div`
+    grid-area: 1 / 2 / 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;`
 
-    const trainings =styled.div`
-    display: none`
+    const Trainings =styled.div`
+    grid-area: 2 / 2 / 3 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 50px;
+    `
+
+    useEffect(() => {
+        fetchRequiredTraining();
+    }, []);
+
+    const fetchRequiredTraining = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/requiredTraining/`);
+            const data = await response.json();
+            setRequiredTraining(data);
+        } catch (error) {
+            console.error('Error fetching your required training', error);
+        }
+    };
 
 
     const handleTabChange = (tab) => {
@@ -36,26 +70,48 @@ export default function Training() {
     return (
         <>
         <TRContainer>
-            <subhead>
+            <Subhead>
                 <h1>Trainings</h1>
-            </subhead>
-            <type>
+            </Subhead>
+            <Type>
                 <h2>Type</h2>
                 
                 <button onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
                 <button onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
                 <button onClick={() => handleTabChange('Professional Military Education')}>Professional Military Education</button>
                 <button onClick={() => handleTabChange('Additional Duty Training')}>Additional Duty Training</button>
-            </type>
-            <toggle>
+            </Type>
+            <Toggle>
             <button onClick={() => handleTabChange('Active')}>Active</button>
                 <button onClick={() => handleTabChange('Draft')}>Draft</button>
                 <button onClick={() => handleTabChange('Archived')}>Archived</button>
-            </toggle>
-            <trainings>
-                <h1>Training List Here</h1>
-            </trainings>
+            </Toggle>
+            <Trainings>
+                <InnerTraining>
+                    {requiredTraining.map((training, index) =>
+                    <TrainingCard key={index}>
+                    {training.name}
+                    </TrainingCard> )}
+                </InnerTraining>
+            </Trainings>
             </TRContainer>
         </>
     )
 }
+
+const TrainingCard = styled.div`
+display: grid;
+grid-template-columns: 1fr
+grid-row-columns: 
+border: 1px solid black;
+width: 20%;
+height: 100%
+`
+const InnerTraining = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+width: 100%;
+height: 30vh;
+gap: 20px;
+`

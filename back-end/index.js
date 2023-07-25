@@ -85,11 +85,10 @@ app.post('/users', async (req, res) => {
 app.get('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
-
-    
     const user = await knex('users')
+      .join('ranks', 'users.rank_id', 'ranks.id')
       .join('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'units.name as unit_name')
+      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -102,6 +101,23 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+//endpoint for getting all duties for a specific user
+app.get('/duties/:user_id', async (req, res) => {
+  const userId = req.params.user_id;
+  try {
+    const duties = await knex('user_duties')
+      .join('duties', 'user_duties.duty_id', 'duties.id')
+      .where('user_duties.user_id', userId)
+      .first()
+    if (duties) {
+      res.json(duties);
+    } else {
+      res.status(404).json({ message: 'No duties found for user' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving duties', error });
+  }
+});
 
 //endpoint for updating a user. Admin will most likely use this
 app.patch('/users/:id', async (req, res) => {
@@ -143,7 +159,7 @@ app.delete('/users/:id', async (req, res) => {
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 //endpoint that allows UTM/admin to create an account
 app.post('/createAccount', async (req, res) => {
-  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id, password} = req.body
+  const {/*first_name, last_name, rank_id, email, */dodID, role_id,/* supervisor_id, */unit_id, password} = req.body
   const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
@@ -154,15 +170,15 @@ app.post('/createAccount', async (req, res) => {
       //email: email,
       password: hashedPass,
       dodID: Number(dodID),
-      role_id: null,
+      role_id: role_id,
       //supervisor_id: Number(supervisor_id),
-      unit_id: null
+      unit_id: unit_id
     }
     console.log(newUser)
-    const addedUser = await knex('users')
+    let addedUser = await knex('users')
     .insert(newUser)
-    .returning('*')
-    .catch(e=>console.log(e))
+    .returning('*');
+
     addedUser = addedUser.map(user => {
       delete user/*.password*/;
       return user;
@@ -186,7 +202,7 @@ app.post('/registration', async (req, res) => {
       const passwordCheck = bcrypt.compareSync(password, user.password); 
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = jwt.sign({ id: user.id }, /*secretKey*/ { algorithm: 'RS256' }, function(err, token) {
+        const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
           console.log('token',token);
       })
       res.status(201).json({id: user.id, token: token});
@@ -197,7 +213,7 @@ app.post('/registration', async (req, res) => {
       res.status(402).json({  message: 'User not detected' });
     }
   } catch (error) {
-    //console.error('login error detected:', error);
+    console.error('login error detected:', error);
           res.status(500).json({ message: 'login error detected' });
   }
 })
@@ -205,16 +221,15 @@ app.post('/registration', async (req, res) => {
 //endpoint for account to register their account that was already created
 app.patch('/registration/:id', async (req, res) => {
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id, unit_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, supervisor_id} = req.body;
   const hashedPass = bcrypt.hashSync(password, 10)
   const userAccountUpdate = {
-  first_name: first_name,
-  last_name: last_name,
-  rank_id: null,
-  email: email,
-  password: hashedPass,
-  supervisor_id: Number(supervisor_id),
-  unit_id: Number(unit_id)
+      first_name: first_name,
+      last_name: last_name,
+      rank_id: rank_id,
+      email: email,
+      password: hashedPass,
+      supervisor_id: Number(supervisor_id),
   }
   
   try {
@@ -226,7 +241,7 @@ app.patch('/registration/:id', async (req, res) => {
       const passwordCheck = bcrypt.compareSync(password, user.password); 
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = jwt.sign({ id: user.id }, /*secretKey*/ { algorithm: 'RS256' }, function(err, token) {
+        const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
           console.log('token',token);
       })
       res.status(201).json({id: user.id, token: token});
@@ -279,7 +294,21 @@ app.post('/login', async (req, res) => {
   try {
     if(token)
     {
-      const result = jwt.verify(token)
+      const result = jwt.verify(token, secretKey, (err, decoded) => {
+        if(err)
+        {
+          console.log(err);
+          return;
+        }
+        else
+        {
+          if(decoded.exp < Date.now())
+          {
+            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token})
+          }
+        }
+      })
+      return;
     }
     const user = await knex('users')
     .select('id', 'email', 'password', 'role_id')
@@ -289,14 +318,20 @@ app.post('/login', async (req, res) => {
       const passwordCheck = bcrypt.compareSync(password, user.password); 
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
+        const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
           if(err)
           {
             console.log(err);
+            res.status(500).json({message: 'Unknown Error'});
           }
-          console.log('token',token);
+          else
+          {
+            console.log(user);
+            res.status(201).json({id: user.id, token: token, userType: user.role_id});
+            return;
+          }
       })
-      res.status(201).json({id: user.id, token: token, userType: user.role_id});
+      
     } else {
       res.status(401).json({  message: 'Invalid username or password detected' }); 
     }
@@ -305,7 +340,8 @@ app.post('/login', async (req, res) => {
     }
   } catch (error) {
     //console.error('login error detected:', error);
-          res.status(500).json({ message: 'login error detected' });
+    console.log(error);
+    res.status(500).json({ message: 'login error detected' });
   }
 })
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////

@@ -8,8 +8,10 @@ import SchoolIcon from '@mui/icons-material/School';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+import useUserCheck from '../hooks/useUserCheck'
+
 export default function Header() {
-  const {setUser, isVerified, setIsVerified, setFirstName, setLastName} = useContext(AppContext);
+  const {setUser, setToken, setFirstName, setLastName} = useContext(AppContext);
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -30,14 +32,12 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    setIsVerified(false);
-    setUser('');
-    setFirstName('');
-    setLastName('');
+    setToken(null);
+    sessionStorage.clear();
     alert('You are logged out');
     navigate('/login');
   }
-
+  const {validToken, validatedUserType} = useUserCheck()
   return (
     <AppBar position="static" sx={{ backgroundColor: 'MidnightBlue' }}>
       <Container maxWidth="xl">
@@ -145,10 +145,10 @@ export default function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={() => {isVerified ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
+              <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
                 <Typography  textAlign="center">Account</Typography>
               </MenuItem>
-              {isVerified ?
+              {validToken ?
                 <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>

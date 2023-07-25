@@ -15,7 +15,7 @@ export default function CreateUserAccount() {
     const [pwd, setpwd] = useState("");
     const [rank, setRank] = useState('');
     const [error, setError] = useState(null);
-    //const {userType, validToken} = useUserCheck();
+    const {validatedUserType, validToken} = useUserCheck();
     const HandleSelect = (e) =>
     {
         console.log(e.target.value);

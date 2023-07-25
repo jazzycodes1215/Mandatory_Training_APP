@@ -13,7 +13,7 @@ const App = ()=> {
     const [user,setUser]=useState(1);
     const [token, setToken] = useState(null);
     const [authExp, setExp] = useState(0);
-    const [userType, setUserType] = useState('visitor')
+    const [userType, setUserType] = useState(0)
     const [isVerified, setIsVerified] = useState(false)
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
@@ -28,10 +28,11 @@ const App = ()=> {
                             registered, setRegistered,
                             token, setToken,
                             authExp, setExp,
+                            userType, setUserType,
                             testStr: `I'm using context!`
                           }
     
-    console.log(ContextObject);
+    //console.log(ContextObject);
     
     return(
         <>

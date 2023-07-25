@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react'
-import AppContext from './../App.js'
+import { AppContext } from '../App'
 
 /*TL;Dont wanna read the code. It returns an object with two values
 validToken: This means that this has ran the fetch request and the user still has a valid token. This is to reduce strain
@@ -18,17 +18,16 @@ const {validToken, userType} = useUserCheck();*/
 
 //Im going with auth user actions and set an expiraton before this needs to run again
 
-export const useUserCheck = async () =>
+export const useUserCheck = () =>
 {
   const {user, token, setToken, authExp, setExp} = useContext(AppContext);
-  console.log(user);
 
   //States
-  const [userType, setUserType] = useState('visitor');
+  const [validatedUserType, setUserType] = useState('visitor');
   const [validToken, setValid] = useState(false);
   //Set this up because grabbing things from storage can be annoying. Make it only happen once when user goes to the page.
   //Else they just need to login. This may exist better in App.js as part of context
-  const [initial, setInitial] = useState('false');
+  const [initial, setInitial] = useState(false);
   //Session storage token
   const sessionToken = sessionStorage.getItem("token");
   //useEffect to make this run if things change
@@ -37,46 +36,65 @@ export const useUserCheck = async () =>
     const UserCheck = async () => {
       //Logic for pulling a token from local/session storage
       let authToken;
-      if(initial)
+      console.log(initial);
+      if(!initial)
       {
+        setInitial(true);
+        console.log(sessionToken == null)
         if(sessionToken != null)
         {
           authToken = sessionToken;
         }
         else
         {
-          setValid(false)
-          setUserType('visitor');
-          return;
+          if(token)
+          {
+            authToken = token;
+          }
+          else
+          {
+            setValid(false)
+            setUserType('visitor');
+          }
         }
       }
       else
       {
-        console.log("test");
+        
+        if(token)
+        {
+          authToken = token;
+        }
       }
 
 
       const header = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`}};
-
-      //Maybe don't go to the login login... API
-      let response = await fetch(`http://localhost:3001/login`, header)
+          'Content-Type': 'application/json'},
+        body: JSON.stringify({token: authToken})};
+      if(!authToken)
+      {
+        return;
+      }
+      let response = await fetch(`http://localhost:4000/login`, header)
       let status = response.status;
       let data = await response.json();
-
+      console.log(data);
       if(status === 201)
       {
+        console.log(data);
+        setExp(data.exp)
         setUserType(data.userType);
         setToken(data.token)
+        setValid(true);
+        sessionStorage.setItem("token", token);
       }
       
-    }
-
-    if(authExp < Date.Now())
+    } 
+    if(authExp > Date.now())
     {
+      console.log("problem child");
       return;
     }
     else
@@ -84,8 +102,8 @@ export const useUserCheck = async () =>
       UserCheck();
     }
     
-  },[token])//Should be based off of user data changing. Likely a userContext of some kind.
-  return {validToken, userType};
+  },[token])
+  return {validatedUserType: validatedUserType, validToken: validToken};
 }
 
 export default useUserCheck
