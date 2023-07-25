@@ -7,6 +7,31 @@ import '../stylesheets/login.css';
 
 export default function Login() {
     const { testStr } = useContext(AppContext);
+    const [email, setEmail] = useState('');
+    const [pwd, setpwd] = useState("");
+    
+    const HandleSubmit = async () =>
+    {
+        let userData = {email: email, password: pwd}
+
+        const header = {method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData)};
+        //Maybe don't go to the login login... API
+        let response = await fetch(`http://localhost:3001/login`, header)
+        let status = response.status;
+        let data = await response.json();
+  
+        if(status === 201)
+        {
+          //setUserType(data.userType);
+          //setToken(data.token)
+        }
+    }
+
+
     return (
         <>
             <section className="body">
@@ -16,9 +41,9 @@ export default function Login() {
                         <h2>Welcome to UTM Tool</h2>
                         <p>Please sign in to your account to continue</p>
                         <div className="form">
-                            <label>Email</label><input type="textbox"></input>
-                            <label>Password</label><input type="password"></input>
-                            <button className="button">Login</button>
+                            <label>Email</label><input onChange={(e)=>setEmail(e.target.value)} type="textbox"></input>
+                            <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>
+                            <button onClick={HandleSubmit}className="button">Login</button>
                         </div>
                     </section>
                 </div>

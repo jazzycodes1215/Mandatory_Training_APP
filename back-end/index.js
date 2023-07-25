@@ -206,7 +206,7 @@ app.post('/login', async (req, res) => {
     .where('email', email)
     .first();
     if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user.password);
+      const passwordCheck = bcrypt.compareSync(password, user.password); 
       console.log(passwordCheck);
       if (passwordCheck) {
         const token = jwt.sign({ id: user.id }, /*secretKey*/ { algorithm: 'RS256' }, function(err, token) {
@@ -227,19 +227,65 @@ app.post('/login', async (req, res) => {
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////TRAINING REGISTRATION///////////////////////////////////////////////////////////////////////////
-//GET training
+//GET Request for getting all the training data
+app.get('/requiredTraining', async (req, res) => {
+  //
+  try {
+    const trainings = await knex('trainings')
+      .select("*")
+      .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training data', error });
+  }
+  });
+
+  app.post('/requiredTraining', async (req, res) => {
+    const newTraining = req.body;
+    try {
+      const insertTrainings = await knex('trainings')
+        .insert(newTraining)
+        .then(() => {
+          res.status(200).json({message: successful});
+        })
+    } catch (error) {
+      res.status(500).json({ message: 'Error adding training data', error });
+    }
+    });
+
+
+
+
+    // app.post('/users', async (req, res) => {
+    //   const newUser = req.body; // Assuming the request body contains the necessary user data
+    //   try {
+    //     const insertedUser = await knex('users')
+    //     .insert(newUser)
+    //     .then(() => {
+    //       res.status(200).json({message: successful});
+    //     })
+    //   } catch (error) {
+    //     res.status(500).json({ 
+    //       message: 'Error creating user', error 
+    //     });
+    //   }
+    // });
+
+
+
+//GET Request for assigning training to a specific duty
 app.get('/requiredTraining/:id', async (req, res) => {
   const dutyId = req.params.id;
   //
   try {
     // Fetch the training requirements for the given duty ID
     const trainingRequirements = await knex('duty_trainings')
-      .where('duty_id', dutyId)
-      .join('duty_trainings', 'trainings.id', '=', 'duty_trainings.id')
-      .select('trainings.name', 'trainings.interval', 'trainings.source');
+      .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
+      .select("*")
+      .where('duty_trainings.id', dutyId)
+      .orderBy('trainings.id', 'desc')
   
     if (trainingRequirements.length === 0) {
-      return res.status(404).json({ message: 'No training requirements found for the given duty ID' });
+      return res.status(404).json({ message: 'No training found for the given duty ID' });
     }
   
     res.json(trainingRequirements);
@@ -249,21 +295,20 @@ app.get('/requiredTraining/:id', async (req, res) => {
   });
   
 
-//GET specific training
-app.get('/required-training/:user-id', async (req, res) => {
-const dutyId = req.query.id;
+//GET specific training per duty
+app.get('/requiredTraining/duty/:duty_id', async (req, res) => {
+const {duty_id} = req.params;
 //
 try {
   // Fetch the training requirements for the given duty ID
   const trainingRequirements = await knex('duty_trainings')
-    .where('duty_id', dutyId)
-    .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
-    .select('trainings.name', 'trainings.interval', 'trainings.source');
-
+  .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
+  .select("*")
+  .where('duty_trainings.duty_id', duty_id)
+  .orderBy('trainings.id', 'desc')
   if (trainingRequirements.length === 0) {
     return res.status(404).json({ message: 'No training requirements found for the given duty ID' });
   }
-
   res.json(trainingRequirements);
 } catch (error) {
   res.status(500).json({ message: 'Error retrieving training requirements', error });

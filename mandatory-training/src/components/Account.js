@@ -12,7 +12,7 @@ export default function Account() {
     const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
-        setRegistered(true);
+        setRegistered(false);
     }, []);
 
     const handleEditModeOn = () => {
@@ -32,7 +32,7 @@ export default function Account() {
             {!registered ? 
                 <AccountHeader>
                     <h1>Account Information</h1>
-                    <h1>Please Enter Missing Account Details</h1>
+                    <h1>Please enter missing account details</h1>
                 </AccountHeader>
                 :
                 <AccountHeader>
@@ -49,21 +49,47 @@ export default function Account() {
             }
             {editMode || !registered ?
                 <AccountInfoContainer>
-                    <InputAccountInfo></InputAccountInfo>
-                    <InputAccountInfo></InputAccountInfo>
-                    <InputAccountInfo></InputAccountInfo>
-                    <InputAccountInfo></InputAccountInfo>
-                    <SelectAccountInfo></SelectAccountInfo>
-                    <SelectAccountInfo></SelectAccountInfo>
+                    <Row>
+                        <Column>
+                            <Label for="inputFirstName">First Name:</Label>
+                            <InputAccountInfo id="inputFirstName" type="text"></InputAccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="inputLastName">Last Name:</Label>
+                            <InputAccountInfo id="inputLastName" type="text"></InputAccountInfo>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column>
+                            <Label for="inputEmail">Email:</Label>
+                            <InputAccountInfo id="inputEmail" type="email"></InputAccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="inputPassword">Password (8 character minimum):</Label>
+                            <InputAccountInfo id="inputPassword" type="password"></InputAccountInfo>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Label for="selectUnit">Unit:</Label>
+                        <SelectAccountInfo id="selectUnit"></SelectAccountInfo>
+                        <Label for="selectDuties">Duties:</Label>
+                        <SelectAccountInfo id="selectDuties"></SelectAccountInfo>
+                    </Row>
                 </AccountInfoContainer>
                 :
                 <AccountInfoContainer>
+                    <Row>
                     <AccountInfo id="firstName"><b>First Name: </b></AccountInfo>
                     <AccountInfo id="lastName"><b>Last Name: </b></AccountInfo>
+                    </Row>
+                    <Row>
                     <AccountInfo id="email"><b>Email: </b></AccountInfo>
                     <AccountInfo id="password"><b>Password: </b></AccountInfo>
+                    </Row>
+                    <Row>
                     <AccountInfo id="unit"><b>Unit: </b></AccountInfo>
                     <AccountInfo id="duties"><b>Duties: </b></AccountInfo>
+                    </Row>
                 </AccountInfoContainer>
             }
         </>
@@ -83,12 +109,32 @@ flex-direction: row;
 flex-wrap: wrap;
 padding: 10px;
 `
+const Row = styled.div`
+display: flex;
+justify-content: flex-start;
+align-items: center;
+width: 100%;
+margin-bottom: 20px;
+`
+const Column = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+flex-grow: 1;
+margin-bottom: 20px;
+`
 const AccountInfo = styled.span`
 width: 50%;
 `
 const InputAccountInfo = styled.input`
-width: 50%;
+width: 100%;
+margin-right: 10px;
 `
 const SelectAccountInfo = styled.select`
-width: 50%;
+flex-grow: 5;
+margin-right: 10px;
+`
+const Label = styled.label`
+
 `

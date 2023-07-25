@@ -2,7 +2,7 @@ import { useState, useEffect, createContext} from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { 
-  Header, Help, Login, Account, Registration, RequiredTraining, UTM, 
+  Header, Help, Login, Account, RequiredTraining, UTM, 
   Training, CreateTraining, Admin, UserAccount, CreateUserAccount 
 } from './components';
 
@@ -11,6 +11,8 @@ export const AppContext = createContext();
 const App = ()=> {
 
     const [user,setUser]=useState(1);
+    const [token, setToken] = useState(null);
+    const [authExp, setExp] = useState(0);
     const [isVerified, setIsVerified] = useState(false)
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
@@ -23,6 +25,8 @@ const App = ()=> {
                             lastName, setLastName,
                             isSupervisor, setIsSupervisor,
                             registered, setRegistered,
+                            token, setToken,
+                            authExp, setExp,
                             testStr: `I'm using context!`
                           }
     
@@ -39,7 +43,6 @@ const App = ()=> {
                             <Route path='/' element={<Help />} />
                             <Route path='/login/*' element={<Login />} />
                             <Route path='/account/*' element={<Account />} />
-                            <Route path='/registration/*' element={<Registration />} />
                             <Route path='/required-training/' element={<RequiredTraining />} />
                             <Route path='/required-training/:training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />
