@@ -13,6 +13,7 @@ const App = ()=> {
     const [user,setUser]=useState(1);
     const [token, setToken] = useState(null);
     const [authExp, setExp] = useState(0);
+    const [userType, setUserType] = useState('visitor');
     const [isVerified, setIsVerified] = useState(false)
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();

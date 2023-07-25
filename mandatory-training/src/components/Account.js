@@ -3,12 +3,13 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
 
+import { Button } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Account() {
-    const { registered, setRegistered } = useContext(AppContext);
+    const { registered, setRegistered, user } = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
@@ -27,12 +28,34 @@ export default function Account() {
         setEditMode(false);
     }
 
+    const handleSubmitDetails = () => {
+        handlePatch();
+    }
+
+    const handlePatch = () => {
+        return fetch(`http://localhost:4000/registration/${user}`,{
+            method:"PATCH",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "user_account_id": user, "item_name": itemName, "description": description, "quantity": quantity })
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    return res.json().then(data => { throw new Error(data.error) });
+                }
+            })
+            .catch(err => {
+                window.alert(err.message);
+            });
+    }
+
     return (
         <>
             {!registered ? 
                 <AccountHeader>
                     <h1>Account Information</h1>
-                    <h1>Please enter missing account details</h1>
+                    <span>Please enter missing account details</span>
                 </AccountHeader>
                 :
                 <AccountHeader>
@@ -52,45 +75,74 @@ export default function Account() {
                     <Row>
                         <Column>
                             <Label for="inputFirstName">First Name:</Label>
-                            <InputAccountInfo id="inputFirstName" type="text"></InputAccountInfo>
+                            <InputAccountInfo id="inputFirstName" type="text" required></InputAccountInfo>
                         </Column>
                         <Column>
                             <Label for="inputLastName">Last Name:</Label>
-                            <InputAccountInfo id="inputLastName" type="text"></InputAccountInfo>
+                            <InputAccountInfo id="inputLastName" type="text" required></InputAccountInfo>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
                             <Label for="inputEmail">Email:</Label>
-                            <InputAccountInfo id="inputEmail" type="email"></InputAccountInfo>
+                            <InputAccountInfo id="inputEmail" type="email" required></InputAccountInfo>
                         </Column>
                         <Column>
                             <Label for="inputPassword">Password (8 character minimum):</Label>
-                            <InputAccountInfo id="inputPassword" type="password"></InputAccountInfo>
+                            <InputAccountInfo id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
                         </Column>
                     </Row>
                     <Row>
-                        <Label for="selectUnit">Unit:</Label>
-                        <SelectAccountInfo id="selectUnit"></SelectAccountInfo>
-                        <Label for="selectDuties">Duties:</Label>
-                        <SelectAccountInfo id="selectDuties"></SelectAccountInfo>
+                        <Column>
+                            <Label for="selectUnit">Unit:</Label>
+                            <SelectAccountInfo id="selectUnit" required></SelectAccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="selectDuties">Duties:</Label>
+                            <SelectAccountInfo id="selectDuties" multiple required></SelectAccountInfo>
+                        </Column>
                     </Row>
                 </AccountInfoContainer>
                 :
                 <AccountInfoContainer>
                     <Row>
-                    <AccountInfo id="firstName"><b>First Name: </b></AccountInfo>
-                    <AccountInfo id="lastName"><b>Last Name: </b></AccountInfo>
+                        <Column>
+                            <Label for="firstName">First Name:</Label>
+                            <AccountInfo id="firstName">test</AccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="lastName">Last Name:</Label>
+                            <AccountInfo id="lastName">test</AccountInfo>
+                        </Column>
                     </Row>
                     <Row>
-                    <AccountInfo id="email"><b>Email: </b></AccountInfo>
-                    <AccountInfo id="password"><b>Password: </b></AccountInfo>
+                        <Column>
+                            <Label for="email">Email:</Label>
+                            <AccountInfo id="email">test</AccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="password">Password:</Label>
+                            <AccountInfo id="password">test</AccountInfo>
+                        </Column>
                     </Row>
                     <Row>
-                    <AccountInfo id="unit"><b>Unit: </b></AccountInfo>
-                    <AccountInfo id="duties"><b>Duties: </b></AccountInfo>
+                        <Column>
+                            <Label for="unit">Unit:</Label>
+                            <AccountInfo id="unit">test</AccountInfo>
+                        </Column>
+                        <Column>
+                            <Label for="duties">Duties:</Label>
+                            <AccountInfo id="duties">test</AccountInfo>
+                        </Column>
                     </Row>
                 </AccountInfoContainer>
+            }
+            {registered ? 
+                <></>
+                :
+                <ButtonContainer>
+                    <Button variant="contained" sx={{backgroundColor: 'MidnightBlue'}}>Submit Accont Details</Button>
+                </ButtonContainer>
             }
         </>
     )
@@ -107,34 +159,37 @@ const AccountInfoContainer = styled.div`
 display: flex;
 flex-direction: row;
 flex-wrap: wrap;
-padding: 10px;
 `
 const Row = styled.div`
 display: flex;
 justify-content: flex-start;
 align-items: center;
 width: 100%;
-margin-bottom: 20px;
 `
 const Column = styled.div`
 display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: flex-start;
-flex-grow: 1;
-margin-bottom: 20px;
+width: 50%;
+height: 100px;
+margin-left: 20px;
+margin-right: 20px;
 `
 const AccountInfo = styled.span`
 width: 50%;
 `
 const InputAccountInfo = styled.input`
-width: 100%;
-margin-right: 10px;
+align-self: stretch;
 `
 const SelectAccountInfo = styled.select`
-flex-grow: 5;
-margin-right: 10px;
+align-self: stretch;
 `
 const Label = styled.label`
-
+font-weight: 700;
+`
+const ButtonContainer = styled.div`
+display: flex;
+justify-content: center;
+margin: 50px;
 `

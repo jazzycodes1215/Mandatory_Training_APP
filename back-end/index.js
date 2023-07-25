@@ -136,25 +136,26 @@ app.delete('/users/:id', async (req, res) => {
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 //endpoint that allows UTM/admin to create an account
 app.post('/createAccount', async (req, res) => {
-  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id} = req.body
-  // const hashedPass = bcrypt.hashSync(password, 10)
+  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id, password} = req.body
+  const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
       // id: id,
-      first_name: first_name,
-      last_name: last_name,
-      rank_id: rank_id,
-      email: email,
-      // password: hashPass,
-      dodID: dodID,
-      role_id:role_id,
-      supervisor_id: supervisor_id,
-      unit_id: unit_id
+      //first_name: first_name,
+      //last_name: last_name,
+      //rank_id: Number(rank_id),
+      //email: email,
+      password: hashedPass,
+      dodID: Number(dodID),
+      role_id: Number(role_id),
+      //supervisor_id: Number(supervisor_id),
+      unit_id: Number(unit_id)
     }
     console.log(newUser)
     const addedUser = await knex('users')
     .insert(newUser)
-    .returning('*');
+    .returning('*')
+    .catch(e=>console.log(e))
     addedUser = addedUser.map(user => {
       delete user/*.password*/;
       return user;
@@ -239,6 +240,7 @@ app.get('/requiredTraining', async (req, res) => {
   }
   });
 
+  //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
     const newTraining = req.body;
     try {
@@ -252,28 +254,44 @@ app.get('/requiredTraining', async (req, res) => {
     }
     });
 
+      //Endpoint updating trainings list
+  app.patch('/requiredTraining/:id', async (req, res) => {
+    const trainingId = req.params.id;
+    const updatedTraining = req.body
+    try {
+      const trainingUpdate = await knex('trainings')
+        .where('id',trainingId)
+        .update(updatedTraining)
+        if (trainingUpdate) {
+            res.status(200).json({ message: 'Training updated successfully' });
+          } else {
+            res.status(404).json({ message: 'Training not found' });
+           }
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating training data', error });
+    }
+    });
 
-
-
-    // app.post('/users', async (req, res) => {
-    //   const newUser = req.body; // Assuming the request body contains the necessary user data
-    //   try {
-    //     const insertedUser = await knex('users')
-    //     .insert(newUser)
-    //     .then(() => {
-    //       res.status(200).json({message: successful});
-    //     })
-    //   } catch (error) {
-    //     res.status(500).json({ 
-    //       message: 'Error creating user', error 
-    //     });
-    //   }
-    // });
-
+    //Endpoint for deleting trainings from list
+    app.delete('/requiredTraining/:id', async (req, res) => {
+      const trainingId = req.params.id;
+      try {
+        const trainingDelete = await knex('trainings')
+          .where('id',trainingId)
+          .del()
+          if (trainingDelete) {
+              res.json({ message: 'Training deleted successfully' });
+            } else {
+              res.status(404).json({ message: 'Training not found' });
+             }
+      } catch (error) {
+        res.status(500).json({ message: 'Error deleting training data', error });
+      }
+      });
 
 
 //GET Request for assigning training to a specific duty
-app.get('/requiredTraining/:id', async (req, res) => {
+app.get('/requiredTraining/dutyTrainings:id', async (req, res) => {
   const dutyId = req.params.id;
   //
   try {
@@ -296,7 +314,7 @@ app.get('/requiredTraining/:id', async (req, res) => {
   
 
 //GET specific training per duty
-app.get('/requiredTraining/duty/:duty_id', async (req, res) => {
+app.get('/requiredTraining/duties/:duty_id', async (req, res) => {
 const {duty_id} = req.params;
 //
 try {
@@ -314,6 +332,94 @@ try {
   res.status(500).json({ message: 'Error retrieving training requirements', error });
 }
 });
+//////////////////////////////////////////////////TRAINING REGISTRATION///////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////UNIT ENDPOINTS///////////////////////////////////////////////////////////////////////////
+//Endpoint for  fetching all units
+app.get('/units', async (req, res) => {
+  try {
+    const users = await knex('units')
+    .select('*')
+    .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error retrieving units', error 
+    });
+  }
+});
+
+// endpoint for adding in a new unit
+app.post('/units', async (req, res) => {
+  const newUnit = req.body; // Assuming the request body contains the necessary user data
+  try {
+    const insertedUnit = await knex('units')
+    .insert(newUnit)
+    .then(() => {
+      res.status(200).json({message: successful});
+    })
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error creating unit', error 
+    });
+  }
+});
+
+//endpoint for getting a specific unit
+app.get('/units/:id', async (req, res) => {
+  const unitId = req.params.id;
+  try {
+    const unit = await knex('units')
+    .where('id', unitId)
+    .first();
+    if (unit) {
+      res.json(unit);
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving user', error });
+  }
+});
+
+//endpoint for updating a unit. Admin will most likely use this
+app.patch('/units/:id', async (req, res) => {
+  const unitId = req.params.id;
+  const updatedUnit = req.body; // Assuming the request body contains the updated user data
+  try {
+    const unitUpdate = await knex('units')
+    .where('id', unitId)
+    .update(updatedUnit);
+    
+    if (unitUpdate) {
+      res.json({ message: 'Unit updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating unit', error });
+  }
+});
+
+//endpoint for deleting a unit
+app.delete('/units/:id', async (req, res) => {
+  const unitId = req.params.id;
+  try {
+    const unitDelete = await knex('units')
+    .where('id', unitId)
+    .del();
+    if (unitDelete) {
+      res.json({ message: 'Unit deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting unit', error });
+  }
+});
+//////////////////////////////////////////////////UNIT ENDPOINTS///////////////////////////////////////////////////////////////////////////
+
+
+
 
 /*
 //return subordinates

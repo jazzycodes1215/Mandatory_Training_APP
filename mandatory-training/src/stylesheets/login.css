@@ -9,7 +9,10 @@
 }
 
 .container {
-  background-color: transparent;
+  background-color: black;
+  border-radius: 5px;
+  border-width: 5px;
+  border-color: white;
   display: flex;
   flex-direction: column;
   color: crimson;
