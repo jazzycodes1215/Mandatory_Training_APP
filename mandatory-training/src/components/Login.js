@@ -18,7 +18,7 @@ export default function Login() {
     {
         let userData = {email: email, password: pwd}
 
-        const header = {method: "POST", // or 'PUT'
+        let header = {method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,6 +28,7 @@ export default function Login() {
         let data = await response.json();
         if(status === 201)
         {
+          console.log("succesful");
           setUserType(data.userType);
           setToken(data.token)
           setUser(data.user);

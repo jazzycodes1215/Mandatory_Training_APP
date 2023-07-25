@@ -4,8 +4,10 @@ const port = 4000
 const knex = require('knex')(require('./knexfile.js')['development']);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
+let secretKey = '';
 
 //required endpoint functionalities
 {/* <Route path='/' element={<Help />} />
@@ -83,9 +85,13 @@ app.post('/users', async (req, res) => {
 app.get('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
+
+    
     const user = await knex('users')
-    .where('id', userId)
-    .first();
+      .join('units', 'users.unit_id', 'units.id')
+      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'units.name as unit_name')
+      .where('users.id', userId)
+      .first()
     if (user) {
       res.json(user);
     } else {
@@ -95,6 +101,7 @@ app.get('/users/:id', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving user', error });
   }
 });
+
 
 //endpoint for updating a user. Admin will most likely use this
 app.patch('/users/:id', async (req, res) => {
@@ -147,9 +154,9 @@ app.post('/createAccount', async (req, res) => {
       //email: email,
       password: hashedPass,
       dodID: Number(dodID),
-      role_id: Number(role_id),
+      role_id: null,
       //supervisor_id: Number(supervisor_id),
-      unit_id: Number(unit_id)
+      unit_id: null
     }
     console.log(newUser)
     const addedUser = await knex('users')
@@ -167,44 +174,13 @@ app.post('/createAccount', async (req, res) => {
   }
 })
 
-//endpoint for account to register their account that was already created
-app.patch('/registration/:id', async (req, res) => {
-  const userId = req.params.id
-  console.log(userId)
-  try{
-    const user = await knex('users')
-    .select('id', 'email')
-    .where('id', userId);
-    if(!user) {
-    return res.status(404).json({ message: 'User not found'})
-    }
-    const {password} = req.body
-    if(!password) {
-      return res.status(400).json({ message: 'Password is required'})
-    }
-    const hashedPass = bcrypt.hashSync(password, 10)
-    await knex('users')
-    .where('id', userId)
-    .update({password: hashedPass})
-    .then(() => {
-        res.status(200).json({message: 'Accout creation successfull' });
-      })
-
-    } catch (error) {
-        res.status(500).json({
-            message: 'Your request was denied'
-        })
-      }
-    });
-
-
-//endpoint for account to login
-app.post('/login', async (req, res) => {
-  const {email, password} = req.body
+// Endpoint for a user to register their account with a password provided by the Admin
+app.post('/registration', async (req, res) => {
+  const {dodID, password} = req.body
   try {
     const user = await knex('users')
-    .select('id', 'email', 'password')
-    .where('email', email)
+    .select('id', 'dodID', 'password')
+    .where('dodID', dodID)
     .first();
     if(user) {
       const passwordCheck = bcrypt.compareSync(password, user.password); 
@@ -214,6 +190,113 @@ app.post('/login', async (req, res) => {
           console.log('token',token);
       })
       res.status(201).json({id: user.id, token: token});
+    } else {
+      res.status(401).json({  message: 'Invalid username or password detected' }); 
+    }
+    } else {
+      res.status(402).json({  message: 'User not detected' });
+    }
+  } catch (error) {
+    //console.error('login error detected:', error);
+          res.status(500).json({ message: 'login error detected' });
+  }
+})
+
+//endpoint for account to register their account that was already created
+app.patch('/registration/:id', async (req, res) => {
+  const userId = req.params.id
+  const {first_name, last_name, rank_id, email, password, supervisor_id, unit_id} = req.body;
+  const hashedPass = bcrypt.hashSync(password, 10)
+  const userAccountUpdate = {
+  first_name: first_name,
+  last_name: last_name,
+  rank_id: null,
+  email: email,
+  password: hashedPass,
+  supervisor_id: Number(supervisor_id),
+  unit_id: Number(unit_id)
+  }
+  
+  try {
+    const user = await knex('users')
+    .where('id', userId)
+    .update(userAccountUpdate)
+    .catch(e=>console.log(e));
+    if(user) {
+      const passwordCheck = bcrypt.compareSync(password, user.password); 
+      console.log(passwordCheck);
+      if (passwordCheck) {
+        const token = jwt.sign({ id: user.id }, /*secretKey*/ { algorithm: 'RS256' }, function(err, token) {
+          console.log('token',token);
+      })
+      res.status(201).json({id: user.id, token: token});
+    } else {
+      res.status(401).json({  message: 'Invalid username or password detected' }); 
+    }
+    } else {
+      res.status(402).json({  message: 'User not detected' });
+    }
+  } catch (error) {
+    //console.error('login error detected:', error);
+          res.status(500).json({ message: 'login error detected' });
+  }
+})
+
+///Old endpoint for if we do not have the admin assigning passwords
+// app.patch('/registration/:id', async (req, res) => {
+//   const userId = req.params.id
+//   console.log(userId)
+//   try{
+//     const user = await knex('users')
+//     .select('id', 'email')
+//     .where('id', userId);
+//     if(!user) {
+//     return res.status(404).json({ message: 'User not found'})
+//     }
+//     const {password} = req.body
+//     if(!password) {
+//       return res.status(400).json({ message: 'Password is required'})
+//     }
+//     const hashedPass = bcrypt.hashSync(password, 10)
+//     await knex('users')
+//     .where('id', userId)
+//     .update({password: hashedPass})
+//     .then(() => {
+//         res.status(200).json({message: 'Accout creation successfull' });
+//       })
+
+//     } catch (error) {
+//         res.status(500).json({
+//             message: 'Your request was denied'
+//         })
+//       }
+//     });
+
+
+//endpoint for account to login
+app.post('/login', async (req, res) => {
+  const {email, password, token} = req.body
+  try {
+    if(token)
+    {
+      const result = jwt.verify(token)
+    }
+    const user = await knex('users')
+    .select('id', 'email', 'password', 'role_id')
+    .where('email', email)
+    .first();
+    if(user) {
+      const passwordCheck = bcrypt.compareSync(password, user.password); 
+      console.log(passwordCheck);
+      if (passwordCheck) {
+        const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
+          if(err)
+          {
+            console.log(err);
+          }
+          console.log('token',token);
+      })
+      res.status(201).json({id: user.id, token: token, userType: user.role_id});
     } else {
       res.status(401).json({  message: 'Invalid username or password detected' }); 
     }
@@ -449,5 +532,22 @@ try {
 
 
 app.listen(port, () => {
+
+  crypto.generateKeyPair('rsa', {
+    modulusLength: 4096,
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem',
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+    },
+  }, (err, publicKey, privateKey) => {
+    // Handle errors and use the generated key pair.
+    if(err) console.log(err)
+    secretKey = privateKey;
+  });
+  
   console.log(`Example app listening on port ${port}`)
 })

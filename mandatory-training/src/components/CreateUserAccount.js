@@ -3,8 +3,10 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
 import { AppContext } from '../App'
+import useUserCheck from '../hooks/useUserCheck'
 
 export default function CreateUserAccount() {
+
     const { testStr } = useContext(AppContext);
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');
@@ -13,7 +15,7 @@ export default function CreateUserAccount() {
     const [pwd, setpwd] = useState("");
     const [rank, setRank] = useState('');
     const [error, setError] = useState(null);
-
+    //const {userType, validToken} = useUserCheck();
     const HandleSelect = (e) =>
     {
         console.log(e.target.value);
@@ -22,9 +24,10 @@ export default function CreateUserAccount() {
     {
         //Role supervisor and unit default to 0 for now
         let userData = {first_name: first, last_name: last, email: email, password: pwd, 
-            dodID: id, rank_id: rank, role_id: 0, supervisor_id: 0, unit_id: 0}
+            dodID: id, rank_id: rank, role_id: null, supervisor_id: null, unit_id: null}
 
-        const header = {method: "POST", // or 'PUT'
+        let header = {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },

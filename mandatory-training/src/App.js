@@ -13,7 +13,7 @@ const App = ()=> {
     const [user,setUser]=useState(1);
     const [token, setToken] = useState(null);
     const [authExp, setExp] = useState(0);
-    const [userType, setUserType] = useState('visitor');
+    const [userType, setUserType] = useState('visitor')
     const [isVerified, setIsVerified] = useState(false)
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
@@ -45,7 +45,8 @@ const App = ()=> {
                             <Route path='/login/*' element={<Login />} />
                             <Route path='/account/*' element={<Account />} />
                             <Route path='/required-training/' element={<RequiredTraining />} />
-                            <Route path='/required-training/:training/*' element={<Training />} />
+                            {/* <Route path='/required-training/:training/*' element={<Training />} /> */}
+                            <Route path='/training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />
                             <Route path='/unit-training-manager/*' element={<UTM />} />
                             <Route path='/administrator/*' element={<Admin />} />

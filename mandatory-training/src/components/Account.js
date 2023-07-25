@@ -11,10 +11,26 @@ import CancelIcon from '@mui/icons-material/Cancel';
 export default function Account() {
     const { registered, setRegistered, user } = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
+    const [account, setAccount] = useState(null);
 
     useEffect(() => {
         setRegistered(false);
+        fetchAccount();
     }, []);
+
+    const fetchAccount = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/users/${user}`);
+            const data = await response.json();
+            setAccount(data);
+        } catch (error) {
+            console.error('Error fetching the item', error);
+        }
+    };
+
+    const fetchUTM = () => {
+
+    }
 
     const handleEditModeOn = () => {
         setEditMode(true);
@@ -29,26 +45,26 @@ export default function Account() {
     }
 
     const handleSubmitDetails = () => {
-        handlePatch();
+        // handlePatch();
     }
 
-    const handlePatch = () => {
-        return fetch(`http://localhost:4000/registration/${user}`,{
-            method:"PATCH",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ "user_account_id": user, "item_name": itemName, "description": description, "quantity": quantity })
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return res.json().then(data => { throw new Error(data.error) });
-                }
-            })
-            .catch(err => {
-                window.alert(err.message);
-            });
-    }
+    // const handlePatch = () => {
+    //     return fetch(`http://localhost:4000/registration/${user}`,{
+    //         method:"PATCH",
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ "user_account_id": user, "item_name": itemName, "description": description, "quantity": quantity })
+    //     })
+    //         .then(res => {
+    //             if (res.ok) {
+    //                 return res.json();
+    //             } else {
+    //                 return res.json().then(data => { throw new Error(data.error) });
+    //             }
+    //         })
+    //         .catch(err => {
+    //             window.alert(err.message);
+    //         });
+    // }
 
     return (
         <>
@@ -108,27 +124,27 @@ export default function Account() {
                     <Row>
                         <Column>
                             <Label for="firstName">First Name:</Label>
-                            <AccountInfo id="firstName">test</AccountInfo>
+                            <AccountInfo id="firstName">{account.first_name}</AccountInfo>
                         </Column>
                         <Column>
                             <Label for="lastName">Last Name:</Label>
-                            <AccountInfo id="lastName">test</AccountInfo>
+                            <AccountInfo id="lastName">{account.last_name}</AccountInfo>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
                             <Label for="email">Email:</Label>
-                            <AccountInfo id="email">test</AccountInfo>
+                            <AccountInfo id="email">{account.email}</AccountInfo>
                         </Column>
                         <Column>
                             <Label for="password">Password:</Label>
-                            <AccountInfo id="password">test</AccountInfo>
+                            <AccountInfo id="password">{account.password}</AccountInfo>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
                             <Label for="unit">Unit:</Label>
-                            <AccountInfo id="unit">test</AccountInfo>
+                            <AccountInfo id="unit">{}</AccountInfo>
                         </Column>
                         <Column>
                             <Label for="duties">Duties:</Label>
@@ -141,7 +157,7 @@ export default function Account() {
                 <></>
                 :
                 <ButtonContainer>
-                    <Button variant="contained" sx={{backgroundColor: 'MidnightBlue'}}>Submit Accont Details</Button>
+                    <Button variant="contained" sx={{backgroundColor: 'MidnightBlue'}}>Submit Account Details</Button>
                 </ButtonContainer>
             }
         </>

@@ -1,22 +1,34 @@
 const bcrypt = require('bcrypt');
+// const { faker } = require('@faker-js/faker');
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> } 
  */
-exports.seed = async function(knex) {
-  // Deletes ALL existing entries
-  await knex('users').del()
-  await knex('users').insert([
-    { id: 1, 
-    first_name: 'user', 
-    last_name:'greatest', 
-    rank_id: 1, 
-    email:'email', 
-    password: bcrypt.hashSync('password', 10),
-    dodID: 1609444483,
-    role_id: 1,
-    supervisor_id: 1,
-    unit_id: 1 }
-  ]);
+
+exports.seed = async function (knex) {
+  // Deletes ALL existing entries for the table
+  return knex('users').del()
+  .then(function () {
+      // Generate fake data using Faker
+      const numRowsToSeed = 10; // Number of rows you want to insert
+      const fakeData = [{first_name: 'Gabriel', last_name: 'Losey', user_name: 'loseyga', password: '1234'},];
+      for (let i = 0; i < numRowsToSeed; i++) {
+          let first_name = faker.person.firstName();
+          let last_name = faker.person.lastName();
+      fakeData.push({
+          first_name: `${first_name}`,
+          last_name: `${last_name}`,
+          rank_id: faker.number.int({ min: 1, max: 19 }),
+          email: faker.internet.email({ firstName: first_name, lastName: last_name }),
+          password: bcrypt.hashSync('password', 10),
+          dodID: faker.finance.accountNumber({ length: 9 }),
+          role_id: faker.number.int({ min: 1, max: 4 }),
+          supervisor_id: faker.number.int({ min: 1, max: numRowsToSeed }),
+          unit_id: 1
+      });
+      }
+      // Insert the fake data into the table
+      return knex('users').insert(fakeData);
+  });
 };

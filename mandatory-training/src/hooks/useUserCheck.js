@@ -3,8 +3,14 @@ import AppContext from './../App.js'
 
 /*TL;Dont wanna read the code. It returns an object with two values
 validToken: This means that this has ran the fetch request and the user still has a valid token. This is to reduce strain
-on the backend.
-userType: What the userType is, admin */
+on the backend. It will only try to get a new token when the token expires
+userType: What the userType is, admin, visitor, etc. Defaults to visitor 
+
+To use:
+import useUserContext from '../hooks/useUserCheck.js
+
+Within component pull it.
+const {validToken, userType} = useUserCheck();*/
 
 
 //Should we check if we're logged in every time and potentially hammer the hell out of the backend? 
@@ -14,8 +20,7 @@ userType: What the userType is, admin */
 
 export const useUserCheck = async () =>
 {
-  //Pulling only user for now for the context. Probably changing
-  const {user} = useContext(AppContext);
+  const {user, token, setToken, authExp, setExp} = useContext(AppContext);
   console.log(user);
 
   //States
@@ -29,33 +34,57 @@ export const useUserCheck = async () =>
   //useEffect to make this run if things change
   useEffect(()=>
   {
-
-    const UserCheck = async () =>
-    {
+    const UserCheck = async () => {
       //Logic for pulling a token from local/session storage
-      if(sessionToken)
+      let authToken;
+      if(initial)
+      {
+        if(sessionToken != null)
+        {
+          authToken = sessionToken;
+        }
+        else
+        {
+          setValid(false)
+          setUserType('visitor');
+          return;
+        }
+      }
+      else
+      {
+        console.log("test");
+      }
 
-      //Header for login
-      const header = {method: "PUT", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${useToken}`
-      }};
 
-      let response = await fetch(`SomekindofURLHere`, header)
+      const header = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`}};
+
+      //Maybe don't go to the login login... API
+      let response = await fetch(`http://localhost:3001/login`, header)
       let status = response.status;
       let data = await response.json();
 
-      //Set userType within here after checking its valid, backend maybe should return userType
-      setUserType(data.userType);
+      if(status === 201)
+      {
+        setUserType(data.userType);
+        setToken(data.token)
+      }
+      
     }
 
     if(authExp < Date.Now())
     {
-
+      return;
     }
-    UserCheck();
-  },[user])//Should be based off of user data changing. Likely a userContext of some kind.
+    else
+    {
+      UserCheck();
+    }
+    
+  },[token])//Should be based off of user data changing. Likely a userContext of some kind.
   return {validToken, userType};
 }
 
