@@ -20,6 +20,10 @@ exports.up = function(knex) {
       table.increments('id').primary();
       table.string('name');
     })
+    .createTable('type', table => {
+      table.increments('id').primary();
+      table.string('name');
+    })
     .createTable('users', table => {
       table.increments('id').primary();
       table.string('first_name');
@@ -40,6 +44,8 @@ exports.up = function(knex) {
       table.string('name');
       table.integer('interval');
       table.string('source', 500);
+      table.integer('type_id').unsigned();
+      table.foreign('type_id').references('type.id');
     })
     .createTable('user_duties', table => {
       table.increments('id').primary();
@@ -81,6 +87,7 @@ exports.down = function(knex) {
   .dropTableIfExists('trainings')
   .dropTableIfExists('users')
   .dropTableIfExists('units')
+  .dropTableIfExists('type')
   .dropTableIfExists('ranks')
   .dropTableIfExists('roles')
   .dropTableIfExists('duties')
