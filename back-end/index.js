@@ -108,7 +108,6 @@ app.get('/duties/:user_id', async (req, res) => {
     const duties = await knex('user_duties')
       .join('duties', 'user_duties.duty_id', 'duties.id')
       .where('user_duties.user_id', userId)
-      .first()
     if (duties) {
       res.json(duties);
     } else {
