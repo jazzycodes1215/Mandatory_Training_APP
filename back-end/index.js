@@ -357,6 +357,8 @@ app.get('/requiredTraining', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving training data', error });
   }
   });
+
+  
 app.get('/requiredTraining/:id', async (req, res) => {
   const {id} = req.params;
   try {
@@ -377,6 +379,7 @@ app.get('/requiredTraining/:id', async (req, res) => {
     console.log(error)
   }
 })
+
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
     const newTraining = req.body;
