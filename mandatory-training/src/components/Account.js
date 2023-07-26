@@ -25,6 +25,8 @@ export default function Account() {
     const [updated, setUpdated] = useState(false);
     useEffect(() => {
         fetchAccount();
+        // fetchDuties();
+        fetchUserDuties();
         fetchUnits();
     }, [userID, validatedUserType, updated]);
 
@@ -48,7 +50,7 @@ export default function Account() {
             setPassword(data.password);
             setRank(data.rank_id);
         } catch (error) {
-            console.error('Error fetching the item', error);
+            console.error('Error fetching user data', error);
         }
     };
 
@@ -62,9 +64,27 @@ export default function Account() {
             const data = await response.json();
             setSupervisor(data);
         } catch (error) {
-            console.error('Error fetching the item', error);
+            console.error('Error fetching supervisor data', error);
         }
     }
+
+    const fetchUserDuties = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/duties/${user}`);
+            const data = await response.json();
+            setUserDuties(data);
+        } catch (error) {
+            console.error('Error fetching user duties', error);
+        }
+    }
+
+    const Duties = () => (
+        <DutiesList>
+        {userDuties.map((duty) => (
+            <DutyLi key={duty.id}>{duty.title}</DutyLi>
+        ))}
+        </DutiesList>
+    );
 
     const fetchUnits = async () => {
         try {
@@ -227,7 +247,7 @@ export default function Account() {
                         </Column>
                         <Column>
                             <Label for="duties">Duties:</Label>
-                            <AccountInfo id="duties">test</AccountInfo>
+                            <AccountInfo id="duties">{Duties()}</AccountInfo>
                         </Column>
                     </Row>
                 </AccountInfoContainer>
@@ -287,4 +307,17 @@ const ButtonContainer = styled.div`
 display: flex;
 justify-content: center;
 margin: 50px;
+`
+const DutiesList = styled.ul`
+overflow: auto;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+line-clamp: 3;
+-webkit-box-orient: vertical;
+list-style-type: none;
+`
+const DutyLi = styled.li`
+&:hover {
+    background-color: WhiteSmoke;
+}
 `
