@@ -537,8 +537,35 @@ app.delete('/units/:id', async (req, res) => {
 });
 //////////////////////////////////////////////////UNIT ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
+//Endpoint for Fetching Notifications for a Specific User:
+app.get('/notifications/:user_id', async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const notifications = await knex('training_status')
+    .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
+    .where({ user_id: userId })
+    .orderBy('submission_date', 'desc');
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+});
 
+//Endpoint for marking Notifications as read
+app.patch('/notifications/:user_id', async (req, res) => {
+  try {
+    const notificationsId = req.params.id;
+    const notifications = await knex('training_status')
+    .where({ id: notificationsId })
+    .update({ read_status: true });
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking notification', error });
+  }
+});
 
+//////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
 /*
 //return subordinates
