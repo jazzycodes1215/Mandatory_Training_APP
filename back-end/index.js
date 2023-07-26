@@ -680,3 +680,42 @@ app.listen(port, () => {
 
   console.log(`Example app listening on port ${port}`)
 })
+
+app.get('/status/:unitId', async (req, res) => {
+  const unitId = req.params.unitId;
+
+  try {
+    const users = await knex('users')
+      .select('users.*', 'trainings.name as training_name', 'trainings.interval', 'training_status.*')
+      .where('users.unit_id', unitId)
+      .join('user_duties', 'users.id', 'user_duties.user_id')
+      .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
+      .join('trainings', 'duty_trainings.training_id', 'trainings.id')
+      .leftJoin('training_status', (join) => {
+        join
+          .on('users.id', 'training_status.user_id')
+          .andOn('trainings.id', 'training_status.training_id');
+      });
+
+    // Group the users by user_id and calculate the most recent completion date for each training
+    const groupedUsers = users.reduce((acc, user) => {
+      const userId = user.id;
+      if (!acc[userId]) {
+        acc[userId] = { ...user, completetion_date: null };
+      }
+      if (
+        user.completetion_date &&
+        (!acc[userId].completetion_date || user.completetion_date > acc[userId].completetion_date)
+      ) {
+        acc[userId].completetion_date = user.completetion_date;
+      }
+      return acc;
+    }, {});
+
+    const result = Object.values(groupedUsers);
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving users', error });
+  }
+});
