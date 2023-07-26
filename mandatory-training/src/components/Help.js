@@ -8,7 +8,7 @@ export default function Help() {
     const { testStr } = useContext(AppContext);
     return (
         <>
-            <section className="container">
+            <section className="holder">
                 <div className="left-side">
                     <h2>About the App</h2>
                     <p>This is an application created by Mr. Jaylin Moore, Mr. Anthony Caldemone, Mr. Nicholas Johnson, Mr. Gabriel Losey, and Mr. Josh Penrod</p>
