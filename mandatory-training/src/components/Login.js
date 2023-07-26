@@ -22,6 +22,10 @@ export default function Login() {
         console.log(validToken);
         if(validToken)
         {
+            if(validatedUserType === 1)
+            {
+                navigate("/account")
+            }
             navigate('/')
         }
     }, validToken)
