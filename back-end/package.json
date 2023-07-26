@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "it": "npm uninstall bcrypt && npm i bcrypt",
     "start": "npx knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run && nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
