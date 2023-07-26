@@ -24,7 +24,7 @@ let secretKey = '';
 <Route path='/*' element={<Help />} /> catch all */}
 
 
-/* Data is printed in this format 
+/* Data is printed in this format
  [
     {
         "id": 1,
@@ -58,8 +58,8 @@ app.get('/users', async (req, res) => {
     .select('*')
     .then(data => res.status(200).json(data));
   } catch (error) {
-    res.status(500).json({ 
-      message: 'Error retrieving users', error 
+    res.status(500).json({
+      message: 'Error retrieving users', error
     });
   }
 });
@@ -75,8 +75,8 @@ app.post('/users', async (req, res) => {
       res.status(200).json({message: successful});
     })
   } catch (error) {
-    res.status(500).json({ 
-      message: 'Error creating user', error 
+    res.status(500).json({
+      message: 'Error creating user', error
     });
   }
 });
@@ -127,7 +127,7 @@ app.patch('/users/:id', async (req, res) => {
     const userUpdate = await knex('users')
     .where('id', userId)
     .update(updatedUser);
-    
+
     if (userUpdate) {
       res.json({ message: 'User updated successfully' });
     } else {
@@ -199,7 +199,7 @@ app.post('/registration', async (req, res) => {
     .where('dodID', dodID)
     .first();
     if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user.password); 
+      const passwordCheck = bcrypt.compareSync(password, user.password);
       console.log(passwordCheck);
       if (passwordCheck) {
         const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
@@ -207,7 +207,7 @@ app.post('/registration', async (req, res) => {
       })
       res.status(201).json({id: user.id, token: token});
     } else {
-      res.status(401).json({  message: 'Invalid username or password detected' }); 
+      res.status(401).json({  message: 'Invalid username or password detected' });
     }
     } else {
       res.status(402).json({  message: 'User not detected' });
@@ -231,14 +231,14 @@ app.patch('/registration/:id', async (req, res) => {
       password: hashedPass,
       supervisor_id: Number(supervisor_id),
   }
-  
+
   try {
     const user = await knex('users')
     .where('id', userId)
     .update(userAccountUpdate)
     .catch(e=>console.log(e));
     if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user.password); 
+      const passwordCheck = bcrypt.compareSync(password, user.password);
       console.log(passwordCheck);
       if (passwordCheck) {
         const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
@@ -246,7 +246,7 @@ app.patch('/registration/:id', async (req, res) => {
       })
       res.status(201).json({id: user.id, token: token});
     } else {
-      res.status(401).json({  message: 'Invalid username or password detected' }); 
+      res.status(401).json({  message: 'Invalid username or password detected' });
     }
     } else {
       res.status(402).json({  message: 'User not detected' });
@@ -304,21 +304,21 @@ app.post('/login', async (req, res) => {
         {
           if(decoded.exp < Date.now())
           {
-            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token})
+            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token, user: decoded.user_id})
           }
         }
       })
       return;
     }
     const user = await knex('users')
-    .select('id', 'email', 'password', 'role_id')
+    .select('id', 'email', 'password', 'role_id', "unit_id")
     .where('email', email)
     .first();
     if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user.password); 
+      const passwordCheck = bcrypt.compareSync(password, user.password);
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
+        const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id, unit: user.unit_id}, secretKey, { algorithm: 'RS256' }, function(err, token) {
           if(err)
           {
             console.log(err);
@@ -327,13 +327,13 @@ app.post('/login', async (req, res) => {
           else
           {
             console.log(user);
-            res.status(201).json({id: user.id, token: token, userType: user.role_id});
+            res.status(201).json({id: user.id, token: token, userType: user.role_id, unit: user.unit_id});
             return;
           }
       })
-      
+
     } else {
-      res.status(401).json({  message: 'Invalid username or password detected' }); 
+      res.status(401).json({  message: 'Invalid username or password detected' });
     }
     } else {
       res.status(402).json({  message: 'User not detected' });
@@ -358,7 +358,26 @@ app.get('/requiredTraining', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving training data', error });
   }
   });
+app.get('/requiredTraining/:id', async (req, res) => {
+  const {id} = req.params;
+  try {
+    //I tried not to use knex.raw I swear.
+    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
+    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
+    WHERE user_duties.user_id = ?`, [id])
+    if(trainings?.rows)
+    {
+      res.status(201).json(trainings?.rows)
+    }
+    else
+    {
+      res.status(404);
+    }
 
+  } catch (error) {
+    console.log(error)
+  }
+})
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
     const newTraining = req.body;
@@ -420,17 +439,17 @@ app.get('/requiredTraining/dutyTrainings:id', async (req, res) => {
       .select("*")
       .where('duty_trainings.id', dutyId)
       .orderBy('trainings.id', 'desc')
-  
+
     if (trainingRequirements.length === 0) {
       return res.status(404).json({ message: 'No training found for the given duty ID' });
     }
-  
+
     res.json(trainingRequirements);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving training requirements', error });
   }
   });
-  
+
 
 //GET specific training per duty
 app.get('/requiredTraining/duties/:duty_id', async (req, res) => {
@@ -461,8 +480,8 @@ app.get('/units', async (req, res) => {
     .select('*')
     .then(data => res.status(200).json(data));
   } catch (error) {
-    res.status(500).json({ 
-      message: 'Error retrieving units', error 
+    res.status(500).json({
+      message: 'Error retrieving units', error
     });
   }
 });
@@ -477,8 +496,8 @@ app.post('/units', async (req, res) => {
       res.status(200).json({message: successful});
     })
   } catch (error) {
-    res.status(500).json({ 
-      message: 'Error creating unit', error 
+    res.status(500).json({
+      message: 'Error creating unit', error
     });
   }
 });
@@ -508,7 +527,7 @@ app.patch('/units/:id', async (req, res) => {
     const unitUpdate = await knex('units')
     .where('id', unitId)
     .update(updatedUnit);
-    
+
     if (unitUpdate) {
       res.json({ message: 'Unit updated successfully' });
     } else {
@@ -584,6 +603,6 @@ app.listen(port, () => {
     if(err) console.log(err)
     secretKey = privateKey;
   });
-  
+
   console.log(`Example app listening on port ${port}`)
 })
