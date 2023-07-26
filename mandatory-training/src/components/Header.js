@@ -37,7 +37,9 @@ export default function Header() {
     alert('You are logged out');
     navigate('/login');
   }
+
   const {validToken, validatedUserType} = useUserCheck()
+
   return (
     <AppBar position="static" sx={{ backgroundColor: 'MidnightBlue' }}>
       <Container maxWidth="xl">
@@ -148,6 +150,10 @@ export default function Header() {
               <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
                 <Typography  textAlign="center">Account</Typography>
               </MenuItem>
+              {validatedUserType === 4 ?
+              <MenuItem onClick={()=>navigate('/administrator')}>
+                <Typography textAlign="center">Admin Page</Typography>
+              </MenuItem> : []/*It doesn't take react fragments... */}
               {validToken ?
                 <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
                   <Typography textAlign="center">Logout</Typography>

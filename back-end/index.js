@@ -88,7 +88,7 @@ app.get('/users/:id', async (req, res) => {
     const user = await knex('users')
       .join('ranks', 'users.rank_id', 'ranks.id')
       .join('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name')
+      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -227,23 +227,35 @@ app.patch('/registration/:id', async (req, res) => {
       last_name: last_name,
       rank_id: rank_id,
       email: email,
-      password: hashedPass,
-      supervisor_id: Number(supervisor_id),
+      role_id: 2
   }
 
   try {
     const user = await knex('users')
     .where('id', userId)
     .update(userAccountUpdate)
+    .returning('*')
     .catch(e=>console.log(e));
+
     if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user.password);
+      const passwordCheck = bcrypt.compareSync(password, user[0].password);
       console.log(passwordCheck);
       if (passwordCheck) {
-        const token = jwt.sign({ id: user.id }, secretKey, { algorithm: 'RS256' }, function(err, token) {
-          console.log('token',token);
+        const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id, unit: user.unit_id}, secretKey, { algorithm: 'RS256' }, function(err, token) {
+
+          if(err)
+          {
+            console.log(err);
+            res.status(500).json({message: 'Unknown Error'});
+            return;
+          }
+          else
+          {
+
+            res.status(201).json({id: user.id, token: token, userType: user.role_id, unit: user.unit_id});
+            return;
+          }
       })
-      res.status(201).json({id: user.id, token: token});
     } else {
       res.status(401).json({  message: 'Invalid username or password detected' });
     }
@@ -571,17 +583,32 @@ app.get('/notifications/:user_id', async (req, res) => {
 });
 
 //Endpoint for marking Notifications as read
-app.patch('/notifications/:user_id', async (req, res) => {
+app.patch('/notifications/:id/mark-as-read', async (req, res) => {
   try {
     const notificationsId = req.params.id;
-    const notifications = await knex('training_status')
+    await knex('training_status')
     .where({ id: notificationsId })
     .update({ read_status: true });
-    res.json(notifications);
+    res.json({ message: 'Notification marked as read' });
   } catch (error) {
     res.status(500).json({ message: 'Error marking notification', error });
   }
 });
+
+//Endpoint for sending push-notifications to users (might require a 3rd party api)
+// app.post('/notifications/:user_id', async (req, res) => {
+//   try {
+//     const { id, user_id, title, body } = req.body;
+//     const userId = req.params.user_id;
+//     const notifications = await knex('training_status')
+//     .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
+//     .where({ user_id: userId })
+//     .orderBy('submission_date', 'desc');
+//     res.json(notifications);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching notifications', error });
+//   }
+// });
 
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
 

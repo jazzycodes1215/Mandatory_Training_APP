@@ -2,26 +2,34 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom'
 import { AppContext } from '../App'
 import styled from 'styled-components';
+import useUserCheck from '../hooks/useUserCheck'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 
+
 export default function RequiredTraining() {
     const { testStr, isSupervisor, user } = useContext(AppContext);
     const [requiredTraining, setRequiredTraining] = useState([]);
     const [subordinates, setSubordiantes] = useState([]);
+    const {validToken, validatedUserType, userID} = useUserCheck()
 
     useEffect(() => {
         fetchRequiredTraining();
         fetchSubordinates();
-    }, []);
+    }, [validToken]);
 
     const fetchRequiredTraining = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/required-training/:${user}`);
+            if(!userID)
+            {
+                return;
+            }
+            const response = await fetch(`http://localhost:4000/requiredtraining/${userID}`);
             const data = await response.json();
+            console.log(data);
             setRequiredTraining(data);
         } catch (error) {
             console.error('Error fetching your required training', error);
@@ -30,7 +38,7 @@ export default function RequiredTraining() {
     const fetchSubordinates = async () => {
         if (isSupervisor) {
             try {
-                const response = await fetch(`http://localhost:3001/users?supervisor=${user}`);
+                const response = await fetch(`http://localhost:4000/users?supervisor=${userID}`);
                 const data = await response.json();
                 setSubordiantes(data);
             } catch (error) {
@@ -42,7 +50,9 @@ export default function RequiredTraining() {
     };
 
     return (
-        <RequiredTrainingWrapper>
+        <>
+            {validToken ?
+            <RequiredTrainingWrapper>
             <InfoContainer>
                 <ListHeading>
                     <ListTitle>
@@ -65,16 +75,16 @@ export default function RequiredTraining() {
                                 </Link>
                             }
                             >
-                            <ListItemText 
-                            primary={training.training_name}
-                            secondary={training.due_date}
+                            <ListItemText
+                            primary={training.name}
+                            secondary={training.interval}
                             />
                             </ListItem>
                         ))}
                     </List>
                 </ListContainer>
             </InfoContainer>
-            {isSupervisor ? 
+            {isSupervisor ?
                  <ListContainer>
                     <List sx={{ width: '100%', height: '100%', bgcolor: 'background.paper' }}>
                         {subordinates.map((subordinate, index) => (
@@ -89,7 +99,7 @@ export default function RequiredTraining() {
                                 </Link>
                             }
                             >
-                            <ListItemText 
+                            <ListItemText
                             primary={subordinate.training_name}
                             secondary={subordinate.requiredTraining}
                             />
@@ -101,7 +111,8 @@ export default function RequiredTraining() {
                 <></>
             }
 
-        </RequiredTrainingWrapper>
+        </RequiredTrainingWrapper> : <p>You need to be logged in to access this page!</p>}
+        </>
     )
 }
 
