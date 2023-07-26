@@ -11,7 +11,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Account() {
     const {validatedUserType, validToken, userID} = useUserCheck();
-    const {setToken} = useContext(AppContext);
+    const {setToken, user} = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
     const [account, setAccount] = useState({});
     const [supervisor, setSupervisor] = useState({});
@@ -23,6 +23,7 @@ export default function Account() {
     const [password, setPassword] = useState(null);
     const [rank, setRank] = useState(null);
     const [updated, setUpdated] = useState(false);
+    const [userDuties, setUserDuties] = useState([]);
     useEffect(() => {
         fetchAccount();
         // fetchDuties();
