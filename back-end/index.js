@@ -370,6 +370,24 @@ app.get('/requiredTraining', async (req, res) => {
   }
   });
 
+  app.get('/training/:id', async (req, res) => {
+    const trainingId = req.params.id;
+    try {
+      const training = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('trainings.id', trainingId)
+        .first()
+      if (training) {
+        res.json(training);
+      } else {
+        res.status(404).json({ message: 'Training not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training', error });
+    }
+  });
+
   
 app.get('/requiredTraining/:id', async (req, res) => {
   const {id} = req.params;
