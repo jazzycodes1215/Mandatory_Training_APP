@@ -54,6 +54,18 @@ exports.up = function(knex) {
       table.foreign('duty_id').references('duties.id');
       table.integer('training_id').unsigned();
       table.foreign('training_id').references('trainings.id');
+    })
+    .createTable('training_status', table => {
+      table.increments('id').primary();
+      table.integer('user_id').unsigned();
+      table.foreign('user_id').references('users.id');
+      table.integer('training_id').unsigned();
+      table.foreign('training_id').references('trainings.id');
+      table.string('comment');
+      table.boolean('read_status');
+      table.datetime('submission_date');
+      table.date('completetion_date');
+      table.date('approval_date');
     });
 };
 
@@ -71,4 +83,6 @@ exports.down = function(knex) {
   .dropTableIfExists('ranks')
   .dropTableIfExists('roles')
   .dropTableIfExists('duties')
+  .dropTableIfExists('notifications')
+  .dropTableIfExists('user_trainings')
 };
