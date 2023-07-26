@@ -6,6 +6,7 @@
   align-items: center;
   background-image: url("https://www.epiloguesystems.com/wp-content/uploads/2022/10/training-systems.webp");
   background-size: cover;
+  background-position: 2500%;
 }
 
 .container {

@@ -13,10 +13,14 @@ export default function Account() {
     const [editMode, setEditMode] = useState(false);
     const [account, setAccount] = useState({});
     const [supervisor, setSupervisor] = useState({});
+    const [userDuties, setUserDuties] = useState([]);
+    const [duties, setDuties] = useState([]);
 
     useEffect(() => {
         setRegistered(true);
         fetchAccount();
+        // fetchDuties();
+        fetchUserDuties();
     }, []);
 
     useEffect(() => {
@@ -29,7 +33,7 @@ export default function Account() {
             const data = await response.json();
             setAccount(data);
         } catch (error) {
-            console.error('Error fetching the item', error);
+            console.error('Error fetching user data', error);
         }
     };
 
@@ -39,9 +43,27 @@ export default function Account() {
             const data = await response.json();
             setSupervisor(data);
         } catch (error) {
-            console.error('Error fetching the item', error);
+            console.error('Error fetching supervisor data', error);
         }
     }
+
+    const fetchUserDuties = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/duties/${user}`);
+            const data = await response.json();
+            setUserDuties(data);
+        } catch (error) {
+            console.error('Error fetching user duties', error);
+        }
+    }
+
+    const Duties = () => (
+        <DutiesList>
+        {userDuties.map((duty) => (
+            <DutyLi key={duty.id}>{duty.title}</DutyLi>
+        ))}
+        </DutiesList>
+    );
 
     const handleEditModeOn = () => {
         setEditMode(true);
@@ -165,7 +187,7 @@ export default function Account() {
                         </Column>
                         <Column>
                             <Label for="duties">Duties:</Label>
-                            <AccountInfo id="duties">test</AccountInfo>
+                            <AccountInfo id="duties">{Duties()}</AccountInfo>
                         </Column>
                     </Row>
                 </AccountInfoContainer>
@@ -225,4 +247,17 @@ const ButtonContainer = styled.div`
 display: flex;
 justify-content: center;
 margin: 50px;
+`
+const DutiesList = styled.ul`
+overflow: auto;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+line-clamp: 3; 
+-webkit-box-orient: vertical;
+list-style-type: none;
+`
+const DutyLi = styled.li`
+&:hover {
+    background-color: WhiteSmoke;
+}
 `
