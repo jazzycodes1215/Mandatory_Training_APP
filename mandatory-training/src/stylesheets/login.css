@@ -10,18 +10,20 @@
 }
 
 .container {
-  background-color: black;
+  background-color: white;
   border-radius: 5px;
   border-width: 5px;
-  border-color: white;
+  border-color: black;
   display: flex;
   flex-direction: column;
-  color: crimson;
+  color: midnightblue;
+  padding: 10px;
 }
 
 .title {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 p {
@@ -30,7 +32,7 @@ p {
   justify-content: center;
 }
 
-.form {
+.login {
   display:flex;
   flex-direction: column;
 }
