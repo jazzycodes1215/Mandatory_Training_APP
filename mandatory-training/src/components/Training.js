@@ -90,7 +90,8 @@ export default function Training() {
                 <InnerTraining>
                     {requiredTraining.map((training, index) =>
                     <TrainingCard key={index}>
-                    {training.name}
+                    <h3>{training.name}</h3>
+                    <p>{training.type_id}</p>
                     </TrainingCard> )}
                 </InnerTraining>
             </Trainings>
@@ -101,9 +102,8 @@ export default function Training() {
 
 const TrainingCard = styled.div`
 display: grid;
-grid-template-columns: 1fr
-grid-row-columns: 
-border: 1px solid black;
+grid-template-columns: 1fr;
+border: 4px solid black;
 width: 20%;
 height: 100%
 `
