@@ -363,7 +363,8 @@ app.get('/requiredTraining', async (req, res) => {
   //
   try {
     const trainings = await knex('trainings')
-      .select("*")
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
       .then(data => res.status(200).json(data));
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving training data', error });
