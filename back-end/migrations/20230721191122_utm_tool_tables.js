@@ -75,6 +75,7 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
   return knex.schema
+  .dropTableIfExists('training_status')
   .dropTableIfExists('duty_trainings')
   .dropTableIfExists('user_duties')
   .dropTableIfExists('trainings')
@@ -83,5 +84,4 @@ exports.down = function(knex) {
   .dropTableIfExists('ranks')
   .dropTableIfExists('roles')
   .dropTableIfExists('duties')
-  .dropTableIfExists('training_status')
 };
