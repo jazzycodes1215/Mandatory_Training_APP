@@ -571,17 +571,32 @@ app.get('/notifications/:user_id', async (req, res) => {
 });
 
 //Endpoint for marking Notifications as read
-app.patch('/notifications/:user_id', async (req, res) => {
+app.patch('/notifications/:id/mark-as-read', async (req, res) => {
   try {
     const notificationsId = req.params.id;
-    const notifications = await knex('training_status')
+    await knex('training_status')
     .where({ id: notificationsId })
     .update({ read_status: true });
-    res.json(notifications);
+    res.json({ message: 'Notification marked as read' });
   } catch (error) {
     res.status(500).json({ message: 'Error marking notification', error });
   }
 });
+
+//Endpoint for sending push-notifications to users (might require a 3rd party api)
+// app.post('/notifications/:user_id', async (req, res) => {
+//   try {
+//     const { id, user_id, title, body } = req.body;
+//     const userId = req.params.user_id;
+//     const notifications = await knex('training_status')
+//     .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
+//     .where({ user_id: userId })
+//     .orderBy('submission_date', 'desc');
+//     res.json(notifications);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching notifications', error });
+//   }
+// });
 
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
