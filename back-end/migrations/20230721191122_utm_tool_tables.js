@@ -83,6 +83,5 @@ exports.down = function(knex) {
   .dropTableIfExists('ranks')
   .dropTableIfExists('roles')
   .dropTableIfExists('duties')
-  .dropTableIfExists('notifications')
-  .dropTableIfExists('user_trainings')
+  .dropTableIfExists('training_status')
 };
