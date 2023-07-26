@@ -3,7 +3,7 @@ const { faker } = require('@faker-js/faker');
 
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> } 
+ * @returns { Promise<void> }
  */
 
 exports.seed = async function (knex) {
@@ -23,9 +23,9 @@ exports.seed = async function (knex) {
           email: faker.internet.email({ firstName: first_name, lastName: last_name }),
           password: bcrypt.hashSync('password', 10),
           dodID: faker.finance.accountNumber({ length: 9 }),
-          role_id: faker.number.int({ min: 2, max: 4 }),
+          role_id: faker.number.int({ min: 1, max: 4 }),
           supervisor_id: faker.number.int({ min: 1, max: numRowsToSeed }),
-          unit_id: 1
+          unit_id: faker.number.int({min: 0, max : 3})
       });
       }
       // Insert the fake data into the table
