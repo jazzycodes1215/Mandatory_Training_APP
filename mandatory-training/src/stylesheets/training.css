@@ -25,6 +25,7 @@ p {
    background-color: white;
    border: none;
    
+
    &:hover {
     cursor: pointer;
    }
@@ -32,4 +33,61 @@ p {
 
 .top > h2 {
     margin-bottom: 30px;
+}
+
+.activeBtn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    width: 160px;
+}
+
+
+.activeBtn:hover {
+background-color: #008CBA!important;
+color: white;
+}
+
+.deactiveBtn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    width: 160px;
+}
+
+deactiveBtn:hover{
+    background-color: #008CBA!important;
+    color: white!important;
+}
+.btnDeactivated {
+    background-color: white!important;
+    color: black!important;
+    border: 2px solid #008CBA!important;
+}
+
+.btnDeactivated:hover {
+    background-color: #008CBA!important;
+    color: white;
 }
