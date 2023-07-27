@@ -72,11 +72,30 @@ const FlexItem = styled.div `
 width: 40%;`
 
 const List = styled.ul `
+width: 100%;
 `
 
 const ListItem = styled.li `
+width: 100%;
 `
-//I dont even know how to style this. I mean I know how to style  it but I'm not even sure what to make it look like
-const Button = styled.button `
 
-`
+const Button = styled.button`
+    background-color: MidnightBlue;
+    color: white;
+    font-size: 1em;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid #007BFF;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: white;
+        color: #007BFF;
+    }
+
+    &:focus {
+        outline: none;
+        border: 2px solid #0056b3; // Darker blue border
+    }
+`;
