@@ -1,3 +1,9 @@
+.cdKnWO {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #OC3244;
+  background-color: #CAE3F7;
+}
+
 .holder {
   height: 500px;
   display: flex;
@@ -16,7 +22,7 @@
 }
 
 .left-side {
-  border: solid;
+  border: solid black;
   width: 40%;
   height: 100%;
   margin: 1rem;

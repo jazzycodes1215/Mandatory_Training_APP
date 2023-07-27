@@ -43,7 +43,7 @@ export default function Header() {
   return (
     <AppBar position="static" sx={{ backgroundColor: 'MidnightBlue' }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ py: 2 }}>
           <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
