@@ -7,7 +7,6 @@ import '../stylesheets/help.css';
 export default function Help() {
     const { testStr } = useContext(AppContext);
     return (
-        <div className="cdKnWO">
             <section className="holder">
                 <div className="left-side">
                     <h2>About the App</h2>
@@ -20,6 +19,5 @@ export default function Help() {
                     <section className="contact"><h2>Contact</h2></section>
                 </div>
             </section>
-        </div>
     )
 }

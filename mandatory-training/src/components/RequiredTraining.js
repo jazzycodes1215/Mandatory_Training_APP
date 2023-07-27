@@ -62,11 +62,33 @@ export default function RequiredTraining() {
                     <ListSubHeader>Access your mandatory training courses</ListSubHeader>
                 </ListHeading>
                 <ListContainer>
-                    <List sx={{ width: '100%', height: '100%', bgcolor: 'background.paper' }}>
+                    <List sx={
+                        { width: '99%',
+                        height: '100%', bgcolor:
+                        'background.paper',
+                        overflow: 'hidden',
+                        'overflow-y': 'scroll',
+                        padding: '0px',
+                        'margin-left': '1vw',
+                        '&::-webkit-scrollbar': {
+                            width: '10px',
+                          },
+                          '&::-webkit-scrollbar-track': {
+                            background: '#f1f1f1',
+                          },
+                          '&::-webkit-scrollbar-thumb': {
+                            background: '#888',
+                            borderRadius: '20px',
+                          },
+                          '&::-webkit-scrollbar-thumb:hover': {
+                            background: '#555',
+                          },
+                          }}>
                         {requiredTraining.map((training, index) => (
                             <ListItem
                             key={index}
                             disableGutters
+                            style={{'margin-bottom': '20px', padding: 0}}
                             secondaryAction={
                                 <Link to={`/required-training/${training.id}`}>
                                     <IconButton aria-label="info">
@@ -86,11 +108,12 @@ export default function RequiredTraining() {
             </InfoContainer>
             {isSupervisor ?
                  <ListContainer>
-                    <List sx={{ width: '100%', height: '100%', bgcolor: 'background.paper' }}>
+                    <List sx={{ width: '100%', height: '100%', bgcolor: 'background.paper'}}>
                         {subordinates.map((subordinate, index) => (
                             <ListItem
                             key={index}
                             disableGutters
+                            style={{margin: 0, padding: 0}}
                             secondaryAction={
                                 <Link to={`/required-training/subordinate`}>
                                     <IconButton aria-label="info">
@@ -125,10 +148,13 @@ height: 100%;
 `;
 const ListContainer = styled.div`
 flex-grow: 1;
-overflow: auto;
+height:68vh;
 border-radius: 10px;
+overflow: hidden;
+box-sizing: border-box;
 border: 2px solid black;
 `;
+
 const InfoContainer = styled.div`
 width: 100%;
 margin: 20px;
