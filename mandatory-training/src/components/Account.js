@@ -16,6 +16,7 @@ export default function Account() {
     const [account, setAccount] = useState({});
     const [supervisor, setSupervisor] = useState({});
     const [units, setUnits] = useState([]);
+    const [userDuties, setUserDuties] = useState([])
     const [firstname, setFirst] = useState(null);
     const [lastname, setLast] = useState(null);
     const [email, setEmail] = useState(null);
@@ -70,7 +71,7 @@ export default function Account() {
 
     const fetchUserDuties = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties/${user}`);
+            const response = await fetch(`http://localhost:4000/duties/${userID}`);
             const data = await response.json();
             setUserDuties(data);
         } catch (error) {
@@ -80,9 +81,10 @@ export default function Account() {
 
     const Duties = () => (
         <DutiesList>
-        {userDuties.map((duty) => (
+        {userDuties?.map ?
+        userDuties.map((duty) => (
             <DutyLi key={duty.id}>{duty.title}</DutyLi>
-        ))}
+        )) : <DutyLi key={userDuties.id}>{userDuties.title}</DutyLi>}
         </DutiesList>
     );
 
