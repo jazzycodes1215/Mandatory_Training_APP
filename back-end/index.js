@@ -786,64 +786,65 @@ app.get('/unit/:unit_id/users', async (req, res) => {
 // });
 
 
-// app.get('/unit/:unit_id/users-with-training', async (req, res) => {
-//   try {
-//     const unitId = req.params.unit_id;
-//     const usersWithTraining = await knex('users')
-//       .join('user_duties', 'users.id', '=', 'user_duties.user_id')
-//       .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
-//       .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
-//       .where('users.unit_id', unitId)
-//       .select(
-//         'users.id as user_id',
-//         'users.first_name',
-//         'users.last_name',
-//         'trainings.id as training_id',
-//         'trainings.name as training_name',
-//         'trainings.interval',
-//         'trainings.source',
-//         'duty_trainings.submission_date',
-//         'duty_trainings.completetion_date',
-//         'duty_trainings.approval_date',
-//         'training_status.comment',
-//         'training_status.read_status'
-//       )
-//       .leftJoin('training_status', function () {
-//         this.on('users.id', '=', 'training_status.user_id').andOn('trainings.id', '=', 'training_status.training_id');
-//       });
+app.get('/unit/:unit_id/users-with-training', async (req, res) => {
+  try {
+    const unitId = req.params.unit_id;
+    console.log('unitId:', unitId); 
+    const usersWithTraining = await knex('users')
+      .join('user_duties', 'users.id', '=', 'user_duties.user_id')
+      .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
+      .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
+    //   .leftJoin('training_status', function () {
+    //   this.on('users.id', '=', 'training_status.user_id').andOn('trainings.id', '=', 'training_status.training_id');
+    // })
+  .where('users.unit_id', unitId)
+  .select(
+    'users.id as user_id',
+    'users.first_name',
+    'users.last_name',
+    'trainings.id as training_id',
+    'trainings.name as training_name',
+    knex.raw('"trainings"."interval" as "interval"'),
+    'trainings.source',
+    // 'duty_trainings.submission_date',
+    // 'duty_trainings.completetion_date',
+    // 'duty_trainings.approval_date',
+    // knex.raw('"training_status"."comment" as "comment"'),
+    // knex.raw('"training_status"."read_status" as "read_status"'),
+  );
+  console.log('SQL Query:', usersWithTraining.toString());
+    // Group the results by users to combine all training requirements for each user
+    const usersGrouped = usersWithTraining.reduce((acc, user) => {
+      const userId = user.user_id;
+      if (!acc[userId]) {
+        acc[userId] = {
+          user_id: userId,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          trainings: []
+        };
+      }
+      acc[userId].trainings.push({
+        training_id: user.training_id,
+        training_name: user.training_name,
+        interval: user.interval,
+        source: user.source,
+        // submission_date: user.submission_date,
+        // completetion_date: user.completetion_date,
+        // approval_date: user.approval_date,
+        // comment: user.comment,
+        // read_status: user.read_status
+      });
+      return acc;
+    }, {});
 
-//     // Group the results by users to combine all training requirements for each user
-//     const usersGrouped = usersWithTraining.reduce((acc, user) => {
-//       const userId = user.user_id;
-//       if (!acc[userId]) {
-//         acc[userId] = {
-//           user_id: userId,
-//           first_name: user.first_name,
-//           last_name: user.last_name,
-//           trainings: []
-//         };
-//       }
-//       acc[userId].trainings.push({
-//         training_id: user.training_id,
-//         training_name: user.training_name,
-//         interval: user.interval,
-//         source: user.source,
-//         submission_date: user.submission_date,
-//         completetion_date: user.completetion_date,
-//         approval_date: user.approval_date,
-//         comment: user.comment,
-//         read_status: user.read_status
-//       });
-//       return acc;
-//     }, {});
+    const result = Object.values(usersGrouped);
 
-//     const result = Object.values(usersGrouped);
-
-//     res.json(result);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching users with training', error });
-//   }
-// });
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users with training', error });
+  }
+});
 
 
 
