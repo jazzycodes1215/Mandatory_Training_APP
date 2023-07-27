@@ -46,143 +46,149 @@ export default function Header() {
   const {validToken, validatedUserType} = useUserCheck()
 
   return (
-    <AppBar className='header' position="static">
-      <Container className='header-main' maxWidth="xl">
-        <Toolbar disableGutters sx={{ py: 2 }}>
-          <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            UTM Tool
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+    <HeaderBar className="muiIsWeird">
+      <AppBar position="sticky" sx={{top: '0', backgroundColor: 'MidnightBlue'}}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters sx={{ py: 2 }}>
+            <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              <MenuItem onClick={() => navigate('/required-training')}>
-                <Typography textAlign="center">Dashboard</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-          <SchoolIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            UTM Tool
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              UTM Tool
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                <MenuItem onClick={() => navigate('/required-training')}>
+                  <Typography textAlign="center">Dashboard</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+            <SchoolIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              UTM Tool
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                <Button
+                  onClick={() => navigate('/required-training')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Dashboard
+                </Button>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button
-                onClick={() => navigate('/required-training')}
+                onClick={handleUtmButtonClick}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                Dashboard
+                UTM View
               </Button>
-          </Box>
+            </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button
-              onClick={handleUtmButtonClick}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              UTM View
-            </Button>
-          </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <AccountCircleIcon sx={{color: 'White'}} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <AccountCircleIcon sx={{color: 'White'}} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-
-              {validToken ?
-              <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
-                <Typography  textAlign="center">Account</Typography>
-              </MenuItem> : []}
-              {validatedUserType === 4 ?
-              <MenuItem onClick={()=>navigate('/administrator')}>
-                <Typography textAlign="center">Admin Page</Typography>
-              </MenuItem> : []/*It doesn't take react fragments... */}
-              {validToken ?
-                <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
-                  <Typography textAlign="center">Logout</Typography>
-                </MenuItem>
-                :
-                <MenuItem onClick={() => {navigate('/login'); handleCloseUserMenu()}}>
-                  <Typography textAlign="center">Login</Typography>
-                </MenuItem>
-              }
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                {validToken ?
+                <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
+                  <Typography  textAlign="center">Account</Typography>
+                </MenuItem> : []}
+                {validatedUserType === 4 ?
+                <MenuItem onClick={()=>navigate('/administrator')}>
+                  <Typography textAlign="center">Admin Page</Typography>
+                </MenuItem> : []/*It doesn't take react fragments... */}
+                {validToken ?
+                  <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                  :
+                  <MenuItem onClick={() => {navigate('/login'); handleCloseUserMenu()}}>
+                    <Typography textAlign="center">Login</Typography>
+                  </MenuItem>
+                }
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </HeaderBar>
   );
 };
+
+const HeaderBar = styled.div`
+margin-bottom: 5em
+`

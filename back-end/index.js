@@ -101,6 +101,19 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+//endpoint for getting all duties
+app.get('/duties', async (req, res) => {
+  try {
+    const users = await knex('duties')
+    .select('*')
+    .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error retrieving duties', error
+    });
+  }
+});
+
 //endpoint for getting all duties for a specific user
 app.get('/duties/:user_id', async (req, res) => {
   const userId = req.params.user_id;
@@ -389,7 +402,7 @@ app.get('/requiredTraining', async (req, res) => {
     }
   });
 
-  
+
 app.get('/requiredTraining/:id', async (req, res) => {
   const {id} = req.params;
   try {
@@ -687,7 +700,22 @@ app.get('/status/:unitId', async (req, res) => {
 
   try {
     const users = await knex('users')
-      .select('users.*', 'trainings.name as training_name', 'trainings.interval', 'training_status.*')
+      .select(
+        'users.id',
+        'users.rank_id',
+        'users.last_name',
+        'users.first_name',
+        'users.supervisor_id',
+        'training_status.comment',
+        'training_status.read_status',
+        'training_status.submission_date',
+        'training_status.completetion_date',
+        'training_status.approval_date',
+        'trainings.name as training_name',
+        'trainings.interval',
+        'trainings.source',
+        'training_status.*'
+      )
       .where('users.unit_id', unitId)
       .join('user_duties', 'users.id', 'user_duties.user_id')
       .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
@@ -697,7 +725,6 @@ app.get('/status/:unitId', async (req, res) => {
           .on('users.id', 'training_status.user_id')
           .andOn('trainings.id', 'training_status.training_id');
       });
-
     // Group the users by user_id and calculate the most recent completion date for each training
     const groupedUsers = users.reduce((acc, user) => {
       const userId = user.id;
@@ -732,7 +759,7 @@ app.get('/status/:unitId', async (req, res) => {
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
 //     const unitId = req.params.unit_id;
-//     console.log('unitId:', unitId); 
+//     console.log('unitId:', unitId);
 //     const usersWithTraining = await knex('users')
 //       .join('user_duties', 'users.id', '=', 'user_duties.user_id')
 //       .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
