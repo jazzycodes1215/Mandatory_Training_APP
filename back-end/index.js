@@ -869,7 +869,7 @@ app.get('/unit/status/:unitId', async (req, res) => {
   const unitId = req.params.unitId;
 
   try {
-    const trainings = await knex('users')
+    const users = await knex('users')
       .select(
         'users.rank_id',
         'users.last_name',
@@ -891,38 +891,22 @@ app.get('/unit/status/:unitId', async (req, res) => {
           .andOn('trainings.id', 'training_status.training_id');
       });
 
-    const usersTrainingStatus = {};
-
-    // Group trainings by user_id and store the most recent completion date for each training
-    trainings.forEach((training) => {
-      const userId = training.user_id;
-      if (!usersTrainingStatus[userId]) {
-        usersTrainingStatus[userId] = [];
+    // Group the training data by user information
+    const groupedData = users.reduce((acc, user) => {
+      const { rank_id, last_name, first_name, supervisor_id } = user;
+      const userData = acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`];
+      if (userData) {
+        userData.push(user);
+      } else {
+        acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`] = [user];
       }
-      usersTrainingStatus[userId].push(training);
-    });
+      return acc;
+    }, {});
 
-    // Process the data for each user to find the most recent completion date for each training
-    for (const userId in usersTrainingStatus) {
-      const userTrainings = usersTrainingStatus[userId].reduce((acc, training) => {
-        const trainingName = training.training_name;
-        if (!acc[trainingName]) {
-          acc[trainingName] = { ...training, completetion_date: null };
-        }
-        if (
-          training.completetion_date &&
-          (!acc[trainingName].completetion_date || training.completetion_date > acc[trainingName].completetion_date)
-        ) {
-          acc[trainingName].completetion_date = training.completetion_date;
-        }
-        return acc;
-      }, {});
+    const result = Object.values(groupedData);
 
-      usersTrainingStatus[userId] = Object.values(userTrainings);
-    }
-
-    res.json(usersTrainingStatus);
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving unit status', error });
+    res.status(500).json({ message: 'Error retrieving users', error });
   }
 });
