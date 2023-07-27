@@ -6,12 +6,11 @@ import useUserCheck from '../hooks/useUserCheck'
 
 import { Button } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Account() {
     const {validatedUserType, validToken, userID} = useUserCheck();
-    const {setToken, user} = useContext(AppContext);
+    const {setToken} = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
     const [account, setAccount] = useState({});
     const [supervisor, setSupervisor] = useState({});
@@ -24,9 +23,12 @@ export default function Account() {
     const [rank, setRank] = useState(null);
     const [updated, setUpdated] = useState(false);
     const [userDuties, setUserDuties] = useState([]);
+    const [duties, setDuties] = useState([]);
+    const [users, setUsers] = useState([]);
     useEffect(() => {
         fetchAccount();
-        // fetchDuties();
+        fetchDuties();
+        fetchUsers();
         fetchUserDuties();
         fetchUnits();
     }, [userID, validatedUserType, updated]);
@@ -34,6 +36,26 @@ export default function Account() {
     useEffect(() => {
         fetchSupervisor();
     }, [account]);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/users`);
+            const data = await response.json();
+            setUsers(data);
+        } catch (error) {
+            console.error('Error fetching user duties', error);
+        }
+    }
+
+    const fetchDuties  = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/duties`);
+            const data = await response.json();
+            setDuties(data);
+        } catch (error) {
+            console.error('Error fetching user duties', error);
+        }
+    }
 
     const fetchAccount = async () => {
         try {
@@ -106,15 +128,12 @@ export default function Account() {
         setEditMode(true);
     }
 
-    const handleConfirmEdit = () => {
-        setEditMode(false);
-    }
-
     const handleCancelEdit = () => {
         setEditMode(false);
     }
 
     const handleSubmitDetails = () => {
+        setEditMode(false);
         handlePatch();
     }
 
@@ -147,32 +166,22 @@ export default function Account() {
     const EditDisplay = (<AccountInfoContainer>
         <Row>
             <Column>
+                <Label for="inputEmail">Email:</Label>
+                <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
+            </Column>
+            <Column>
+                <Label for="inputPassword">Password (8 character minimum):</Label>
+                <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
                 <Label for="inputFirstName">First Name:</Label>
                 <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputFirstName" type="text" value={firstname ?? account.first_name} required></InputAccountInfo>
             </Column>
             <Column>
                 <Label for="inputLastName">Last Name:</Label>
                 <InputAccountInfo onChange={(e)=>{setLast(e.target.value)}} id="inputLastName" type="text" value={lastname ?? account.last_name} required></InputAccountInfo>
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                <Row>
-                <Label>Rank</Label>
-                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
-                        <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
-                        <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
-                        <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
-                        <option value="10">O-1</option><option value="11">O-2</option><option value="12">O-3</option>
-                        <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
-                        <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
-                        <option value="19">O-10</option>
-                    </SelectAccountInfo>
-                </Row>
-            </Column>
-            <Column>
-                <Label for="inputPassword">Password (8 character minimum):</Label>
-                <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
             </Column>
         </Row>
         <Row>
@@ -188,8 +197,39 @@ export default function Account() {
                 </SelectAccountInfo>
             </Column>
             <Column>
+                <Label for="selectSupervisor">Supervisor:</Label>
+                <InputAccountInfo id="selectSupervisor" list="supervisors"></InputAccountInfo>
+                    <datalist id="supervisors">
+                        {users?.map((element)=> {
+                            return (
+                                <option value={element.id}>{element.first_name} {element.last_name}</option>
+                            )
+                        })}
+                    </datalist>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Label>Rank: </Label>
+                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
+                        <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
+                        <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
+                        <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
+                        <option value="10">O-1</option><option value="11">O-2</option><option value="12">O-3</option>
+                        <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
+                        <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
+                        <option value="19">O-10</option>
+                    </SelectAccountInfo>
+            </Column>
+            <Column>
                 <Label for="selectDuties">Duties:</Label>
-                <SelectAccountInfo id="selectDuties" multiple required></SelectAccountInfo>
+                <SelectAccountInfo id="selectDuties" multiple required>
+                    {duties?.map((element)=> {
+                        return (
+                            <option value={element.id}>{element.title}</option>
+                        )
+                    })}
+                </SelectAccountInfo>
             </Column>
         </Row>
     </AccountInfoContainer>)
@@ -213,8 +253,8 @@ export default function Account() {
         </Row>
         <Row>
             <Column>
-                <Label for="rank">Rank:</Label>
-                <AccountInfo id="rank">{account.rank_name}</AccountInfo>
+                <Label for="unit">Unit:</Label>
+                <AccountInfo id="unit">{account.unit_name}</AccountInfo>
             </Column>
             <Column>
                 <Label for="supervisor">Supervisor:</Label>
@@ -223,8 +263,8 @@ export default function Account() {
         </Row>
         <Row>
             <Column>
-                <Label for="unit">Unit:</Label>
-                <AccountInfo id="unit">{account.unit_name}</AccountInfo>
+                <Label for="rank">Rank:</Label>
+                <AccountInfo id="rank">{account.rank_name}</AccountInfo>
             </Column>
             <Column>
                 <Label for="duties">Duties:</Label>
@@ -237,13 +277,12 @@ export default function Account() {
         {validToken ?
         <>
             <AccountHeader>
-                <h1>AccountInformation</h1>
+                <h1>Account Information</h1>
                 {validatedUserType === 1 ?
                     <span>Please enter missing account details</span>
                     :
                     editMode ?
                         <div>
-                            <CheckCircleIcon onClick={handleConfirmEdit}/>
                             <CancelIcon onClick={handleCancelEdit}/>
                         </div>
                         :
@@ -317,6 +356,8 @@ display: -webkit-box;
 line-clamp: 3;
 -webkit-box-orient: vertical;
 list-style-type: none;
+padding-left: 0;
+margin-top: 0;
 `
 const DutyLi = styled.li`
 &:hover {

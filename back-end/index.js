@@ -101,6 +101,19 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+//endpoint for getting all duties
+app.get('/duties', async (req, res) => {
+  try {
+    const users = await knex('duties')
+    .select('*')
+    .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error retrieving duties', error
+    });
+  }
+});
+
 //endpoint for getting all duties for a specific user
 app.get('/duties/:user_id', async (req, res) => {
   const userId = req.params.user_id;
