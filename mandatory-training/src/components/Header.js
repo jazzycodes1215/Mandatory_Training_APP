@@ -160,9 +160,11 @@ export default function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+
+              {validToken ?
               <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
                 <Typography  textAlign="center">Account</Typography>
-              </MenuItem>
+              </MenuItem> : []}
               {validatedUserType === 4 ?
               <MenuItem onClick={()=>navigate('/administrator')}>
                 <Typography textAlign="center">Admin Page</Typography>

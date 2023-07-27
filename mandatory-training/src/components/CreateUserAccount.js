@@ -73,7 +73,7 @@ export default function CreateUserAccount() {
                     <label>Email</label><input onChange={(e)=>setEmail(e.target.value)} type="textbox"></input>
                     <label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input>
                     <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>
-                    <button onClick={HandleSubmit}className="button">Login</button>
+                    <button onClick={HandleSubmit}className="button">Create Account</button>
                 </div>
             </section>
         </div>
