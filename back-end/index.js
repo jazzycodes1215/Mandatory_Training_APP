@@ -153,10 +153,12 @@ app.patch('/users/:id', async (req, res) => {
 //endpoint for deleting a user
 app.delete('/users/:id', async (req, res) => {
   const userId = req.params.id;
+
   try {
     const userDelete = await knex('users')
     .where('id', userId)
-    .del();
+    .del()
+    .catch(e=>console.log(e))
     if (userDelete) {
       res.json({ message: 'User deleted successfully' });
     } else {
