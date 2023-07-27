@@ -1,8 +1,8 @@
-.cdKnWO {
+/* .cdKnWO {
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: #OC3244;
   background-color: #CAE3F7;
-}
+} */
 
 .holder {
   height: 100%;
@@ -10,6 +10,9 @@
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #0C3244;
+  background-color: #CAE3F7;
 }
 
 .right-side {
@@ -24,8 +27,7 @@
 .left-side {
   border: solid black;
   width: 40%;
-  height: 100%;
-  margin: 1rem;
+  margin: 2rem 1rem 0.5rem 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
