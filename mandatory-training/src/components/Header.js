@@ -38,6 +38,10 @@ export default function Header() {
     navigate('/login');
   }
 
+  const handleUtmButtonClick = () => {
+    navigate('/unit-training-manager');
+  };
+
   const {validToken, validatedUserType} = useUserCheck()
 
   return (
@@ -125,6 +129,15 @@ export default function Header() {
               </Button>
           </Box>
 
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Button
+              onClick={handleUtmButtonClick}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              UTM View
+            </Button>
+          </Box>
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -147,9 +160,11 @@ export default function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+
+              {validToken ?
               <MenuItem onClick={() => {validToken ? navigate('/account') : navigate('/login'); handleCloseUserMenu()}}>
                 <Typography  textAlign="center">Account</Typography>
-              </MenuItem>
+              </MenuItem> : []}
               {validatedUserType === 4 ?
               <MenuItem onClick={()=>navigate('/administrator')}>
                 <Typography textAlign="center">Admin Page</Typography>

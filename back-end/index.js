@@ -826,3 +826,66 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
+<<<<<<< HEAD
+=======
+
+// app.get('/unit/:unit_id/users-with-training', async (req, res) => {
+//   try {
+//     const unitId = req.params.unit_id;
+//     const usersInUnit = await knex('users')
+//       .join('units', 'users.unit_id', '=', 'units.id')
+//       .where('users.unit_id', unitId)
+//       .select(
+//         'users.id',
+//         'users.first_name',
+//         'users.last_name',
+//         'users.email',
+//         'users.dodID',
+//         'users.rank_id',
+//         'users.role_id',
+//         'users.supervisor_id',
+//         'units.name as unit_name' // Use an alias for the unit name from the units table
+//       );
+
+//     res.json(usersInUnit);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching users in the unit', error });
+//   }
+// });
+
+app.get('/status/:unitId', async (req, res) => {
+  try {
+    const unitId = req.params.unit_id;
+    const usersInUnit = await knex('users')
+      .join('units', 'users.unit_id', '=', 'units.id')
+      .where('users.unit_id', unitId)
+      .select(
+        'users.id',
+        'users.first_name',
+        'users.last_name',
+        'users.email',
+        'users.dodID',
+        'users.rank_id',
+        'users.role_id',
+        'users.supervisor_id',
+        'units.name as unit_name' // Use an alias for the unit name from the units table
+      );
+
+    res.json(usersInUnit);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users in the unit', error });
+  }
+});
+
+/*
+Need user of x id
+Need duties of user
+Need trainings of user's duties
+Need status of user's duties' trainings
+
+Need users of x unit_id
+Need duties of users
+Need trainings of users' duties
+Need status of users' duties' trainings
+*/
+>>>>>>> main
