@@ -2,7 +2,7 @@ import { useState, useEffect, createContext} from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import {
-  Header, Help, Login, Account, RequiredTraining, UTM,
+  Header, Help, Login, Account, RequiredTraining, SubordinateTraining, UTM,
   Training, CreateTraining, Admin, UserAccount, CreateUserAccount
 } from './components';
 
@@ -46,6 +46,7 @@ const App = ()=> {
                             <Route path='/login/*' element={<Login />} />
                             <Route path='/account/*' element={<Account />} />
                             <Route path='/required-training/' element={<RequiredTraining />} />
+                            <Route path='/subordinate-training/:id' element={<SubordinateTraining />} />
                             {/* <Route path='/required-training/:training/*' element={<Training />} /> */}
                             <Route path='/training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />

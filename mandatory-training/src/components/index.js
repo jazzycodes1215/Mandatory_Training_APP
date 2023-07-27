@@ -9,8 +9,9 @@ import CreateTraining from './CreateTraining';
 import Admin from './Admin';
 import UserAccount from './UserAccount';
 import CreateUserAccount from './CreateUserAccount';
+import SubordinateTraining from './SubordinateTraining'
 
-export { 
-    Header, Help, Login, Account, RequiredTraining, UTM, 
-    Training, CreateTraining, Admin, UserAccount, CreateUserAccount 
+export {
+    Header, Help, Login, Account, RequiredTraining, UTM,
+    Training, CreateTraining, Admin, UserAccount, CreateUserAccount, SubordinateTraining
 }
