@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
+import useUserCheck from '../hooks/useUserCheck'
 
 export default function UtmUnitReadiness() {
   const [unitReadinessData, setUnitReadinessData] = useState(null);
+  const {unitID} = useUserCheck();
 
   // Fetch the unit readiness data when the component mounts
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
-      const unitId = 123; // Replace with the actual unitId or get it from props or state
       try {
-        const response = await fetch(`/status/${unitId}`);
+        const response = await fetch(`/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           setUnitReadinessData(data);

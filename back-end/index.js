@@ -778,14 +778,10 @@ app.get('/status/:unitId', async (req, res) => {
       .where('users.unit_id', unitId)
       .select(
         'users.id',
-        'users.first_name',
-        'users.last_name',
-        'users.email',
-        'users.dodID',
         'users.rank_id',
-        'users.role_id',
+        'users.last_name',
+        'users.first_name',
         'users.supervisor_id',
-        'units.name as unit_name' // Use an alias for the unit name from the units table
       );
 
     res.json(usersInUnit);
