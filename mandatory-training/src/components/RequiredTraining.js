@@ -63,11 +63,13 @@ export default function RequiredTraining() {
                 </ListHeading>
                 <ListContainer>
                     <List sx={
-                        { width: '100%',
+                        { width: '99%',
                         height: '100%', bgcolor:
                         'background.paper',
                         overflow: 'hidden',
                         'overflow-y': 'scroll',
+                        padding: '0px',
+                        'margin-left': '1vw',
                         '&::-webkit-scrollbar': {
                             width: '10px',
                           },

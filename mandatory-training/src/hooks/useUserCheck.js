@@ -90,6 +90,10 @@ export const useUserCheck = () =>
         setValid(true);
         sessionStorage.setItem("token", token);
       }
+      else
+      {
+        sessionStorage.clear();
+      }
 
     }
     if(authExp > Date.now())

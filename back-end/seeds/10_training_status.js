@@ -7,15 +7,9 @@ exports.seed = async function(knex) {
   await knex('training_status').del()
   await knex('training_status').insert([
     {id: 1, user_id: 4, training_id: 1, comment: 'Training complete',read_status: false, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'},
-<<<<<<< HEAD
-    {id: 2, user_id: 3, training_id: 1, comment: 'Training requires upload',read_status: false, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'},
-    {id: 3, user_id: 2, training_id: 1, comment: 'Training complete',read_status: false, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'},
-    {id: 4, user_id: 1, training_id: 1, comment: 'Training due',read_status: false, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'}
-=======
     {id: 2, user_id: 3, training_id: 4, comment: 'Training requires upload',read_status: true, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'},
     {id: 3, user_id: 2, training_id: 3, comment: 'Training complete',read_status: true, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'},
     {id: 4, user_id: 1, training_id: 2, comment: 'Training due',read_status: false, submission_date: '2023-07-25T12:00:00Z',completetion_date: '2023-07-30', approval_date: '2023-08-05'}
->>>>>>> main
   ]);
 };
 

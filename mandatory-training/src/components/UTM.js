@@ -1,48 +1,69 @@
-import { useState, useEffect, useContext, createContext } from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
-import styled from 'styled-components';
-import { AppContext } from '../App';
-import UtmUnitReadiness from './UtmUnitReadiness';
-import UtmTrainingManagement from './UtmTrainingManagement';
-import UtmPersonnelManagement from './UtmPersonnelManagement';
-import UtmNotifications from './UtmNotifications';
+  import { useState, useEffect, useContext, createContext } from 'react';
+  import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
+  import styled from 'styled-components';
+  import { AppContext } from '../App';
+  import UtmUnitReadiness from './UtmUnitReadiness';
+  import UtmTrainingManagement from './UtmTrainingManagement';
+  import UtmPersonnelManagement from './UtmPersonnelManagement';
+  import UtmNotifications from './UtmNotifications';
 
-export default function UTM() {
-  const initialSelectedTab = localStorage.getItem('selectedTab') || 'notifications';
-  const [selectedTab, setSelectedTab] = useState(initialSelectedTab);
+  export default function UTM() {
+    const initialSelectedTab = localStorage.getItem('selectedTab') || 'notifications';
+    const [selectedTab, setSelectedTab] = useState(initialSelectedTab);
 
-  useEffect(() => {
-    localStorage.setItem('selectedTab', selectedTab);
-  }, [selectedTab]);
+    useEffect(() => {
+      localStorage.setItem('selectedTab', selectedTab);
+    }, [selectedTab]);
 
-  const handleTabChange = (tab) => {
-    setSelectedTab(tab);
+    const handleTabChange = (tab) => {
+      setSelectedTab(tab);
+    };
+
+    return (
+      <>
+        {/* Buttons for notifications, unit readiness, and manage training */}
+        <Button onClick={() => handleTabChange('notifications')}>Notifications</Button>
+        <Button onClick={() => handleTabChange('unitReadiness')}>Unit Readiness</Button>
+        <Button onClick={() => handleTabChange('manageTraining')}>Manage Training</Button>
+        <Button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</Button>
+
+        {/* Conditional rendering based on the selected tab */}
+        {selectedTab === 'notifications' && (
+        <UtmNotifications />
+        )}
+
+        {selectedTab === 'unitReadiness' && (
+        <UtmUnitReadiness />
+        )}
+
+        {selectedTab === 'manageTraining' && (
+        <UtmTrainingManagement />
+        )}
+
+        {selectedTab === 'managePersonnel' && (
+        <UtmPersonnelManagement />
+        )}
+      </>
+    );
   };
-  
-  return (
-    <>
-      {/* Buttons for notifications, unit readiness, and manage training */}
-      <button onClick={() => handleTabChange('notifications')}>Notifications</button>
-      <button onClick={() => handleTabChange('unitReadiness')}>Unit Readiness</button>
-      <button onClick={() => handleTabChange('manageTraining')}>Manage Training</button>
-      <button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</button>
-    
-      {/* Conditional rendering based on the selected tab */}
-      {selectedTab === 'notifications' && (
-      <UtmNotifications />
-      )}
-    
-      {selectedTab === 'unitReadiness' && (
-      <UtmUnitReadiness />
-      )}
-    
-      {selectedTab === 'manageTraining' && (
-      <UtmTrainingManagement />
-      )}
-    
-      {selectedTab === 'managePersonnel' && (
-      <UtmPersonnelManagement />
-      )}
-    </>
-  );
-};
+
+  const Button = styled.button`
+      background-color: MidnightBlue;
+      color: white;
+      font-size: 1em;
+      margin: 1em;
+      padding: 0.25em 1em;
+      border: 2px solid #007BFF;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &:hover {
+          background-color: white;
+          color: #007BFF;
+      }
+
+      &:focus {
+          outline: none;
+          border: 2px solid #0056b3; // Darker blue border
+      }
+  `;
