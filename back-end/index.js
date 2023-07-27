@@ -389,7 +389,7 @@ app.get('/requiredTraining', async (req, res) => {
     }
   });
 
-  
+
 app.get('/requiredTraining/:id', async (req, res) => {
   const {id} = req.params;
   try {
@@ -697,7 +697,6 @@ app.get('/status/:unitId', async (req, res) => {
           .on('users.id', 'training_status.user_id')
           .andOn('trainings.id', 'training_status.training_id');
       });
-
     // Group the users by user_id and calculate the most recent completion date for each training
     const groupedUsers = users.reduce((acc, user) => {
       const userId = user.id;
@@ -732,7 +731,7 @@ app.get('/status/:unitId', async (req, res) => {
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
 //     const unitId = req.params.unit_id;
-//     console.log('unitId:', unitId); 
+//     console.log('unitId:', unitId);
 //     const usersWithTraining = await knex('users')
 //       .join('user_duties', 'users.id', '=', 'user_duties.user_id')
 //       .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
@@ -826,8 +825,6 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
-<<<<<<< HEAD
-=======
 
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
@@ -888,4 +885,3 @@ Need duties of users
 Need trainings of users' duties
 Need status of users' duties' trainings
 */
->>>>>>> main

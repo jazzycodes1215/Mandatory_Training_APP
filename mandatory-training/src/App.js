@@ -1,9 +1,9 @@
 import { useState, useEffect, createContext} from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
-import { 
-  Header, Help, Login, Account, RequiredTraining, UTM, 
-  Training, CreateTraining, Admin, UserAccount, CreateUserAccount 
+import {
+  Header, Help, Login, Account, RequiredTraining, UTM,
+  Training, CreateTraining, Admin, UserAccount, CreateUserAccount
 } from './components';
 
 export const AppContext = createContext();
@@ -21,7 +21,7 @@ const App = ()=> {
     const [registered, setRegistered] = useState(false);
 
     const ContextObject = { user, setUser,
-                            isVerified,  setIsVerified,  
+                            isVerified,  setIsVerified,
                             firstName, setFirstName,
                             lastName, setLastName,
                             isSupervisor, setIsSupervisor,
@@ -31,9 +31,9 @@ const App = ()=> {
                             userType, setUserType,
                             testStr: `I'm using context!`
                           }
-    
+
     //console.log(ContextObject);
-    
+
     return(
         <>
         <AppWrapper id="App">
@@ -78,4 +78,5 @@ grid-row: 1 / 2;
 `
 const BodyContainer = styled.div`
 grid-row: 2 / 3;
+margin-top: 1em;
 `
