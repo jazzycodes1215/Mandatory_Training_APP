@@ -38,6 +38,10 @@ export default function Header() {
     navigate('/login');
   }
 
+  const handleUtmButtonClick = () => {
+    navigate('/unit-training-manager');
+  };
+
   const {validToken, validatedUserType} = useUserCheck()
 
   return (
@@ -123,6 +127,15 @@ export default function Header() {
               >
                 Dashboard
               </Button>
+          </Box>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Button
+              onClick={handleUtmButtonClick}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              UTM View
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
