@@ -826,8 +826,6 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
-<<<<<<< HEAD
-=======
 
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
@@ -888,4 +886,3 @@ Need duties of users
 Need trainings of users' duties
 Need status of users' duties' trainings
 */
->>>>>>> main

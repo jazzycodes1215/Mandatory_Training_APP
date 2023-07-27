@@ -8,7 +8,7 @@ exports.seed = async function(knex) {
   await knex('trainings').insert([
     {id: 1, name: 'Cyber Awareness Training', interval: 360, source: 'source', type_id: 2},
     {id: 2, name: 'Contilled Unclassified Information (CUI) Training', interval: 360, source: 'source', type_id: 2},
-    {id: 3, name: 'Antiterrorism/ForceProtection', interval: 360, source: 'source', type_id: 2},
+    {id: 3, name: 'Antiterrorism / Force Protection', interval: 360, source: 'source', type_id: 2},
     {id: 4, name: 'Security Training', interval: 360, source: 'source', type_id: 2},
     {id: 5, name: 'Comsec Training', interval: 360, source: 'source', type_id: 2},
     {id: 6, name: 'Emergency Action Plan Review', interval: 360, source: 'source', type_id: 2},

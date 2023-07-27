@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
+import '../stylesheets/global.css'
 
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'
 import SchoolIcon from '@mui/icons-material/School';
@@ -45,8 +46,8 @@ export default function Header() {
   const {validToken, validatedUserType} = useUserCheck()
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'MidnightBlue' }}>
-      <Container maxWidth="xl">
+    <AppBar className='header' position="static">
+      <Container className='header-main' maxWidth="xl">
         <Toolbar disableGutters sx={{ py: 2 }}>
           <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
