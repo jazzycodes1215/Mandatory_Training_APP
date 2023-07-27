@@ -4,7 +4,8 @@ import useUserCheck from '../hooks/useUserCheck'
 export default function UtmUnitReadiness() {
   const [unitReadinessData, setUnitReadinessData] = useState(null);
   const {unitID} = useUserCheck();
-
+  const [error, setError] = useState(null);
+  
   // Fetch the unit readiness data when the component mounts
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
@@ -18,12 +19,13 @@ export default function UtmUnitReadiness() {
         }
       } catch (error) {
         console.error(error);
-        // Handle any error if necessary
+        // Handle any error if necessary, such as setting a default value for unitReadinessData
       }
     };
-
+  
     fetchUnitReadinessData();
   }, []);
+  
 
   // Function to handle downloading the full report as a CSV file
   const handleDownloadReport = () => {

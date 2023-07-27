@@ -687,7 +687,22 @@ app.get('/status/:unitId', async (req, res) => {
 
   try {
     const users = await knex('users')
-      .select('users.*', 'trainings.name as training_name', 'trainings.interval', 'training_status.*')
+      .select(
+        'users.id',
+        'users.rank_id',
+        'users.last_name',
+        'users.first_name',
+        'users.supervisor_id',
+        'training_status.comment',
+        'training_status.read_status',
+        'training_status.submission_date',
+        'training_status.completetion_date',
+        'training_status.approval_date',
+        'trainings.name as training_name',
+        'trainings.interval',
+        'trainings.source',
+        'training_status.*'
+      )
       .where('users.unit_id', unitId)
       .join('user_duties', 'users.id', 'user_duties.user_id')
       .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
@@ -720,98 +735,3 @@ app.get('/status/:unitId', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving users', error });
   }
 });
-
-app.get('/unit/:unit_id/users', async (req, res) => {
-  try {
-    const unitId = req.params.unit_id;
-    const usersInUnit = await knex('users')
-      .join('units', 'users.unit_id', '=', 'units.id')
-      .leftJoin('training_status', function () {
-        this.on('users.id', '=', 'training_status.user_id');
-      })
-      .leftJoin('trainings', 'training_status.training_id', '=', 'trainings.id')
-      .where('users.unit_id', unitId)
-      .select(
-        'users.id',
-        'users.first_name',
-        'users.last_name',
-        'users.email',
-        'users.dodID',
-        'users.rank_id',
-        'users.role_id',
-        'users.supervisor_id',
-        'units.name as unit_name',
-        'training_status.comment',
-        'training_status.read_status',
-        'training_status.submission_date',
-        'training_status.completetion_date',
-        'training_status.approval_date',
-        'trainings.name as training_name',
-        'trainings.interval',
-        'trainings.source'
-      );
-
-    res.json(usersInUnit);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching users in the unit', error });
-  }
-});
-<<<<<<< HEAD
-=======
-
-// app.get('/unit/:unit_id/users-with-training', async (req, res) => {
-//   try {
-//     const unitId = req.params.unit_id;
-//     const usersInUnit = await knex('users')
-//       .join('units', 'users.unit_id', '=', 'units.id')
-//       .where('users.unit_id', unitId)
-//       .select(
-//         'users.id',
-//         'users.first_name',
-//         'users.last_name',
-//         'users.email',
-//         'users.dodID',
-//         'users.rank_id',
-//         'users.role_id',
-//         'users.supervisor_id',
-//         'units.name as unit_name' // Use an alias for the unit name from the units table
-//       );
-
-//     res.json(usersInUnit);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching users in the unit', error });
-//   }
-// });
-
-app.get('/status/:unitId', async (req, res) => {
-  try {
-    const unitId = req.params.unit_id;
-    const usersInUnit = await knex('users')
-      .join('units', 'users.unit_id', '=', 'units.id')
-      .where('users.unit_id', unitId)
-      .select(
-        'users.id',
-        'users.rank_id',
-        'users.last_name',
-        'users.first_name',
-        'users.supervisor_id',
-      );
-
-    res.json(usersInUnit);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching users in the unit', error });
-  }
-});
-
-/*
-Need user of x id
-Need duties of user
-Need trainings of user's duties
-Need status of user's duties' trainings
-
-Need users of x unit_id
-Need duties of users
-Need trainings of users' duties
-Need status of users' duties' trainings
-*/
->>>>>>> main
