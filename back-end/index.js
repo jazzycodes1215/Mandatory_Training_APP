@@ -590,27 +590,94 @@ app.delete('/units/:id', async (req, res) => {
 //////////////////////////////////////////////////UNIT ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
+
+//This endpoint is for getting all notifications and will be the primary endpoint
+// app.get('/notifications', async (req, res) => {
+//   try {
+//     const notifications = await knex('training_status')
+//       .select(
+//         'id',
+//         'comment',
+//         'read_status',
+//         'submission_date',
+//         'completetion_date',
+//         'approval_date'
+//       )
+//       .orderBy('submission_date', 'desc');
+//     res.json(notifications);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching notifications', error });
+//   }
+// });
+
+// This endpoint is for faking notifications for testing reasons
+app.get('/notifications', async (req, res) => {
+  try {
+    const notifications = await knex('training_status')
+      .select(
+        'training_status.id',
+        'training_status.comment',
+        'training_status.training_id',
+        'training_status.read_status',
+        'training_status.submission_date',
+        'training_status.completetion_date',
+        'training_status.approval_date',
+        'trainings.name as training_name'
+      )
+      .leftJoin('trainings', 'training_status.training_id', 'trainings.id')
+      .orderBy('submission_date', 'desc');
+
+    // Generate a random notification
+    const randomNotification = {
+      id: -1, 
+      comment: 'This is a random notification!',
+      training_id: null,
+      read_status: false,
+      submission_date: new Date().toISOString(),
+      completetion_date: null,
+      approval_date: null,
+      training_name: null
+    };
+    const allNotifications = [...notifications, randomNotification];
+    res.json(allNotifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+});
+
 //Endpoint for Fetching Notifications for a Specific User:
 app.get('/notifications/:user_id', async (req, res) => {
   try {
     const userId = req.params.user_id;
     const notifications = await knex('training_status')
-    .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
+    .select('id', 'comment', 'read_status', 'submission_date', 'completetion_date', 'approval_date')
     .where({ user_id: userId })
     .orderBy('submission_date', 'desc');
-    res.json(notifications);
+    res.json({notifications});
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
   }
 });
 
 //Endpoint for marking Notifications as read
-app.patch('/notifications/:id/mark-as-read', async (req, res) => {
+app.patch('/notifications/:id', async (req, res) => {
   try {
     const notificationsId = req.params.id;
     await knex('training_status')
     .where({ id: notificationsId })
     .update({ read_status: true });
+    res.json({ message: 'Notification marked as read' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking notification', error });
+  }
+});
+
+app.delete('/notifications/:id', async (req, res) => {
+  try {
+    const notificationsId = req.params.id;
+    await knex('training_status')
+    .where({ id: notificationsId })
+    .del()
     res.json({ message: 'Notification marked as read' });
   } catch (error) {
     res.status(500).json({ message: 'Error marking notification', error });
@@ -826,66 +893,3 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
-<<<<<<< HEAD
-=======
-
-// app.get('/unit/:unit_id/users-with-training', async (req, res) => {
-//   try {
-//     const unitId = req.params.unit_id;
-//     const usersInUnit = await knex('users')
-//       .join('units', 'users.unit_id', '=', 'units.id')
-//       .where('users.unit_id', unitId)
-//       .select(
-//         'users.id',
-//         'users.first_name',
-//         'users.last_name',
-//         'users.email',
-//         'users.dodID',
-//         'users.rank_id',
-//         'users.role_id',
-//         'users.supervisor_id',
-//         'units.name as unit_name' // Use an alias for the unit name from the units table
-//       );
-
-//     res.json(usersInUnit);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching users in the unit', error });
-//   }
-// });
-
-app.get('/status/:unitId', async (req, res) => {
-  try {
-    const unitId = req.params.unit_id;
-    const usersInUnit = await knex('users')
-      .join('units', 'users.unit_id', '=', 'units.id')
-      .where('users.unit_id', unitId)
-      .select(
-        'users.id',
-        'users.first_name',
-        'users.last_name',
-        'users.email',
-        'users.dodID',
-        'users.rank_id',
-        'users.role_id',
-        'users.supervisor_id',
-        'units.name as unit_name' // Use an alias for the unit name from the units table
-      );
-
-    res.json(usersInUnit);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching users in the unit', error });
-  }
-});
-
-/*
-Need user of x id
-Need duties of user
-Need trainings of user's duties
-Need status of user's duties' trainings
-
-Need users of x unit_id
-Need duties of users
-Need trainings of users' duties
-Need status of users' duties' trainings
-*/
->>>>>>> main
