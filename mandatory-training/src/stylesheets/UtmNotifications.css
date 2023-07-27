@@ -1,0 +1,53 @@
+.notification-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .notification-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .notification-comment {
+    font-weight: bold;
+  }
+  
+  .notification-training {
+    color: #333;
+  }
+  
+  .notification-date {
+    font-style: italic;
+  }
+  
+  .notification-read {
+    color: #777;
+  }
+
+  .delete-button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px 10px;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    scale: 1.1;
+  }
+
+  .mark-as-read-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 10px;
+    cursor: pointer;
+  }
+
+  .mark-as-read-button:hover {
+    scale: 1.1;
+  }

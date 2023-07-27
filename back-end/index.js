@@ -603,27 +603,94 @@ app.delete('/units/:id', async (req, res) => {
 //////////////////////////////////////////////////UNIT ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
+
+//This endpoint is for getting all notifications and will be the primary endpoint
+// app.get('/notifications', async (req, res) => {
+//   try {
+//     const notifications = await knex('training_status')
+//       .select(
+//         'id',
+//         'comment',
+//         'read_status',
+//         'submission_date',
+//         'completetion_date',
+//         'approval_date'
+//       )
+//       .orderBy('submission_date', 'desc');
+//     res.json(notifications);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching notifications', error });
+//   }
+// });
+
+// This endpoint is for faking notifications for testing reasons
+app.get('/notifications', async (req, res) => {
+  try {
+    const notifications = await knex('training_status')
+      .select(
+        'training_status.id',
+        'training_status.comment',
+        'training_status.training_id',
+        'training_status.read_status',
+        'training_status.submission_date',
+        'training_status.completetion_date',
+        'training_status.approval_date',
+        'trainings.name as training_name'
+      )
+      .leftJoin('trainings', 'training_status.training_id', 'trainings.id')
+      .orderBy('submission_date', 'desc');
+
+    // Generate a random notification
+    const randomNotification = {
+      id: -1, 
+      comment: 'This is a random notification!',
+      training_id: null,
+      read_status: false,
+      submission_date: new Date().toISOString(),
+      completetion_date: null,
+      approval_date: null,
+      training_name: null
+    };
+    const allNotifications = [...notifications, randomNotification];
+    res.json(allNotifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+});
+
 //Endpoint for Fetching Notifications for a Specific User:
 app.get('/notifications/:user_id', async (req, res) => {
   try {
     const userId = req.params.user_id;
     const notifications = await knex('training_status')
-    .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
+    .select('id', 'comment', 'read_status', 'submission_date', 'completetion_date', 'approval_date')
     .where({ user_id: userId })
     .orderBy('submission_date', 'desc');
-    res.json(notifications);
+    res.json({notifications});
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
   }
 });
 
 //Endpoint for marking Notifications as read
-app.patch('/notifications/:id/mark-as-read', async (req, res) => {
+app.patch('/notifications/:id', async (req, res) => {
   try {
     const notificationsId = req.params.id;
     await knex('training_status')
     .where({ id: notificationsId })
     .update({ read_status: true });
+    res.json({ message: 'Notification marked as read' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking notification', error });
+  }
+});
+
+app.delete('/notifications/:id', async (req, res) => {
+  try {
+    const notificationsId = req.params.id;
+    await knex('training_status')
+    .where({ id: notificationsId })
+    .del()
     res.json({ message: 'Notification marked as read' });
   } catch (error) {
     res.status(500).json({ message: 'Error marking notification', error });
