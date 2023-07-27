@@ -721,10 +721,6 @@ app.get('/status/:unitId', async (req, res) => {
   }
 });
 
-
-
-
-
 app.get('/unit/:unit_id/users', async (req, res) => {
   try {
     const unitId = req.params.unit_id;
