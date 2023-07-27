@@ -726,7 +726,10 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     const unitId = req.params.unit_id;
     const usersInUnit = await knex('users')
       .join('units', 'users.unit_id', '=', 'units.id')
-      .join()
+      .leftJoin('training_status', function () {
+        this.on('users.id', '=', 'training_status.user_id');
+      })
+      .leftJoin('trainings', 'training_status.training_id', '=', 'trainings.id')
       .where('users.unit_id', unitId)
       .select(
         'users.id',
@@ -737,7 +740,15 @@ app.get('/unit/:unit_id/users', async (req, res) => {
         'users.rank_id',
         'users.role_id',
         'users.supervisor_id',
-        'units.name as unit_name' // Use an alias for the unit name from the units table
+        'units.name as unit_name',
+        'training_status.comment',
+        'training_status.read_status',
+        'training_status.submission_date',
+        'training_status.completetion_date',
+        'training_status.approval_date',
+        'trainings.name as training_name',
+        'trainings.interval',
+        'trainings.source'
       );
 
     res.json(usersInUnit);
@@ -745,6 +756,8 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
+<<<<<<< HEAD
+=======
 
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
@@ -801,3 +814,4 @@ Need duties of users
 Need trainings of users' duties
 Need status of users' duties' trainings
 */
+>>>>>>> main
