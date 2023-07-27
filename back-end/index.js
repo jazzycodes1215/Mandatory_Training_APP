@@ -384,6 +384,58 @@ app.get('/requiredTraining', async (req, res) => {
   }
   });
 
+app.get('/requiredTraining/primaryTraining', async (req, res) => {
+  
+  try {
+    const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('type.name', 'Primary Training')
+      .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training data', error });
+  }
+  });
+
+app.get('/requiredTraining/auxTraining', async (req, res) => {
+  
+  try {
+    const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('type.name', 'Auxiliary Training')
+      .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training data', error });
+  }
+  });
+
+app.get('/requiredTraining/PME', async (req, res) => {
+  
+  try {
+    const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('type.name', 'rofessional Military Education')
+      .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training data', error });
+  }
+
+  });
+app.get('/requiredTraining/ADT', async (req, res) => {
+  
+  try {
+    const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('type.name', 'Additional Duty Training')
+      .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving training data', error });
+  }
+  });
+
   app.get('/training/:id', async (req, res) => {
     const trainingId = req.params.id;
     try {

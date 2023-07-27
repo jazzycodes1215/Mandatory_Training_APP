@@ -3,12 +3,18 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
 import '../stylesheets/training.css'
-import All from './TrainingAll';
+
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
+
+import All from './TrainingAll';
+import Primary from './TrainingPrimary';
+import Auxiliary from './TrainingAux';
+import PME from './TrainingPME';
+import ADT from './TrainingADT';
 
 export default function Training() {
 
@@ -71,6 +77,42 @@ export default function Training() {
         setSelectedTab(tab);
       };
 
+      const selectedBtn1 = (Tab) => {
+        document.getElementById("btn1").classList.remove("btnDeactivated");
+        document.getElementById("btn2").classList.add("btnDeactivated");
+        document.getElementById("btn3").classList.add("btnDeactivated");
+        document.getElementById("btn4").classList.add("btnDeactivated");
+        document.getElementById("btn5").classList.add("btnDeactivated");
+      }
+      const selectedBtn2 = (Tab) => {
+        document.getElementById("btn1").classList.add("btnDeactivated");
+        document.getElementById("btn2").classList.remove("btnDeactivated");
+        document.getElementById("btn3").classList.add("btnDeactivated");
+        document.getElementById("btn4").classList.add("btnDeactivated");
+        document.getElementById("btn5").classList.add("btnDeactivated");
+      }
+      const selectedBtn3 = (Tab) => {
+        document.getElementById("btn1").classList.add("btnDeactivated");
+        document.getElementById("btn2").classList.add("btnDeactivated");
+        document.getElementById("btn3").classList.remove("btnDeactivated");
+        document.getElementById("btn4").classList.add("btnDeactivated");
+        document.getElementById("btn5").classList.add("btnDeactivated");
+      }
+      const selectedBtn4 = (Tab) => {
+        document.getElementById("btn1").classList.add("btnDeactivated");
+        document.getElementById("btn2").classList.add("btnDeactivated");
+        document.getElementById("btn3").classList.add("btnDeactivated");
+        document.getElementById("btn4").classList.remove("btnDeactivated");
+        document.getElementById("btn5").classList.add("btnDeactivated");
+      }
+      const selectedBtn5 = (Tab) => {
+        document.getElementById("btn1").classList.add("btnDeactivated");
+        document.getElementById("btn2").classList.add("btnDeactivated");
+        document.getElementById("btn3").classList.add("btnDeactivated");
+        document.getElementById("btn4").classList.add("btnDeactivated");
+        document.getElementById("btn5").classList.remove("btnDeactivated");
+      }
+
     return (
         <>
         <TRContainer className='boy'>
@@ -80,11 +122,11 @@ export default function Training() {
             <Type className='top'>
                 <h2>Type</h2>
                 <div className='type-btns'>
-                    <button onClick={() => handleTabChange('All')}>All</button>
-                    <button onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
-                    <button onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
-                    <button onClick={() => handleTabChange('Professional Military Education')}>Professional Military Education</button>
-                    <button onClick={() => handleTabChange('Additional Duty Training')}>Additional Duty Training</button>
+                    <button id='btn1' onClick={() => handleTabChange('All')}>All</button>
+                    <button id='btn2' onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
+                    <button id='btn3' onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
+                    <button id='btn4' onClick={() => handleTabChange('PME')}>Professional Military Education</button>
+                    <button id='btn5' onClick={() => handleTabChange('ADT')}>Additional Duty Training</button>
                 </div>
             </Type>
             <Toggle>
@@ -95,6 +137,22 @@ export default function Training() {
             <Trainings>
             {selectedTab === 'All' && (
                      <All />
+              )}
+
+              {selectedTab === 'Primary Training' && (
+                     <Primary />
+              )}
+
+{selectedTab === 'Auxiliary Training' && (
+                     <Auxiliary />
+              )}
+
+{selectedTab === 'PME' && (
+                     <PME />
+              )}
+
+{selectedTab === 'ADT' && (
+                     <ADT />
               )}
             </Trainings>
             </TRContainer>
@@ -133,7 +191,7 @@ grid-row: 3;
 export const InnerTraining = styled.div`
 display: flex;
 flex-direction: row;
-justify-content: center;
+justify-content: flex-start;
 flex-wrap: wrap;
 width: 100%;
 height: 100%;
