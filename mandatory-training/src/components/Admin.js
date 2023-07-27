@@ -5,7 +5,29 @@ import { AppContext } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 export default function Admin() {
     const {validatedUserType, validToken} = useUserCheck();
+    const [tickets, setTickets] = useState([]);
     const navigate = useNavigate();
+
+    const enableTickets = false;
+    const fetchTickes = async () =>
+    {
+        if(enableTickets)
+        {
+            const method = {
+                header: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(validToken)
+            }
+            let response = await fetch(`http://localhost:4000/tickets/`, method)
+            let data = response.json();
+            setTickets(data);
+        }
+    }
+    useEffect(()=>
+    {
+
+    }, [] )
 
     return (
         <>
@@ -13,11 +35,22 @@ export default function Admin() {
             <>
             <FlexContainer>
                 <div className="left-align-div">
-                    <p>This is where my tools would be if I HAD THEM</p>
-                    <p>This would be a second tool IF I HAD THEM</p>
+                    <Button onClick={()=>navigate('/create-account')}>Create Account</Button>
                 </div>
                 <div className="right-align-div">
-                    <p>This is where my tickets would be... IF I HAD THEM</p>
+                    <List>
+                    {tickets?.map((element, index)=>{
+                        return (
+                        <ListItem>
+                            <p>element.name</p>
+                        </ListItem>
+                        )
+                    })}
+                    </List>
+                    <div className="ticket-submenu">
+                        <Button>Close Ticket</Button>
+                        <Button>Delete Ticket</Button>
+                    </div>
                 </div>
             </FlexContainer>
             <div className="admin-footer">
@@ -37,3 +70,13 @@ padding: 10px;
 `
 const FlexItem = styled.div `
 width: 40%;`
+
+const List = styled.ul `
+`
+
+const ListItem = styled.li `
+`
+//I dont even know how to style this. I mean I know how to style  it but I'm not even sure what to make it look like
+const Button = styled.button `
+
+`
