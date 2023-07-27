@@ -47,7 +47,7 @@ export default function Header() {
 
   return (
     <HeaderBar className="muiIsWeird">
-      <AppBar position="sticky" sx={{top: '0', backgroundColor: 'MidnightBlue'}}>
+      <AppBar position="sticky" sx={{top: '0'}}>
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ py: 2 }}>
             <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
