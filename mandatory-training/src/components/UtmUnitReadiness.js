@@ -10,7 +10,7 @@ export default function UtmUnitReadiness() {
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
-        const response = await fetch(`/status/${unitID}`);
+        const response = await fetch(`unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           setUnitReadinessData(data);
