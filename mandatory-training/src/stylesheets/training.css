@@ -1,0 +1,10 @@
+body {
+    overflow-y: auto;
+    background-color: aquamarine 
+}
+
+.boy {
+    overflow-y: auto;
+    height: 90vh;
+    margin-bottom: 20px;
+}

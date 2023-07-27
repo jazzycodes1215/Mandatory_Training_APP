@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
+import '../stylesheets/training.css'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -15,11 +16,9 @@ export default function Training() {
     const { testStr } = useContext(AppContext);
 
     const TRContainer = styled.div`
-    display: grid; 
-    grid-template-columns: 20% 80%; 
-    grid-template-rows: 30%; 
-    grid-column-gap: 0px;
-    grid-row-gap: 0px; 
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 8vh 40vh;
   `;
 
     const Subhead =styled.div`
@@ -69,7 +68,7 @@ export default function Training() {
 
     return (
         <>
-        <TRContainer>
+        <TRContainer className='boy'>
             <Subhead>
                 <h1>Trainings</h1>
             </Subhead>
@@ -90,8 +89,14 @@ export default function Training() {
                 <InnerTraining>
                     {requiredTraining.map((training, index) =>
                     <TrainingCard key={index}>
-                    <h3>{training.name}</h3>
-                    <p>{training.type_name}</p>
+                        <TrainingCardTop>
+                        </TrainingCardTop>
+                        <TrainingCardMid>
+                            <p>{training.type_name}</p>
+                            <h3>{training.name}</h3>
+                        </TrainingCardMid>
+                        <TrainingCardBot>
+                        </TrainingCardBot>   
                     </TrainingCard> )}
                 </InnerTraining>
             </Trainings>
@@ -102,16 +107,37 @@ export default function Training() {
 
 const TrainingCard = styled.div`
 display: grid;
-grid-template-columns: 1fr;
-grid-template-rows: 20% 80% 20%; 
+grid-template-rows: .5fr 2fr .5fr; 
 border: 1px solid black;
 width: 20%;
+height: 100%;
+margin-bottom: 20px;
+`
+const TrainingCardTop = styled.div`
+grid-column: 1;
+grid-row: 1 / 2;
+
+`
+const TrainingCardMid = styled.div`
+grid-column: 1;
+grid-row: 2 / 3;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+
+text-align: left;
+`
+const TrainingCardBot = styled.div`
+grid-column: 1;
+grid-row: 3;
+
 `
 const InnerTraining = styled.div`
 display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 width: 100%;
-height: 30vh;
+height: 100%;
 gap: 20px;
 `
