@@ -750,157 +750,31 @@ app.get('/unit/:unit_id/users', async (req, res) => {
   }
 });
 
-// app.get('/users/:id', async (req, res) => {
-//   const userId = req.params.id;
-//   try {
-//     const user = await knex('users')
-//       .join('ranks', 'users.rank_id', 'ranks.id')
-//       .join('units', 'users.unit_id', 'units.id')
-//       .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
-//       .where('users.id', userId)
-//       .first()
-//     if (user) {
-//       res.json(user);
-//     } else {
-//       res.status(404).json({ message: 'User not found' });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error retrieving user', error });
-//   }
-// });
-
-// app.get('/duties/:user_id', async (req, res) => {
-//   const userId = req.params.user_id;
-//   try {
-//     const duties = await knex('user_duties')
-//       .join('duties', 'user_duties.duty_id', 'duties.id')
-//       .where('user_duties.user_id', userId)
-//     if (duties) {
-//       res.json(duties);
-//     } else {
-//       res.status(404).json({ message: 'No duties found for user' });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error retrieving duties', error });
-//   }
-// });
-
-
 // app.get('/unit/:unit_id/users-with-training', async (req, res) => {
 //   try {
 //     const unitId = req.params.unit_id;
-//     const usersWithTraining = await knex('users')
-//       .join('user_duties', 'users.id', '=', 'user_duties.user_id')
-//       .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
-//       .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
+//     const usersInUnit = await knex('users')
+//       .join('units', 'users.unit_id', '=', 'units.id')
 //       .where('users.unit_id', unitId)
 //       .select(
-//         'users.id as user_id',
+//         'users.id',
 //         'users.first_name',
 //         'users.last_name',
-//         'trainings.id as training_id',
-//         'trainings.name as training_name',
-//         'trainings.interval',
-//         'trainings.source',
-//         'duty_trainings.submission_date',
-//         'duty_trainings.completetion_date',
-//         'duty_trainings.approval_date',
-//         'training_status.comment',
-//         'training_status.read_status'
-//       )
-//       .leftJoin('training_status', function () {
-//         this.on('users.id', '=', 'training_status.user_id').andOn('trainings.id', '=', 'training_status.training_id');
-//       });
-
-//     // Group the results by users to combine all training requirements for each user
-//     const usersGrouped = usersWithTraining.reduce((acc, user) => {
-//       const userId = user.user_id;
-//       if (!acc[userId]) {
-//         acc[userId] = {
-//           user_id: userId,
-//           first_name: user.first_name,
-//           last_name: user.last_name,
-//           trainings: []
-//         };
-//       }
-//       acc[userId].trainings.push({
-//         training_id: user.training_id,
-//         training_name: user.training_name,
-//         interval: user.interval,
-//         source: user.source,
-//         submission_date: user.submission_date,
-//         completetion_date: user.completetion_date,
-//         approval_date: user.approval_date,
-//         comment: user.comment,
-//         read_status: user.read_status
-//       });
-//       return acc;
-//     }, {});
-
-//     const result = Object.values(usersGrouped);
-
-//     res.json(result);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching users with training', error });
-//   }
-// });
-
-
-
-// app.get('/unit/:unit_id/users-with-training', async (req, res) => {
-//   try {
-//     const unitId = req.params.unit_id;
-//     const usersWithTraining = await knex('users')
-//       .join('user_duties', 'users.id', '=', 'user_duties.user_id')
-//       .join('duty_trainings', 'user_duties.duty_id', '=', 'duty_trainings.duty_id')
-//       .join('trainings', 'duty_trainings.training_id', '=', 'trainings.id')
-//       .where('users.unit_id', unitId)
-//       .select(
-//         'users.id as user_id',
-//         'users.first_name',
-//         'users.last_name',
-//         'trainings.id as training_id',
-//         'trainings.name as training_name',
-//         'trainings.interval',
-//         'trainings.source',
-//         'duty_trainings.submission_date',
-//         'duty_trainings.completion_date',
-//         'duty_trainings.approval_date'
+//         'users.email',
+//         'users.dodID',
+//         'users.rank_id',
+//         'users.role_id',
+//         'users.supervisor_id',
+//         'units.name as unit_name' // Use an alias for the unit name from the units table
 //       );
 
-//     // Group the results by users to combine all training requirements for each user
-//     const usersGrouped = usersWithTraining.reduce((acc, user) => {
-//       const userId = user.user_id;
-//       if (!acc[userId]) {
-//         acc[userId] = {
-//           user_id: userId,
-//           first_name: user.first_name,
-//           last_name: user.last_name,
-//           trainings: []
-//         };
-//       }
-//       acc[userId].trainings.push({
-//         training_id: user.training_id,
-//         training_name: user.training_name,
-//         interval: user.interval,
-//         source: user.source,
-//         submission_date: user.submission_date,
-//         completion_date: user.completion_date,
-//         approval_date: user.approval_date
-//       });
-//       return acc;
-//     }, {});
-
-//     const result = Object.values(usersGrouped);
-
-//     res.json(result);
+//     res.json(usersInUnit);
 //   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching users with training', error });
+//     res.status(500).json({ message: 'Error fetching users in the unit', error });
 //   }
 // });
 
-
-app.get('/unit/:unit_id/users', async (req, res) => {
+app.get('/status/:unitId', async (req, res) => {
   try {
     const unitId = req.params.unit_id;
     const usersInUnit = await knex('users')
@@ -923,3 +797,15 @@ app.get('/unit/:unit_id/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users in the unit', error });
   }
 });
+
+/*
+Need user of x id
+Need duties of user
+Need trainings of user's duties
+Need status of user's duties' trainings
+
+Need users of x unit_id
+Need duties of users
+Need trainings of users' duties
+Need status of users' duties' trainings
+*/
