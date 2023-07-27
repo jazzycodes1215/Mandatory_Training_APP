@@ -71,7 +71,7 @@ export default function Account() {
 
     const fetchUserDuties = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties/${user}`);
+            const response = await fetch(`http://localhost:4000/duties/${userID}`);
             const data = await response.json();
             setUserDuties(data);
         } catch (error) {
@@ -81,9 +81,10 @@ export default function Account() {
 
     const Duties = () => (
         <DutiesList>
-        {userDuties.map((duty) => (
+        {userDuties?.map ?
+        userDuties.map((duty) => (
             <DutyLi key={duty.id}>{duty.title}</DutyLi>
-        ))}
+        )) : <DutyLi key={userDuties.id}>{userDuties.title}</DutyLi>}
         </DutiesList>
     );
 
@@ -142,117 +143,117 @@ export default function Account() {
                 window.alert(err.message);
             });
     }
-    console.log(account);
+    //I apologize for these. Reorganizing the ternarys was a PAIN without this though
+    const EditDisplay = (<AccountInfoContainer>
+        <Row>
+            <Column>
+                <Label for="inputFirstName">First Name:</Label>
+                <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputFirstName" type="text" value={firstname ?? account.first_name} required></InputAccountInfo>
+            </Column>
+            <Column>
+                <Label for="inputLastName">Last Name:</Label>
+                <InputAccountInfo onChange={(e)=>{setLast(e.target.value)}} id="inputLastName" type="text" value={lastname ?? account.last_name} required></InputAccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Row>
+                <Label>Rank</Label>
+                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
+                        <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
+                        <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
+                        <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
+                        <option value="10">O-1</option><option value="11">O-2</option><option value="12">O-3</option>
+                        <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
+                        <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
+                        <option value="19">O-10</option>
+                    </SelectAccountInfo>
+                </Row>
+            </Column>
+            <Column>
+                <Label for="inputPassword">Password (8 character minimum):</Label>
+                <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Label for="selectUnit">Unit:</Label>
+                <SelectAccountInfo id="selectUnit" onChange={(e)=>{setUnit(e.target.value)}}required>
+                    {units?.map((element, index)=>
+                    {
+                        return (
+                            <option value={element.id}>{element.name}</option>
+                        )
+                    })}
+                </SelectAccountInfo>
+            </Column>
+            <Column>
+                <Label for="selectDuties">Duties:</Label>
+                <SelectAccountInfo id="selectDuties" multiple required></SelectAccountInfo>
+            </Column>
+        </Row>
+    </AccountInfoContainer>)
+
+    const AccountDisplay = (<AccountInfoContainer>
+        <Row>
+            <Column>
+                <Label for="email">Email:</Label>
+                <AccountInfo id="email">{account.email}</AccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Label for="firstName">First Name:</Label>
+                <AccountInfo id="firstName">{account.first_name}</AccountInfo>
+            </Column>
+            <Column>
+                <Label for="lastName">Last Name:</Label>
+                <AccountInfo id="lastName">{account.last_name}</AccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Label for="rank">Rank:</Label>
+                <AccountInfo id="rank">{account.rank_name}</AccountInfo>
+            </Column>
+            <Column>
+                <Label for="supervisor">Supervisor:</Label>
+                <AccountInfo id="supervisor">{`${supervisor.first_name} ${supervisor.last_name}`}</AccountInfo>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Label for="unit">Unit:</Label>
+                <AccountInfo id="unit">{account.unit_name}</AccountInfo>
+            </Column>
+            <Column>
+                <Label for="duties">Duties:</Label>
+                <AccountInfo id="duties">{Duties()}</AccountInfo>
+            </Column>
+        </Row>
+    </AccountInfoContainer>)
     return (
         <>
-            {validatedUserType === 1 ?
-                <AccountHeader>
-                    <h1>Account Information</h1>
+        {validToken ?
+        <>
+            <AccountHeader>
+                <h1>AccountInformation</h1>
+                {validatedUserType === 1 ?
                     <span>Please enter missing account details</span>
-                </AccountHeader>
-                :
-                <AccountHeader>
-                    <h1>Account Information</h1>
-                    {editMode ?
+                    :
+                    editMode ?
                         <div>
                             <CheckCircleIcon onClick={handleConfirmEdit}/>
                             <CancelIcon onClick={handleCancelEdit}/>
                         </div>
                         :
                         <EditIcon onClick={handleEditModeOn}/>
-                    }
-                </AccountHeader>
-            }
-            {editMode || validatedUserType === 1 ?
-                <AccountInfoContainer>
-                    <Row>
-                        <Column>
-                            <Label for="inputFirstName">First Name:</Label>
-                            <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputFirstName" type="text" value={firstname ?? account.first_name} required></InputAccountInfo>
-                        </Column>
-                        <Column>
-                            <Label for="inputLastName">Last Name:</Label>
-                            <InputAccountInfo onChange={(e)=>{setLast(e.target.value)}} id="inputLastName" type="text" value={lastname ?? account.last_name} required></InputAccountInfo>
-                        </Column>
-                    </Row>
-                    <Row>
-                        <Column>
-                            <Row>
-                            <Label>Rank</Label>
-                                <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
-                                    <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
-                                    <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
-                                    <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
-                                    <option value="10">O-1</option><option value="11">O-2</option><option value="12">O-3</option>
-                                    <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
-                                    <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
-                                    <option value="19">O-10</option>
-                                </SelectAccountInfo>
-                            </Row>
-                        </Column>
-                        <Column>
-                            <Label for="inputPassword">Password (8 character minimum):</Label>
-                            <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
-                        </Column>
-                    </Row>
-                    <Row>
-                        <Column>
-                            <Label for="selectUnit">Unit:</Label>
-                            <SelectAccountInfo id="selectUnit" onChange={(e)=>{setUnit(e.target.value)}}required>
-                                {units?.map((element, index)=>
-                                {
-                                    return (
-                                        <option value={element.id}>{element.name}</option>
-                                    )
-                                })}
-                            </SelectAccountInfo>
-                        </Column>
-                        <Column>
-                            <Label for="selectDuties">Duties:</Label>
-                            <SelectAccountInfo id="selectDuties" multiple required></SelectAccountInfo>
-                        </Column>
-                    </Row>
-                </AccountInfoContainer>
-                :
-                <AccountInfoContainer>
-                    <Row>
-                        <Column>
-                            <Label for="email">Email:</Label>
-                            <AccountInfo id="email">{account.email}</AccountInfo>
-                        </Column>
-                    </Row>
-                    <Row>
-                        <Column>
-                            <Label for="firstName">First Name:</Label>
-                            <AccountInfo id="firstName">{account.first_name}</AccountInfo>
-                        </Column>
-                        <Column>
-                            <Label for="lastName">Last Name:</Label>
-                            <AccountInfo id="lastName">{account.last_name}</AccountInfo>
-                        </Column>
-                    </Row>
-                    <Row>
-                        <Column>
-                            <Label for="rank">Rank:</Label>
-                            <AccountInfo id="rank">{account.rank_name}</AccountInfo>
-                        </Column>
-                        <Column>
-                            <Label for="supervisor">Supervisor:</Label>
-                            <AccountInfo id="supervisor">{`${supervisor.first_name} ${supervisor.last_name}`}</AccountInfo>
-                        </Column>
-                    </Row>
-                    <Row>
-                        <Column>
-                            <Label for="unit">Unit:</Label>
-                            <AccountInfo id="unit">{account.unit_name}</AccountInfo>
-                        </Column>
-                        <Column>
-                            <Label for="duties">Duties:</Label>
-                            <AccountInfo id="duties">{Duties()}</AccountInfo>
-                        </Column>
-                    </Row>
-                </AccountInfoContainer>
-            }
+                }
+            </AccountHeader>
+            {editMode || validatedUserType === 1 ? EditDisplay : AccountDisplay}
+        </>
+        :
+            <p>Please login to view this page</p>}
             {validToken && (validatedUserType === 1 || editMode) ?
                 <ButtonContainer>
                     <Button variant="contained" onClick={handleSubmitDetails} sx={{backgroundColor: 'MidnightBlue'}}>Submit Account Details</Button>
