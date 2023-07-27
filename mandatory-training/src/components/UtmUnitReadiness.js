@@ -10,16 +10,17 @@ export default function UtmUnitReadiness() {
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
-        const response = await fetch(`unit/status/${unitID}`);
+        const response = await fetch(`/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           setUnitReadinessData(data);
+          console.log(unitReadinessData)
         } else {
           throw new Error('Failed to fetch unit readiness data');
         }
       } catch (error) {
-        console.error(error);
-        // Handle any error if necessary, such as setting a default value for unitReadinessData
+        console.error('Error fetching unit readiness data:', error);
+        setError(error.message);
       }
     };
   
@@ -42,6 +43,8 @@ export default function UtmUnitReadiness() {
             {/* Display the data */}
             <pre>{JSON.stringify(unitReadinessData, null, 2)}</pre>
           </div>
+        ) : error ? ( // Display error message if there's an error
+          <div>Error: {error.message}</div>
         ) : (
           <div>Loading...</div>
         )}

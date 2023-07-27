@@ -762,7 +762,7 @@ app.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
 
-
+//Endpoint for getting an individuals training Status
 app.get('/user/status/:userId', async (req, res) => {
   const userId = req.params.userId;
 
