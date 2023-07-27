@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App'
 import '../stylesheets/training.css'
+import All from './TrainingAll';
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -13,12 +14,14 @@ export default function Training() {
 
     const [selectedTab, setSelectedTab] = useState('notifications');
     const [requiredTraining, setRequiredTraining] = useState([])
+    
     const { testStr } = useContext(AppContext);
 
     const TRContainer = styled.div`
     display: grid;
+    margin-top: 30px;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 8vh 40vh;
+    grid-template-rows: 8vh 80vh; 
   `;
 
     const Subhead =styled.div`
@@ -30,7 +33,9 @@ export default function Training() {
     const Type =styled.div`
     grid-area: 2 / 1 / 3 / 2;
     display: flex;
-    flex-direction: column;`
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 100px;`
 
     const Toggle =styled.div`
     grid-area: 1 / 2 / 2 / 3;
@@ -72,72 +77,67 @@ export default function Training() {
             <Subhead>
                 <h1>Trainings</h1>
             </Subhead>
-            <Type>
+            <Type className='top'>
                 <h2>Type</h2>
-                
-                <button onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
-                <button onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
-                <button onClick={() => handleTabChange('Professional Military Education')}>Professional Military Education</button>
-                <button onClick={() => handleTabChange('Additional Duty Training')}>Additional Duty Training</button>
+                <div className='type-btns'>
+                    <button onClick={() => handleTabChange('All')}>All</button>
+                    <button onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
+                    <button onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
+                    <button onClick={() => handleTabChange('Professional Military Education')}>Professional Military Education</button>
+                    <button onClick={() => handleTabChange('Additional Duty Training')}>Additional Duty Training</button>
+                </div>
             </Type>
             <Toggle>
-            <button onClick={() => handleTabChange('Active')}>Active</button>
+                <button onClick={() => handleTabChange('Active')}>Active</button>
                 <button onClick={() => handleTabChange('Draft')}>Draft</button>
                 <button onClick={() => handleTabChange('Archived')}>Archived</button>
             </Toggle>
             <Trainings>
-                <InnerTraining>
-                    {requiredTraining.map((training, index) =>
-                    <TrainingCard key={index}>
-                        <TrainingCardTop>
-                        </TrainingCardTop>
-                        <TrainingCardMid>
-                            <p>{training.type_name}</p>
-                            <h3>{training.name}</h3>
-                        </TrainingCardMid>
-                        <TrainingCardBot>
-                        </TrainingCardBot>   
-                    </TrainingCard> )}
-                </InnerTraining>
+            {selectedTab === 'All' && (
+                     <All />
+              )}
             </Trainings>
             </TRContainer>
         </>
     )
 }
 
-const TrainingCard = styled.div`
+export const TrainingCard = styled.div`
 display: grid;
 grid-template-rows: .5fr 2fr .5fr; 
 border: 1px solid black;
 width: 20%;
-height: 100%;
+height: 50%;
 margin-bottom: 20px;
 `
-const TrainingCardTop = styled.div`
+export const TrainingCardTop = styled.div`
 grid-column: 1;
 grid-row: 1 / 2;
 
 `
-const TrainingCardMid = styled.div`
+export const TrainingCardMid = styled.div`
 grid-column: 1;
 grid-row: 2 / 3;
 display: flex;
 flex-direction: column;
 align-items: flex-start;
-justify-content: flex-end;
 
 text-align: left;
+padding-left: 10px
 `
-const TrainingCardBot = styled.div`
+export const TrainingCardBot = styled.div`
 grid-column: 1;
 grid-row: 3;
 
 `
-const InnerTraining = styled.div`
+export const InnerTraining = styled.div`
 display: flex;
 flex-direction: row;
+justify-content: center;
 flex-wrap: wrap;
 width: 100%;
 height: 100%;
 gap: 20px;
+overflow-y: auto;
+padding-top: 20px;
 `
