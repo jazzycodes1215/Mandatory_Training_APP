@@ -55,6 +55,7 @@ app.get('/', (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await knex('users')
+    .join('units', 'users.unit_id', 'units.id')
     .select('*')
     .then(data => res.status(200).json(data));
   } catch (error) {
