@@ -208,11 +208,15 @@ export default function RequiredTraining() {
             )
             :
             (
-                <p>You need to be logged in to access this page!</p>
+                <LoginP>You need to be logged in to access this page!</LoginP>
             )}
         </>
     )
 }
+
+const LoginP = styled.p`
+font-size: 1vw;
+margin-top: 3em`
 
 const TrainingContainer = styled.div`
 display:flex;

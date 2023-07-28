@@ -5,7 +5,7 @@ import { AppContext } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails
-, ListItemButton, ListItemIcon, Checkbox } from '@mui/material';
+, ListItemButton, ListItemIcon, Checkbox, InputLabel, Select, MenuItem } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
@@ -13,11 +13,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 export default function Admin() {
-    const {validatedUserType, validToken} = useUserCheck();
+    const {validatedUserType, validToken, unitID} = useUserCheck();
     const [tickets, setTickets] = useState([]);
     const [users, setUsers] = useState([])
     const [modState, setModState] = useState(null)
     const [userToDelete, setUserToDelete] = useState(null);
+    //Yes its an object. No don't ask. It will hurt you as much inside as it hurt me to write it...
+    const [roleToSet, setRoleToSet] = useState({});
     const navigate = useNavigate();
 
     const enableTickets = false;
@@ -48,8 +50,16 @@ export default function Admin() {
             setModState(null);
         }
         else {
-            console.log("Setting del user state")
             setModState('delUser');
+            fetchUsers();
+        }
+    }
+    const HandlePromoteUser = async () => {
+        if(modState === 'promUser') {
+            setModState(null);
+        }
+        else {
+            setModState('promUser');
             fetchUsers();
         }
     }
@@ -74,6 +84,34 @@ export default function Admin() {
                 return 'UTM'
             case 4:
                 return 'Admin'
+        }
+    }
+
+    const handleSelect = (e, id) => {
+        setUserToDelete(id)
+        setRoleToSet({...roleToSet, [id]: e.target.value})
+    }
+
+    const handleProm = async () => {
+        if(!userToDelete || roleToSet)
+        {
+            return;
+        }
+
+        const method = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({role_id: roleToSet[userToDelete]})}
+        console.log(method);
+        const response = await fetch(`http://localhost:4000/users/${userToDelete}`, method)
+        const data = await response.json();
+        if(response.ok)
+        {
+            setUserToDelete(null);
+            setRoleToSet({});
+            fetchUsers();
         }
     }
 
@@ -109,8 +147,8 @@ export default function Admin() {
                 <LeftDiv>
                     <ButtonTraining onClick={()=>navigate('/create-account')}>Create Account</ButtonTraining>
                     <ButtonTraining onClick={()=>HandleDeleteUser()}>Delete Account</ButtonTraining>
-                    <ButtonTraining onClick={()=>navigate('/create-account')}>Promote Account</ButtonTraining>
-                    <ButtonTraining onClick={()=>navigate('/create-account')}>Manage Training</ButtonTraining>
+                    <ButtonTraining onClick={()=>HandlePromoteUser()}>Modify Role</ButtonTraining>
+                    <ButtonTraining onClick={()=>navigate('/training')}>Manage Training</ButtonTraining>
                 </LeftDiv>
                 <RightDiv>
                 <Accordion expanded={true} sx={{width: '85vw', marginRight: "5vw"}}>
@@ -174,25 +212,42 @@ export default function Admin() {
                                 />
                                 </ListItem>
                                 )
-                            }) : (null/*requiredTraining?.map((training, index) => (
-                                <ListItem
-                                key={index}
-                                disableGutters
-                                style={{'marginBottom': '20px', padding: 0}}
-                                secondaryAction={
-                                    <Link to={`/required-training/${training.id}`}>
-                                        <IconButton aria-label="info">
-                                        <InfoIcon />
-                                        </IconButton>
-                                    </Link>
-                                }
-                                >
+                            }) : (modState === 'promUser' ? users?.map((element, index)=>{
+                                return (
+                                    <ListItem
+                                        key={index}
+                                        disableGutters
+                                        style={{'marginBottom': '20px', padding: 0}}
+                                        secondaryAction={
+                                            <>
+                                            <InputLabel sx={{'fontSize': '15px', 'marginTop': '2.5vh'}} id="label">Role</InputLabel>
+                                            <Select sx={{width: '15vw'}} labelId="label" onChange={(e)=>{handleSelect(e, element.id)}}
+                                            id="select" value={roleToSet[element.id] ? roleToSet[element.id] : element.role_id}>
+                                                <MenuItem value="1">Non-verified User</MenuItem>
+                                                <MenuItem value="2">User</MenuItem>
+                                                <MenuItem value="3">Unit Training Manager</MenuItem>
+                                                <MenuItem value="4">Admin</MenuItem>
+                                            </Select>
+                                            </>
+                                        }>
+                                <ListItemButton role={undefined} onClick={() => handleToggle(element.id)} dense>
+                                    <ListItemIcon style={{width: '50px'}}>
+                                        <Checkbox
+                                        edge="start"
+                                        checked={element.id === userToDelete ? true : false}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{ 'aria-labelledby': element.id }}
+                                        style={{width: '20px'}}/>
+                                    </ListItemIcon>
+                                </ListItemButton>
                                 <ListItemText
-                                primary={training.name}
-                                secondary={training.interval}
-                                />
+                                style={{ width: "90%" }}
+                                primary={`${element.last_name} ${element.first_name}`}
+                                secondary={UserRole(element.role_id)}/>
                                 </ListItem>
-                            ))*/)}
+                                )
+                            }) : null)}
                         </List>
                     </ListContainer>
                 </AccordionDetails>
@@ -204,17 +259,22 @@ export default function Admin() {
                                 <ButtonTraining onClick={handleDelete}>Delete User</ButtonTraining>
                                 <ButtonTraining>Modify User</ButtonTraining>
                             </>
-                             : <>
-                                <ButtonTraining>Close Ticket</ButtonTraining>
-                                <ButtonTraining>Delete Ticket</ButtonTraining>
-                         </>}
+                             :  <>
+                                    {modState == 'promUser' ? <ButtonTraining onClick={handleProm}>Promote User</ButtonTraining>
+                                    :
+                                    <>
+                                    <ButtonTraining>Close Ticket</ButtonTraining>
+                                    <ButtonTraining>Delete Ticket</ButtonTraining>
+                                    </>
+                                    }
+
+                                </>
+                         }
 
                     </TicketMenu>
                 </RightDiv>
             </FlexContainer>
-            <div className="admin-footer">
-                <p>This is where the footer goes</p>
-            </div>
+
             </> : <></>}
         </>
     )
@@ -292,3 +352,24 @@ font-weight: 700;
 const ListSubHeader = styled.span`
 font-size: x-large;
 `;
+
+
+/*requiredTraining?.map((training, index) => (
+                                <ListItem
+                                key={index}
+                                disableGutters
+                                style={{'marginBottom': '20px', padding: 0}}
+                                secondaryAction={
+                                    <Link to={`/required-training/${training.id}`}>
+                                        <IconButton aria-label="info">
+                                        <InfoIcon />
+                                        </IconButton>
+                                    </Link>
+                                }
+                                >
+                                <ListItemText
+                                primary={training.name}
+                                secondary={training.interval}
+                                />
+                                </ListItem>
+                            ))*/
