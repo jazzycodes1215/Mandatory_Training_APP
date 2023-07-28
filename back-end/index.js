@@ -339,7 +339,7 @@ app.post('/login', async (req, res) => {
     }
     const user = await knex('users')
     .select('id', 'email', 'password', 'role_id', "unit_id")
-    .where('email', email)
+    .where('email', 'ilike', email)
     .first();
     if(user) {
       const passwordCheck = bcrypt.compareSync(password, user.password);
