@@ -10,18 +10,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 
-import All from './TrainingAll';
-import Primary from './TrainingPrimary';
-import Auxiliary from './TrainingAux';
-import PME from './TrainingPME';
-import ADT from './TrainingADT';
+import Card from './TrainingCard';
+
 
 export default function Training() {
 
-    const [selectedTab, setSelectedTab] = useState('notifications');
+    const [selectedTab, setSelectedTab] = useState('All');
     const [requiredTraining, setRequiredTraining] = useState([])
-    
-    const { testStr } = useContext(AppContext);
+    const [endpoint, setEndpoint] = useState('')
 
     const TRContainer = styled.div`
     display: grid;
@@ -33,7 +29,9 @@ export default function Training() {
     const Subhead =styled.div`
     grid-area: 1 / 1 / 2 / 2;
     display: flex;
-    justify-content: center;
+    width: 30%;
+    padding-left: 96px;
+    justify-content: flex-start;
     align-items: center;`
 
     const Type =styled.div`
@@ -58,63 +56,77 @@ export default function Training() {
     padding: 0 50px;
     `
 
-    useEffect(() => {
-        fetchRequiredTraining();
-    }, []);
+    // useEffect(() => {
+    //     fetchRequiredTraining();
+    // }, []);
 
-    const fetchRequiredTraining = async () => {
-        try {
-            const response = await fetch(`http://localhost:4000/requiredTraining/`);
-            const data = await response.json();
-            setRequiredTraining(data);
-        } catch (error) {
-            console.error('Error fetching your required training', error);
-        }
-    };
+    // const fetchRequiredTraining = async (e) => {
+    //     try {
+    //         const response = await fetch(`http://localhost:4000/requiredTraining/`);
+    //         const data = await response.json();
+    //         setRequiredTraining(data);
+    //     } catch (error) {
+    //         console.error('Error fetching your required training', error);
+    //     }
+    // };
 
 
-    const handleTabChange = (tab) => {
+    const HandleTabChange = (tab, btn) => {
         setSelectedTab(tab);
+        setEndpoint(tab);
       };
 
-      const selectedBtn1 = (Tab) => {
+      const SelectedBtn = (btn) => {
+      switch (btn) {
+        
+        case 1:  
         document.getElementById("btn1").classList.remove("btnDeactivated");
         document.getElementById("btn2").classList.add("btnDeactivated");
         document.getElementById("btn3").classList.add("btnDeactivated");
         document.getElementById("btn4").classList.add("btnDeactivated");
         document.getElementById("btn5").classList.add("btnDeactivated");
-      }
-      const selectedBtn2 = (Tab) => {
+        break;
+
+        case 2:
         document.getElementById("btn1").classList.add("btnDeactivated");
         document.getElementById("btn2").classList.remove("btnDeactivated");
         document.getElementById("btn3").classList.add("btnDeactivated");
         document.getElementById("btn4").classList.add("btnDeactivated");
         document.getElementById("btn5").classList.add("btnDeactivated");
-      }
-      const selectedBtn3 = (Tab) => {
+        break;
+
+        case 3:
         document.getElementById("btn1").classList.add("btnDeactivated");
         document.getElementById("btn2").classList.add("btnDeactivated");
         document.getElementById("btn3").classList.remove("btnDeactivated");
         document.getElementById("btn4").classList.add("btnDeactivated");
         document.getElementById("btn5").classList.add("btnDeactivated");
-      }
-      const selectedBtn4 = (Tab) => {
+        break;
+
+        case 4:
         document.getElementById("btn1").classList.add("btnDeactivated");
         document.getElementById("btn2").classList.add("btnDeactivated");
         document.getElementById("btn3").classList.add("btnDeactivated");
         document.getElementById("btn4").classList.remove("btnDeactivated");
         document.getElementById("btn5").classList.add("btnDeactivated");
-      }
-      const selectedBtn5 = (Tab) => {
+        break;
+
+        case 5:
         document.getElementById("btn1").classList.add("btnDeactivated");
         document.getElementById("btn2").classList.add("btnDeactivated");
         document.getElementById("btn3").classList.add("btnDeactivated");
         document.getElementById("btn4").classList.add("btnDeactivated");
         document.getElementById("btn5").classList.remove("btnDeactivated");
+        break;
+        default:
+            console.log('Error finding that button')
       }
+    }
 
     return (
         <>
+
+    
         <TRContainer className='boy'>
             <Subhead>
                 <h1>Trainings</h1>
@@ -122,38 +134,17 @@ export default function Training() {
             <Type className='top'>
                 <h2>Type</h2>
                 <div className='type-btns'>
-                    <button id='btn1' onClick={() => handleTabChange('All')}>All</button>
-                    <button id='btn2' onClick={() => handleTabChange('Primary Training')}>Primary Trainings</button>
-                    <button id='btn3' onClick={() => handleTabChange('Auxilary Training')}>Auxilary Training</button>
-                    <button id='btn4' onClick={() => handleTabChange('PME')}>Professional Military Education</button>
-                    <button id='btn5' onClick={() => handleTabChange('ADT')}>Additional Duty Training</button>
+                    <button id='btn1' className='activeBtn' onClick={() => HandleTabChange('', 1)}>All</button>
+                    <button id='btn2' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('primaryTraining', 2)}>Primary Trainings</button>
+                    <button id='btn3' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('auxTraining', 3)}>Auxilary Training</button>
+                    <button id='btn4' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('PME', 4)}>Professional Military Education</button>
+                    <button id='btn5' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('ADT', 5)}>Additional Duty Training</button>
                 </div>
             </Type>
-            <Toggle>
-                <button onClick={() => handleTabChange('Active')}>Active</button>
-                <button onClick={() => handleTabChange('Draft')}>Draft</button>
-                <button onClick={() => handleTabChange('Archived')}>Archived</button>
-            </Toggle>
             <Trainings>
-            {selectedTab === 'All' && (
-                     <All />
-              )}
-
-              {selectedTab === 'Primary Training' && (
-                     <Primary />
-              )}
-
-{selectedTab === 'Auxiliary Training' && (
-                     <Auxiliary />
-              )}
-
-{selectedTab === 'PME' && (
-                     <PME />
-              )}
-
-{selectedTab === 'ADT' && (
-                     <ADT />
-              )}
+                <Card
+                endp={endpoint}
+                />
             </Trainings>
             </TRContainer>
         </>
@@ -167,6 +158,8 @@ border: 1px solid black;
 width: 20%;
 height: 50%;
 margin-bottom: 20px;
+&:hover {
+    cursor:pointer;
 `
 export const TrainingCardTop = styled.div`
 grid-column: 1;

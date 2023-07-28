@@ -38,7 +38,7 @@ p {
 .activeBtn {
     background-color: #4CAF50;
     border: none;
-    color: white;
+    color: rgb(255, 255, 255);
     text-align: center;
     text-decoration: none;
     font-size: 16px;
