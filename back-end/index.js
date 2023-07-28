@@ -606,6 +606,7 @@ app.post('/units', async (req, res) => {
 //endpoint for getting a specific unit
 app.get('/units/:id', async (req, res) => {
   const unitId = req.params.id;
+
   try {
     const unit = await knex('units')
     .where('id', unitId)
@@ -922,7 +923,7 @@ app.get('/user/status/:userId', async (req, res) => {
 
 app.get('/unit/status/:unitId', async (req, res) => {
   const unitId = req.params.unitId;
-
+  console.log(req.params)
   try {
     const users = await knex('users')
       .select(
@@ -944,7 +945,8 @@ app.get('/unit/status/:unitId', async (req, res) => {
         join
           .on('users.id', 'training_status.user_id')
           .andOn('trainings.id', 'training_status.training_id');
-      });
+      })
+      .catch(e=>console.log(e))
 
     // Group the training data by user information
     const groupedData = users.reduce((acc, user) => {
