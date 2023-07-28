@@ -61,10 +61,8 @@ export default function RequiredTraining() {
                 {
                     let response = await fetch(`http://localhost:4000/requiredtraining/${subordinates[index].id}`)
                     let data = await response.json();
-                    console.log(subordinates);
                     mappedData.push({name: `${subordinates[index].last_name}, ${subordinates[index].first_name}`, subordinate_id: subordinates[index].id, data: data});
                 }
-                console.log(mappedData);
                 setSubordinates(mappedData);
             } catch (error) {
                 console.error('Error fetching your subordinates', error);
@@ -177,14 +175,13 @@ export default function RequiredTraining() {
                                         },
                                         }}>
                                         {subordinates.map((subordinate, index) => {
-                                            console.log(subordinate);
                                             return subordinate.data?.map((element, index)=> (
                                                 <ListItem
                                                     key={index}
                                                     disableGutters
                                                     style={{'marginBottom': '20px', padding: 0}}
                                                     secondaryAction={
-                                                <Link to={`/subordinate-training/${subordinate.subordinate_id}`}>
+                                                <Link to={`/required-training/${element.id}`}>
                                                     <IconButton aria-label="info">
                                                     <InfoIcon />
                                                     </IconButton>
