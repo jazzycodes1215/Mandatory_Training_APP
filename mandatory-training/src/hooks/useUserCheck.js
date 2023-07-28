@@ -86,7 +86,7 @@ export const useUserCheck = () =>
         setExp(data.exp)
         setUserType(data.userType);
         setToken(data.token)
-        setUnit(data.unit_id)
+        setUnit(data.unit)
         setValid(true);
         sessionStorage.setItem("token", token);
       }
@@ -107,7 +107,6 @@ export const useUserCheck = () =>
     }
 
   },[token])
-
   return {validatedUserType: validatedUserType, validToken: validToken, unitID: unit, userID: userid};
 }
 

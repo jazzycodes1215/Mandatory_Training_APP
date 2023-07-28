@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Header, Help, Login, Account, RequiredTraining, SubordinateTraining, UTM,
-  Training, CreateTraining, Admin, UserAccount, CreateUserAccount
+  Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay
 } from './components';
 
 export const AppContext = createContext();
@@ -47,7 +47,7 @@ const App = ()=> {
                             <Route path='/account/*' element={<Account />} />
                             <Route path='/required-training/' element={<RequiredTraining />} />
                             <Route path='/subordinate-training/:id' element={<SubordinateTraining />} />
-                            {/* <Route path='/required-training/:training/*' element={<Training />} /> */}
+                            {<Route path='/required-training/:training/*' element={<TrainingDisplay />} /> }
                             <Route path='/training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />
                             <Route path='/unit-training-manager/*' element={<UTM />} />

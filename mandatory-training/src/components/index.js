@@ -10,8 +10,10 @@ import Admin from './Admin';
 import UserAccount from './UserAccount';
 import CreateUserAccount from './CreateUserAccount';
 import SubordinateTraining from './SubordinateTraining'
+import TrainingDisplay from './TrainingDisplay'
 
 export {
     Header, Help, Login, Account, RequiredTraining, UTM,
-    Training, CreateTraining, Admin, UserAccount, CreateUserAccount, SubordinateTraining
+    Training, CreateTraining, Admin, UserAccount, CreateUserAccount, SubordinateTraining,
+    TrainingDisplay
 }

@@ -6,13 +6,12 @@ export default function UtmUnitReadiness() {
   const [unitReadinessData, setUnitReadinessData] = useState(null);
   const {unitID} = useUserCheck();
   const [error, setError] = useState(null);
-  console.log(unitID)
-  
+
   // Fetch the unit readiness data when the component mounts
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/unit/status/1`);
+        const response = await fetch(`http://localhost:4000/unit/status/${unitID}`);
         console.log('response', response);
         if (response.ok) {
           const data = await response.json();
@@ -29,10 +28,10 @@ export default function UtmUnitReadiness() {
         setError(error.message);
       }
     };
-  
+
     fetchUnitReadinessData();
   }, []);
-  
+
 
   // Function to handle downloading the full report as a CSV file
   const handleDownloadReport = () => {
