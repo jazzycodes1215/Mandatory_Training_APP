@@ -57,7 +57,7 @@ export default function RequiredTraining() {
             })
             try {
                 let mappedData = [];
-                for(const index in subordinates)
+                for ( const index in subordinates )
                 {
                     let response = await fetch(`http://localhost:4000/requiredtraining/${subordinates[index].id}`)
                     let data = await response.json();
@@ -142,7 +142,7 @@ export default function RequiredTraining() {
                             </AccordionDetails>
                         </Accordion>
                         {supervisor &&
-                        <Accordion  expanded={expanded==='accordion2'} onClick={()=>handleExpand('accordion2')}>
+                        <Accordion  expanded={ expanded ==='accordion2'} onClick={()=>handleExpand('accordion2')}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
                                 <ListTitle>
                                     <StarIcon sx={{fontSize: 'xxx-large'}} />

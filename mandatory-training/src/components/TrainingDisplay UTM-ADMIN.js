@@ -1,24 +1,20 @@
-import { useState, useEffect, useContext, useRef} from 'react';
+import { useState, useEffect, useContext} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
 import { AppContext } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
-
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import mySvg from '../Icons/16px/Settings.svg'
+import '../stylesheets/training.css'
 
-export default function TrainingDisplay() {
+export default function TrainingDisplayUTM() {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState({})
-  const {validatedUserType, validToken, userID, unitID} = useUserCheck();
-  const [isSupe, setIsSupe] = useState(false);
-  const [subordinateData, setSubordinateData] = useState([])
-  const [overdue, setOverdue] = useState([]);
-  const [overduePercentage, setOverduePercentage] = useState(0);
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
@@ -27,66 +23,20 @@ export default function TrainingDisplay() {
     setTrainingData(data);
   }
 
-  const fetchSubordinates = async () => {
-    if(!unitID)
-    {
-      return;
-    }
-    const response = await fetch(`http://localhost:4000/unit/status/${unitID}`)
-    const data = await response.json();
-    let subordinate = [];
-    let overdueSubordinates = [];
-    let trainingStats = {totalSubordinates: 0};
-    data?.forEach(element=>{
-        let addUser = false;
-        trainingStats['totalSubordinates'] += 1;
-        element.forEach((element)=>{
-          if(element.supervisor_id === userID)
-          {
-            let dueDate;
-            if(!trainingStats[element.id])
-            {
-              trainingStats[element.id] = 0;
-            }
-            if(element.completetion_date)
-            {
-              dueDate = Date.parse(element.completetion_date) + (element.interval * 24 * 60 * 60 * 1000);
-              if(dueDate < Date.now())
-              {
-                addUser = true;
-              }
-              else {
-                trainingStats[element.id] += 1;
-              }
-            }
-            else
-            {
-              addUser = true;
-            }
+  // useEffect(()=>
+  // {
+  //   fetchTraining();
+  // }, training)
 
-            subordinate.push(element)
-          }
-
-        })
-
-        if(addUser)
-        {
-          overdueSubordinates.push(`${element[0].first_name} ${element[0].last_name}`)
-        }
-
-      })
-    setOverduePercentage(trainingStats[training]/trainingStats['totalSubordinates'])
-    setOverdue(overdueSubordinates)
-    setSubordinateData(subordinate);
-  }
-  useEffect(()=>
-  {
-    fetchTraining();
-    fetchSubordinates();
-  }, [training])
   return (
     <>
+      <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+          <div className='editTraining'>
+          <p>Edit</p>
+          <img src={mySvg} alt="mmm"></img>
+        </div>
+      </div>
       {trainingData ?
       <FlexDiv>
       <LeftDiv>
@@ -149,24 +99,8 @@ export default function TrainingDisplay() {
       </LeftDiv>
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
-        <ButtonTraining onClick={()=>navigate(-1)}>Go To Training</ButtonTraining>
-        <ButtonTraining onClick={()=>navigate(-1)}>Submit Certificate</ButtonTraining>
-        {subordinateData ?
-        <div>
-          <FlexDiv>
-            <Box>
-              Overdue: {overduePercentage * 100} %
-            </Box>
-            <Box>
-              Completion: {(1 - overduePercentage) * 100} %
-            </Box>
-          </FlexDiv>
-          <Box>
-            {overdue ? overdue?.map(element=>element) : null}
-          </Box>
-          <ButtonTraining>Submit Bug</ButtonTraining>
-        </div>
-        : <></>}
+        <h2>Training Statistics</h2>
+        
       </RightDiv>
       </FlexDiv>
       : null}
