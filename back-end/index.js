@@ -135,6 +135,7 @@ app.get('/duties/:user_id', async (req, res) => {
 app.patch('/users/:id', async (req, res) => {
   const userId = req.params.id;
   const updatedUser = req.body; // Assuming the request body contains the updated user data
+  console.log(req.body);
   try {
     const userUpdate = await knex('users')
     .where('id', userId)
@@ -330,7 +331,7 @@ app.post('/login', async (req, res) => {
         {
           if(decoded.exp < Date.now())
           {
-            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token, user: decoded.user_id})
+            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token, user: decoded.user_id, unit: decoded.unit})
           }
         }
       })
@@ -387,7 +388,7 @@ app.get('/requiredTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/primaryTraining', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -400,7 +401,7 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/auxTraining', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -413,7 +414,7 @@ app.get('/requiredTraining/auxTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/PME', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -426,7 +427,7 @@ app.get('/requiredTraining/PME', async (req, res) => {
 
   });
 app.get('/requiredTraining/ADT', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -696,7 +697,7 @@ app.get('/notifications', async (req, res) => {
 
     // Generate a random notification
     const randomNotification = {
-      id: -1, 
+      id: -1,
       comment: 'This is a random notification!',
       training_id: null,
       read_status: false,
