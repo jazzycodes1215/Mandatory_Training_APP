@@ -321,7 +321,7 @@ app.post('/login', async (req, res) => {
   try {
     if(token)
     {
-      const result = jwt.verify(token, secretKey, (err, decoded) => {
+      const result =  jwt.verify(token, secretKey, (err, decoded) => {
         if(err)
         {
           console.log(err);
