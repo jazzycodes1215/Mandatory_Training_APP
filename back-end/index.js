@@ -135,6 +135,7 @@ app.get('/duties/:user_id', async (req, res) => {
 app.patch('/users/:id', async (req, res) => {
   const userId = req.params.id;
   const updatedUser = req.body; // Assuming the request body contains the updated user data
+  console.log(req.body);
   try {
     const userUpdate = await knex('users')
     .where('id', userId)
@@ -153,10 +154,12 @@ app.patch('/users/:id', async (req, res) => {
 //endpoint for deleting a user
 app.delete('/users/:id', async (req, res) => {
   const userId = req.params.id;
+
   try {
     const userDelete = await knex('users')
     .where('id', userId)
-    .del();
+    .del()
+    .catch(e=>console.log(e))
     if (userDelete) {
       res.json({ message: 'User deleted successfully' });
     } else {
@@ -318,7 +321,7 @@ app.post('/login', async (req, res) => {
   try {
     if(token)
     {
-      const result = jwt.verify(token, secretKey, (err, decoded) => {
+      const result =  jwt.verify(token, secretKey, (err, decoded) => {
         if(err)
         {
           console.log(err);
@@ -328,7 +331,7 @@ app.post('/login', async (req, res) => {
         {
           if(decoded.exp < Date.now())
           {
-            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token, user: decoded.user_id})
+            res.status(201).json({id: decoded.id, exp: decoded.exp, userType: decoded.userType, token: token, user: decoded.user_id, unit: decoded.unit})
           }
         }
       })
@@ -385,7 +388,7 @@ app.get('/requiredTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/primaryTraining', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -398,7 +401,7 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/auxTraining', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -411,7 +414,7 @@ app.get('/requiredTraining/auxTraining', async (req, res) => {
   });
 
 app.get('/requiredTraining/PME', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -424,7 +427,7 @@ app.get('/requiredTraining/PME', async (req, res) => {
 
   });
 app.get('/requiredTraining/ADT', async (req, res) => {
-  
+
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
@@ -694,7 +697,7 @@ app.get('/notifications', async (req, res) => {
 
     // Generate a random notification
     const randomNotification = {
-      id: -1, 
+      id: -1,
       comment: 'This is a random notification!',
       training_id: null,
       read_status: false,
@@ -814,7 +817,7 @@ app.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
 
-
+//Endpoint for getting an individuals training Status
 app.get('/user/status/:userId', async (req, res) => {
   const userId = req.params.userId;
 
@@ -921,17 +924,17 @@ app.get('/unit/status/:unitId', async (req, res) => {
   const unitId = req.params.unitId;
 
   try {
-    const trainings = await knex('users')
+    const users = await knex('users')
       .select(
+        'users.id',
         'users.rank_id',
         'users.last_name',
         'users.first_name',
         'users.supervisor_id',
-        'trainings.name as training_name',
+        'trainings.id',
+        'trainings.name',
         'trainings.interval',
-        'trainings.source',
-        'training_status.completetion_date',
-        'training_status.submission_date'
+        'training_status.completetion_date'
       )
       .where('users.unit_id', unitId)
       .join('user_duties', 'users.id', 'user_duties.user_id')
@@ -943,38 +946,24 @@ app.get('/unit/status/:unitId', async (req, res) => {
           .andOn('trainings.id', 'training_status.training_id');
       });
 
-    const usersTrainingStatus = {};
-
-    // Group trainings by user_id and store the most recent completion date for each training
-    trainings.forEach((training) => {
-      const userId = training.user_id;
-      if (!usersTrainingStatus[userId]) {
-        usersTrainingStatus[userId] = [];
+    // Group the training data by user information
+    const groupedData = users.reduce((acc, user) => {
+      const { rank_id, last_name, first_name, supervisor_id } = user;
+      const userData = acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`];
+      if (userData) {
+        userData.push(user);
+      } else {
+        acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`] = [user];
       }
-      usersTrainingStatus[userId].push(training);
-    });
+      return acc;
+    }, {});
 
-    // Process the data for each user to find the most recent completion date for each training
-    for (const userId in usersTrainingStatus) {
-      const userTrainings = usersTrainingStatus[userId].reduce((acc, training) => {
-        const trainingName = training.training_name;
-        if (!acc[trainingName]) {
-          acc[trainingName] = { ...training, completetion_date: null };
-        }
-        if (
-          training.completetion_date &&
-          (!acc[trainingName].completetion_date || training.completetion_date > acc[trainingName].completetion_date)
-        ) {
-          acc[trainingName].completetion_date = training.completetion_date;
-        }
-        return acc;
-      }, {});
+    const result = Object.values(groupedData);
 
-      usersTrainingStatus[userId] = Object.values(userTrainings);
-    }
+    console.log('Response Data:', result);
 
-    res.json(usersTrainingStatus);
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving unit status', error });
+    res.status(500).json({ message: 'Error retrieving users', error });
   }
 });

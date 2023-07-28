@@ -1,25 +1,32 @@
 import { useState, useEffect } from 'react';
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/UtmUnitReadiness.css'
 
 export default function UtmUnitReadiness() {
   const [unitReadinessData, setUnitReadinessData] = useState(null);
   const {unitID} = useUserCheck();
   const [error, setError] = useState(null);
+  console.log(unitID)
   
   // Fetch the unit readiness data when the component mounts
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
-        const response = await fetch(`unit/status/${unitID}`);
+        const response = await fetch(`http://localhost:4000/unit/status/1`);
+        console.log('response', response);
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           setUnitReadinessData(data);
+          console.log('unit readiness', unitReadinessData);
         } else {
+          const errorData = await response.text();
+          console.error('Error fetching unit readiness data:', errorData);
           throw new Error('Failed to fetch unit readiness data');
         }
       } catch (error) {
-        console.error(error);
-        // Handle any error if necessary, such as setting a default value for unitReadinessData
+        console.error('Error fetching unit readiness data:', error);
+        setError(error.message);
       }
     };
   
@@ -32,19 +39,32 @@ export default function UtmUnitReadiness() {
     // Implement the logic to generate and download the CSV report here
   };
 
+  const renderUnitReadinessData = () => {
+    if (unitReadinessData) {
+      return unitReadinessData.map((userTrainings, index) => (
+        <div key={index} className='user-chart'>
+          <h3>User {index + 1}</h3>
+          {userTrainings.map((training, trainingIndex) => (
+            <div key={trainingIndex} className='training bar'>
+              <p>Training Name: {training.name}</p>
+              <p>Interval: {training.interval}</p>
+              {/* Add more information you want to display */}
+            </div>
+          ))}
+        </div>
+      ));
+    } else if (error) {
+      return <div>Error: {error.message}</div>;
+    } else {
+      return <div>Loading...</div>;
+    }
+  };
+
   return (
-    <div>
+    <div className='readiness-container'>
       <div>
         <h2>Unit Readiness Section</h2>
-        {/* Add the fetched data to display the unit's readiness regarding the personnels' training status */}
-        {unitReadinessData ? (
-          <div>
-            {/* Display the data */}
-            <pre>{JSON.stringify(unitReadinessData, null, 2)}</pre>
-          </div>
-        ) : (
-          <div>Loading...</div>
-        )}
+        {renderUnitReadinessData()}
       </div>
       <div>
         {/* Add the download button to download the full report */}

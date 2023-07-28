@@ -3,9 +3,21 @@ import { BrowserRouter, Route, Routes, Link , useNavigate} from 'react-router-do
 import styled from 'styled-components';
 import { AppContext } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
+
+import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails
+, ListItemButton, ListItemIcon, Checkbox } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import StarIcon from '@mui/icons-material/Star';
+import PeopleIcon from '@mui/icons-material/People';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
 export default function Admin() {
     const {validatedUserType, validToken} = useUserCheck();
     const [tickets, setTickets] = useState([]);
+    const [users, setUsers] = useState([])
+    const [modState, setModState] = useState(null)
+    const [userToDelete, setUserToDelete] = useState(null);
     const navigate = useNavigate();
 
     const enableTickets = false;
@@ -24,34 +36,181 @@ export default function Admin() {
             setTickets(data);
         }
     }
-    useEffect(()=>
-    {
 
-    }, [] )
+    const fetchUsers = async () => {
+        let response = await fetch(`http://localhost:4000/users`)
+        let data = await response.json();
+        setUsers(data);
+    }
+
+    const HandleDeleteUser = async () => {
+        if(modState === 'delUser') {
+            setModState(null);
+        }
+        else {
+            console.log("Setting del user state")
+            setModState('delUser');
+            fetchUsers();
+        }
+    }
+
+    const handleToggle = (value) =>
+    {
+        console.log(value);
+        if(userToDelete === value)
+        {
+            setUserToDelete(null);
+        }
+        setUserToDelete(value)
+    }
+
+    const UserRole = (roleId) => {
+        switch(roleId) {
+            case 1:
+                return 'Unverified User'
+            case 2:
+                return 'User'
+            case 3:
+                return 'UTM'
+            case 4:
+                return 'Admin'
+        }
+    }
+
+    const handleDelete = async () =>
+    {
+        if(userToDelete > -1)
+        {
+            const method = {
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'DELETE'
+            }
+            let response = await fetch(`http://localhost:4000/users/${userToDelete}`, method)
+            if(response.ok)
+            {
+                console.log("User Deleted");
+                setUserToDelete(null);
+            }
+            else
+            {
+                console.log("Unable to find user");
+                setUserToDelete(null);
+            }
+        }
+    }
 
     return (
         <>
             {validatedUserType === 4 ?
             <>
             <FlexContainer>
-                <div className="left-align-div">
-                    <Button onClick={()=>navigate('/create-account')}>Create Account</Button>
-                </div>
-                <div className="right-align-div">
-                    <List>
-                    {tickets?.map((element, index)=>{
-                        return (
-                        <ListItem>
-                            <p>element.name</p>
-                        </ListItem>
-                        )
-                    })}
-                    </List>
-                    <div className="ticket-submenu">
-                        <Button>Close Ticket</Button>
-                        <Button>Delete Ticket</Button>
-                    </div>
-                </div>
+                <LeftDiv>
+                    <ButtonTraining onClick={()=>navigate('/create-account')}>Create Account</ButtonTraining>
+                    <ButtonTraining onClick={()=>HandleDeleteUser()}>Delete Account</ButtonTraining>
+                    <ButtonTraining onClick={()=>navigate('/create-account')}>Promote Account</ButtonTraining>
+                    <ButtonTraining onClick={()=>navigate('/create-account')}>Manage Training</ButtonTraining>
+                </LeftDiv>
+                <RightDiv>
+                <Accordion expanded={true} sx={{width: '85vw', marginRight: "5vw"}}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <ListTitle>
+                        <StarIcon sx={{fontSize: 'xxx-large'}} />
+                        <ListHeader>{modState === 'delUser' ? "Delete User" : "Tickets"}</ListHeader>
+                    </ListTitle>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <ListContainer>
+                    <List sx={
+                            { width: '99%',
+                            height: '100%', bgcolor:
+                            'background.paper',
+                            overflow: 'hidden',
+                            'overflowY': 'scroll',
+                            padding: '0px',
+                            'marginLeft': '1vw',
+                            '&::-webkit-scrollbar': {
+                                width: '10px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: '#f1f1f1',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: '#888',
+                                borderRadius: '20px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                                background: '#555',
+                            },
+                            }}>
+                            {modState === 'delUser' ? users?.map((element, index)=>{
+                                return (
+                                    <ListItem
+                                        key={index}
+                                        disableGutters
+                                        style={{'marginBottom': '20px', padding: 0}}
+                                >
+                                <ListItemButton role={undefined} onClick={() => handleToggle(element.id)} dense>
+                                    <ListItemIcon style={{width: '50px'}}>
+                                        <Checkbox
+                                        edge="start"
+                                        checked={element.id === userToDelete ? true : false}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{ 'aria-labelledby': element.id }}
+                                        style={{width: '20px'}}
+                                        />
+                                    </ListItemIcon>
+                                </ListItemButton>
+                                <ListItemText
+                                style={{ width: "90%" }}
+                                primary={`${element.last_name} ${element.first_name}`}
+                                secondary={UserRole(element.role_id)}
+                                />
+                                </ListItem>
+                                )
+                            }) : (null/*requiredTraining?.map((training, index) => (
+                                <ListItem
+                                key={index}
+                                disableGutters
+                                style={{'marginBottom': '20px', padding: 0}}
+                                secondaryAction={
+                                    <Link to={`/required-training/${training.id}`}>
+                                        <IconButton aria-label="info">
+                                        <InfoIcon />
+                                        </IconButton>
+                                    </Link>
+                                }
+                                >
+                                <ListItemText
+                                primary={training.name}
+                                secondary={training.interval}
+                                />
+                                </ListItem>
+                            ))*/)}
+                        </List>
+                    </ListContainer>
+                </AccordionDetails>
+            </Accordion>
+                    <TicketMenu>
+
+                            {modState == 'delUser' ?
+                            <>
+                                <ButtonTraining onClick={handleDelete}>Delete User</ButtonTraining>
+                                <ButtonTraining>Modify User</ButtonTraining>
+                            </>
+                             : <>
+                                <ButtonTraining>Close Ticket</ButtonTraining>
+                                <ButtonTraining>Delete Ticket</ButtonTraining>
+                         </>}
+
+                    </TicketMenu>
+                </RightDiv>
             </FlexContainer>
             <div className="admin-footer">
                 <p>This is where the footer goes</p>
@@ -67,19 +226,27 @@ flex-direction: row;
 justify-content: space-between;
 align-items: center;
 padding: 10px;
+margin-top: 1em;
+`
+
+const LeftDiv = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+`
+const RightDiv = styled.div`
+display: flex;
+flex-direction: column;
+`
+
+const TicketMenu = styled.div`
+display: flex;
+flex-direction: row;
 `
 const FlexItem = styled.div `
 width: 40%;`
 
-const List = styled.ul `
-width: 100%;
-`
-
-const ListItem = styled.li `
-width: 100%;
-`
-
-const Button = styled.button`
+const ButtonTraining = styled.button`
     background-color: MidnightBlue;
     color: white;
     font-size: 1em;
@@ -98,4 +265,30 @@ const Button = styled.button`
         outline: none;
         border: 2px solid #0056b3; // Darker blue border
     }
+`;
+const ListContainer = styled.div`
+flex-grow: 1;
+height:50vh;
+border-radius: 10px;
+overflow: hidden;
+box-sizing: border-box;
+border: 2px solid black;
+`;
+
+const ListHeading = styled.div`
+display: flex;
+flex-direction: column;
+width: 100%;
+`;
+const ListTitle = styled.div`
+display: flex;
+flex-direction: row;
+width: 100%;
+`;
+const ListHeader = styled.span`
+font-size: xxx-large;
+font-weight: 700;
+`;
+const ListSubHeader = styled.span`
+font-size: x-large;
 `;
