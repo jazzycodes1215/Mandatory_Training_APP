@@ -6,6 +6,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 let secretKey = '';
 
@@ -55,6 +58,7 @@ app.get('/', (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await knex('users')
+    .join('units', 'users.unit_id', 'units.id')
     .select('*')
     .then(data => res.status(200).json(data));
   } catch (error) {
@@ -339,7 +343,7 @@ app.post('/login', async (req, res) => {
     }
     const user = await knex('users')
     .select('id', 'email', 'password', 'role_id', "unit_id")
-    .where('email', email)
+    .where('email', 'ilike', email)
     .first();
     if(user) {
       const passwordCheck = bcrypt.compareSync(password, user.password);
@@ -970,3 +974,34 @@ app.get('/unit/status/:unitId', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving users', error });
   }
 });
+
+//ENDPOINT TO UPLOAD FILE
+app.post('/upload', upload.single('file'), (req, res) => {
+  const fileContent = fs.readFileSync(req.file.path);
+  const fileName = req.file.originalname;
+  const fileType = req.file.mimetype;
+  const userId = req.body.userID;
+
+  knex ('files')
+  .insert({ file_name: fileName, file_content: fileContent, file_type: fileType, user_id: userId })
+  .then(() => {
+    res.status(200).send('File uploaded and stored in the database');
+  })
+  .catch((err) => {
+    console.error('Error storing file in the database:', err);
+    res.status(500).send('Error storing file in the database');
+  });
+})
+
+//ENDPOINT TO VERIFY FILE UPLOAD
+app.get('/upload', async (req, res) => {
+  try {
+    const users = await knex('files')
+    .select('*')
+    .then(data => res.status(200).json(data));
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error retrieving users', error
+    });
+  }
+})

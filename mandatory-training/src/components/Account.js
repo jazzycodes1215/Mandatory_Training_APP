@@ -13,7 +13,8 @@ export default function Account() {
     const {setToken} = useContext(AppContext);
     const [editMode, setEditMode] = useState(false);
     const [account, setAccount] = useState({});
-    const [supervisor, setSupervisor] = useState({});
+    const [supervisor, setSupervisor] = useState(null);
+    const [supervisorAccount, setSupervisorAccount] = useState('');
     const [units, setUnits] = useState([]);
     const [firstname, setFirst] = useState(null);
     const [lastname, setLast] = useState(null);
@@ -85,7 +86,7 @@ export default function Account() {
             }
             const response = await fetch(`http://localhost:4000/users/${account.supervisor_id}`);
             const data = await response.json();
-            setSupervisor(data);
+            setSupervisorAccount(data);
         } catch (error) {
             console.error('Error fetching supervisor data', error);
         }
@@ -130,6 +131,7 @@ export default function Account() {
 
     const handleCancelEdit = () => {
         setEditMode(false);
+        setSupervisor(null);
     }
 
     const handleSubmitDetails = () => {
@@ -186,23 +188,16 @@ export default function Account() {
         </Row>
         <Row>
             <Column>
-                <Label for="selectUnit">Unit:</Label>
-                <SelectAccountInfo id="selectUnit" onChange={(e)=>{setUnit(e.target.value)}}required>
-                    {units?.map((element, index)=>
-                    {
-                        return (
-                            <option value={element.id}>{element.name}</option>
-                        )
-                    })}
-                </SelectAccountInfo>
+                <Label for="unit">Unit:</Label>
+                <AccountInfo id="unit">{account.unit_name}</AccountInfo>
             </Column>
             <Column>
                 <Label for="selectSupervisor">Supervisor:</Label>
-                <InputAccountInfo id="selectSupervisor" list="supervisors"></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ?? `${supervisorAccount.first_name} ${supervisorAccount.last_name}`} required></InputAccountInfo>
                     <datalist id="supervisors">
                         {users?.map((element)=> {
                             return (
-                                <option value={element.id}>{element.first_name} {element.last_name}</option>
+                                <option value={`${element.first_name} ${element.last_name}`}>{element.name}</option>
                             )
                         })}
                     </datalist>
@@ -211,7 +206,7 @@ export default function Account() {
         <Row>
             <Column>
                 <Label>Rank: </Label>
-                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
+                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue={account.rank_id} name="rank" id="agnosticRank">
                         <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
                         <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
                         <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
@@ -258,7 +253,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="supervisor">Supervisor:</Label>
-                <AccountInfo id="supervisor">{`${supervisor.first_name} ${supervisor.last_name}`}</AccountInfo>
+                <AccountInfo id="supervisor">{`${supervisorAccount.first_name} ${supervisorAccount.last_name}`}</AccountInfo>
             </Column>
         </Row>
         <Row>

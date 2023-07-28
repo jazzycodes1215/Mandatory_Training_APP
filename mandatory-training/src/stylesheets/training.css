@@ -21,73 +21,58 @@ p {
 }
 
 .type-btns > button {
-   text-align: left;
-   background-color: white;
-   border: none;
-   
-
-   &:hover {
+    background-color: MidnightBlue;
+    color: white;
+    font-size: 1em;
+    margin: 1em 0;
+    padding: .7em 2em;
+    border: 2px solid #007BFF;
+    border-radius: 3px;
     cursor: pointer;
-   }
+    text-align: left;
+
+    &:hover {
+        background-color: white;
+        color: #007BFF;
+    }
+
+    &:focus {
+        outline: none;
+        border: 2px solid #0056b3;
+    }
 }
 
 .top > h2 {
     margin-bottom: 30px;
 }
 
-.activeBtn {
-    background-color: #4CAF50;
-    border: none;
-    color: rgb(255, 255, 255);
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition-duration: 0.2s;
-    cursor: pointer;
-    height: 40px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-    width: 160px;
+.top-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 99%;
+    padding: 20px 0;
 }
 
-
-.activeBtn:hover {
-background-color: #008CBA!important;
-color: white;
+.editTraining {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 7%;
+    &:hover {
+        color: #3478b2;
+        cursor: pointer;
+    }
 }
 
-.deactiveBtn {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition-duration: 0.2s;
-    cursor: pointer;
-    height: 40px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    width: 160px;
-}
+.editTraining > p {
+    font-size: 20px;
+    margin: 0;
+    margin-right: 4px;
 
-deactiveBtn:hover{
-    background-color: #008CBA!important;
-    color: white!important;
+    
 }
-.btnDeactivated {
-    background-color: white!important;
-    color: black!important;
-    border: 2px solid #008CBA!important;
-}
-
-.btnDeactivated:hover {
-    background-color: #008CBA!important;
-    color: white;
+.editTraining > img {
+    width: 30px;
+    height: auto;
 }

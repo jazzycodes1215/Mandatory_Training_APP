@@ -5,6 +5,7 @@ import {
   Header, Help, Login, Account, RequiredTraining, SubordinateTraining, UTM,
   Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay
 } from './components';
+import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 
 export const AppContext = createContext();
 
@@ -53,8 +54,10 @@ const App = ()=> {
                             <Route path='/unit-training-manager/*' element={<UTM />} />
                             <Route path='/administrator/*' element={<Admin />} />
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
+                            <Route path='/trainingdisplayUTM' element={<TrainingDisplayUTM />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
                             <Route path='/*' element={<Help />} /> catch all
+                            
                         </Routes>
                     </BodyContainer>
                 </BrowserRouter>
