@@ -3,9 +3,9 @@
   import styled from 'styled-components';
   import { AppContext } from '../App';
   import UtmUnitReadiness from './UtmUnitReadiness';
-  import UtmTrainingManagement from './UtmTrainingManagement';
   import UtmPersonnelManagement from './UtmPersonnelManagement';
   import UtmNotifications from './UtmNotifications';
+import { Training } from '.';
 
   export default function UTM() {
     const initialSelectedTab = localStorage.getItem('selectedTab') || 'notifications';
@@ -37,7 +37,7 @@
         )}
 
         {selectedTab === 'manageTraining' && (
-        <UtmTrainingManagement />
+        <Training />
         )}
 
         {selectedTab === 'managePersonnel' && (
