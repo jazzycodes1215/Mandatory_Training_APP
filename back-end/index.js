@@ -926,15 +926,15 @@ app.get('/unit/status/:unitId', async (req, res) => {
   try {
     const users = await knex('users')
       .select(
+        'users.id',
         'users.rank_id',
         'users.last_name',
         'users.first_name',
         'users.supervisor_id',
-        'trainings.name as training_name',
+        'trainings.id',
+        'trainings.name',
         'trainings.interval',
-        'trainings.source',
-        'training_status.completetion_date',
-        'training_status.submission_date'
+        'training_status.completetion_date'
       )
       .where('users.unit_id', unitId)
       .join('user_duties', 'users.id', 'user_duties.user_id')

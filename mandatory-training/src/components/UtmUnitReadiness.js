@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/UtmUnitReadiness.css'
 
 export default function UtmUnitReadiness() {
   const [unitReadinessData, setUnitReadinessData] = useState(null);
@@ -41,11 +42,11 @@ export default function UtmUnitReadiness() {
   const renderUnitReadinessData = () => {
     if (unitReadinessData) {
       return unitReadinessData.map((userTrainings, index) => (
-        <div key={index}>
+        <div key={index} className='user-chart'>
           <h3>User {index + 1}</h3>
           {userTrainings.map((training, trainingIndex) => (
-            <div key={trainingIndex}>
-              <p>Training Name: {training.training_name}</p>
+            <div key={trainingIndex} className='training bar'>
+              <p>Training Name: {training.name}</p>
               <p>Interval: {training.interval}</p>
               {/* Add more information you want to display */}
             </div>
@@ -60,7 +61,7 @@ export default function UtmUnitReadiness() {
   };
 
   return (
-    <div>
+    <div className='readiness-container'>
       <div>
         <h2>Unit Readiness Section</h2>
         {renderUnitReadinessData()}

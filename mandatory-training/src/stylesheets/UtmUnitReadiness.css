@@ -1,0 +1,30 @@
+.readiness-container {
+    max-height: 1100px; /* Set the maximum height for the chart container */
+    overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+  }
+  
+  .user-chart {
+    margin-bottom: 20px;
+  }
+  
+  .training-bar {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px;
+    margin-bottom: 5px;
+  }
+  
+  /* Optionally, add some styles to the training bar to represent the intervals visually */
+  .training-bar::before {
+    content: '';
+    display: block;
+    width: var(--interval-width, 0);
+    height: 10px;
+    background-color: #ffc107;
+    transition: width 0.3s ease;
+  }
+  
+  /* Add inline style to the training bar to dynamically adjust the width based on the interval */
+  .training-bar[style*='interval:']::before {
+    --interval-width: calc(100% * (attr(style:match('interval:(\\d+)'), 1) / 100));
+  }
