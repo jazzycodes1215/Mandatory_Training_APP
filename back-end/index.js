@@ -669,7 +669,7 @@ app.delete('/units/:id', async (req, res) => {
 //         'comment',
 //         'read_status',
 //         'submission_date',
-//         'completetion_date',
+//         'completion_date',
 //         'approval_date'
 //       )
 //       .orderBy('submission_date', 'desc');
@@ -689,7 +689,7 @@ app.get('/notifications', async (req, res) => {
         'training_status.training_id',
         'training_status.read_status',
         'training_status.submission_date',
-        'training_status.completetion_date',
+        'training_status.completion_date',
         'training_status.approval_date',
         'trainings.name as training_name'
       )
@@ -703,7 +703,7 @@ app.get('/notifications', async (req, res) => {
       training_id: null,
       read_status: false,
       submission_date: new Date().toISOString(),
-      completetion_date: null,
+      completion_date: null,
       approval_date: null,
       training_name: null
     };
@@ -719,7 +719,7 @@ app.get('/notifications/:user_id', async (req, res) => {
   try {
     const userId = req.params.user_id;
     const notifications = await knex('training_status')
-    .select('id', 'comment', 'read_status', 'submission_date', 'completetion_date', 'approval_date')
+    .select('id', 'comment', 'read_status', 'submission_date', 'completion_date', 'approval_date')
     .where({ user_id: userId })
     .orderBy('submission_date', 'desc');
     res.json({notifications});
@@ -832,7 +832,7 @@ app.get('/user/status/:userId', async (req, res) => {
         'trainings.name as training_name',
         'trainings.interval',
         'trainings.source',
-        'training_status.completetion_date',
+        'training_status.completion_date',
         'training_status.submission_date'
       )
       .where('users.id', userId)
@@ -848,13 +848,13 @@ app.get('/user/status/:userId', async (req, res) => {
     const userTrainings = trainings.reduce((acc, training) => {
       const trainingName = training.training_name;
       if (!acc[trainingName]) {
-        acc[trainingName] = { ...training, completetion_date: null };
+        acc[trainingName] = { ...training, completion_date: null };
       }
       if (
-        training.completetion_date &&
-        (!acc[trainingName].completetion_date || training.completetion_date > acc[trainingName].completetion_date)
+        training.completion_date &&
+        (!acc[trainingName].completion_date || training.completion_date > acc[trainingName].completion_date)
       ) {
-        acc[trainingName].completetion_date = training.completetion_date;
+        acc[trainingName].completion_date = training.completion_date;
       }
       return acc;
     }, {});
@@ -882,7 +882,7 @@ app.get('/user/status/:userId', async (req, res) => {
 //         'training_status.comment',
 //         'training_status.read_status',
 //         'training_status.submission_date',
-//         'training_status.completetion_date',
+//         'training_status.completion_date',
 //         'training_status.approval_date',
 //         'trainings.name as training_name',
 //         'trainings.interval',
@@ -902,13 +902,13 @@ app.get('/user/status/:userId', async (req, res) => {
 //     const groupedUsers = users.reduce((acc, user) => {
 //       const userId = user.id;
 //       if (!acc[userId]) {
-//         acc[userId] = { ...user, completetion_date: null };
+//         acc[userId] = { ...user, completion_date: null };
 //       }
 //       if (
-//         user.completetion_date &&
-//         (!acc[userId].completetion_date || user.completetion_date > acc[userId].completetion_date)
+//         user.completion_date &&
+//         (!acc[userId].completion_date || user.completion_date > acc[userId].completion_date)
 //       ) {
-//         acc[userId].completetion_date = user.completetion_date;
+//         acc[userId].completion_date = user.completion_date;
 //       }
 //       return acc;
 //     }, {});
@@ -923,39 +923,39 @@ app.get('/user/status/:userId', async (req, res) => {
 
 app.get('/unit/status/:unitId', async (req, res) => {
   const unitId = req.params.unitId;
-  console.log(req.params)
   try {
     const users = await knex('users')
       .select(
         'users.id',
-        'users.rank_id',
         'users.last_name',
         'users.first_name',
-        'users.supervisor_id',
-        'trainings.id',
-        'trainings.name',
+        'ranks.name as rank_name',
+        'trainings.id as training_id',
+        'trainings.name as training_name',
         'trainings.interval',
-        'training_status.completetion_date'
+        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
       )
       .where('users.unit_id', unitId)
+      .join('ranks', 'users.rank_id', 'ranks.id')
       .join('user_duties', 'users.id', 'user_duties.user_id')
       .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
       .join('trainings', 'duty_trainings.training_id', 'trainings.id')
       .leftJoin('training_status', (join) => {
-        join
-          .on('users.id', 'training_status.user_id')
-          .andOn('trainings.id', 'training_status.training_id');
+        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
+        join.on('training_status.completion_date', '=', function () {
+          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
+        });
       })
-      .catch(e=>console.log(e))
+      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
 
     // Group the training data by user information
     const groupedData = users.reduce((acc, user) => {
-      const { rank_id, last_name, first_name, supervisor_id } = user;
-      const userData = acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`];
+      const { rank_name, last_name, first_name } = user;
+      const userData = acc[`${rank_name}_${last_name}_${first_name}`];
       if (userData) {
         userData.push(user);
       } else {
-        acc[`${rank_id}_${last_name}_${first_name}_${supervisor_id}`] = [user];
+        acc[`${rank_name}_${last_name}_${first_name}`] = [user];
       }
       return acc;
     }, {});
@@ -966,6 +966,7 @@ app.get('/unit/status/:unitId', async (req, res) => {
 
     res.json(result);
   } catch (error) {
+    console.error('Error retrieving users:', error);
     res.status(500).json({ message: 'Error retrieving users', error });
   }
 });

@@ -28,3 +28,22 @@
   .training-bar[style*='interval:']::before {
     --interval-width: calc(100% * (attr(style:match('interval:(\\d+)'), 1) / 100));
   }
+
+  /* UtmUnitReadiness.css */
+
+.overdue {
+  background-color: #ff0000;
+  color: #fff;
+}
+
+.due-soon {
+  background-color: #ffc0cb;
+}
+
+.coming-due {
+  background-color: #ffff00;
+}
+
+.up-to-date {
+  background-color: #98fb98;
+}

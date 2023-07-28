@@ -70,7 +70,7 @@ exports.up = function(knex) {
       table.string('comment');
       table.boolean('read_status');
       table.datetime('submission_date');
-      table.date('completetion_date');
+      table.date('completion_date');
       table.date('approval_date');
     });
 };
