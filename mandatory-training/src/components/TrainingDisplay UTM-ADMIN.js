@@ -4,14 +4,15 @@ import { AppContext } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 
-
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import mySvg from '../Icons/16px/Settings.svg'
+import '../stylesheets/training.css'
 
-export default function TrainingDisplay() {
+export default function TrainingDisplayUTM() {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState({})
   const navigate = useNavigate();
@@ -22,14 +23,20 @@ export default function TrainingDisplay() {
     setTrainingData(data);
   }
 
-  useEffect(()=>
-  {
-    fetchTraining();
-  }, training)
+  // useEffect(()=>
+  // {
+  //   fetchTraining();
+  // }, training)
 
   return (
     <>
+      <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+          <div className='editTraining'>
+          <p>Edit</p>
+          <img src={mySvg} alt="mmm"></img>
+        </div>
+      </div>
       {trainingData ?
       <FlexDiv>
       <LeftDiv>
@@ -92,8 +99,8 @@ export default function TrainingDisplay() {
       </LeftDiv>
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
-        <ButtonTraining onClick={()=>navigate(-1)}>Go To Training</ButtonTraining>
-        <ButtonTraining onClick={()=>navigate(-1)}>Submit Certificate</ButtonTraining>
+        <h2>Training Statistics</h2>
+        
       </RightDiv>
       </FlexDiv>
       : null}

@@ -5,7 +5,7 @@ import { TrainingCardTop } from './Training';
 import { TrainingCardMid } from './Training';
 import { TrainingCardBot } from './Training';
 import { Training } from './Training';
-
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Card(props) {
 
@@ -31,7 +31,13 @@ export default function Card(props) {
     return(
             <InnerTraining>
                     {requiredTraining.map((training, index) =>
-                    <TrainingCard key={index}>
+                    <TrainingCard 
+                    key={index}
+                    secondaryAction={
+                        <Link to={`/required-training/${training.id}`}>
+                        </Link>
+                    }
+                    >
                         <TrainingCardTop>
                         </TrainingCardTop>
                         <TrainingCardMid className='mid'>

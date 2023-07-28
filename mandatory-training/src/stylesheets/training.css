@@ -46,3 +46,33 @@ p {
     margin-bottom: 30px;
 }
 
+.top-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 99%;
+    padding: 20px 0;
+}
+
+.editTraining {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 7%;
+    &:hover {
+        color: #3478b2;
+        cursor: pointer;
+    }
+}
+
+.editTraining > p {
+    font-size: 20px;
+    margin: 0;
+    margin-right: 4px;
+
+    
+}
+.editTraining > img {
+    width: 30px;
+    height: auto;
+}
