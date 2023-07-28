@@ -959,6 +959,8 @@ app.get('/unit/status/:unitId', async (req, res) => {
 
     const result = Object.values(groupedData);
 
+    console.log('Response Data:', result);
+
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving users', error });

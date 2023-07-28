@@ -11,13 +11,16 @@ export default function UtmUnitReadiness() {
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
-        const response = await fetch(`/unit/status/${unitID}`);
-        console.log('response', response)
+        const response = await fetch(`http://localhost:4000/unit/status/1`);
+        console.log('response', response);
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           setUnitReadinessData(data);
-          console.log('unit readiness', unitReadinessData)
+          console.log('unit readiness', unitReadinessData);
         } else {
+          const errorData = await response.text();
+          console.error('Error fetching unit readiness data:', errorData);
           throw new Error('Failed to fetch unit readiness data');
         }
       } catch (error) {
@@ -35,73 +38,37 @@ export default function UtmUnitReadiness() {
     // Implement the logic to generate and download the CSV report here
   };
 
-//   const renderedData = unitReadinessData
-//     ? unitReadinessData.map((userData, index) => (
-//         <div key={index}>
-//           <h3>{`${userData[0].last_name}, ${userData[0].first_name}`}</h3>
-//           <ul>
-//             {userData.map((training, trainingIndex) => (
-//               <li key={trainingIndex}>
-//                 <strong>Training Name:</strong> {training.training_name} <br />
-//                 <strong>Interval:</strong> {training.interval} <br />
-//                 <strong>Completion Date:</strong> {training.completetion_date} <br />
-//                 <strong>Submission Date:</strong> {training.submission_date} <br />
-//                 <br />
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-//       ))
-//     : null;
-
-//   return (
-//     <div>
-//       <div>
-//         <h2>Unit Readiness Section</h2>
-//         {renderedData || (error ? <div>Error: {error.message}</div> : <div>Loading...</div>)}
-//       </div>
-//       <div>
-//         {/* Add the download button to download the full report */}
-//         <button onClick={handleDownloadReport}>Download Report</button>
-//       </div>
-//     </div>
-//   );
-// }
-
-return (
-  <div>
-    <div>
-      <h2>Unit Readiness Section</h2>
-      {/* Add the fetched data to display the unit's readiness regarding the personnels' training status */}
-      {unitReadinessData ? (
-        <div>
-          {/* Map through the outer array */}
-          {unitReadinessData.map((userTrainings, index) => (
-            <div key={index}>
-              {/* Display user information (assuming it is the same for each userTrainings group) */}
-              <p>
-                User: {userTrainings[0].first_name} {userTrainings[0].last_name}
-              </p>
-              {/* Map through the inner array (userTrainings) to display each training */}
-              {userTrainings.map((training, innerIndex) => (
-                <div key={innerIndex}>
-                  <p>Training Name: {training.training_name}</p>
-                  {/* Add more information about the training as needed */}
-                </div>
-              ))}
+  const renderUnitReadinessData = () => {
+    if (unitReadinessData) {
+      return unitReadinessData.map((userTrainings, index) => (
+        <div key={index}>
+          <h3>User {index + 1}</h3>
+          {userTrainings.map((training, trainingIndex) => (
+            <div key={trainingIndex}>
+              <p>Training Name: {training.training_name}</p>
+              <p>Interval: {training.interval}</p>
+              {/* Add more information you want to display */}
             </div>
           ))}
         </div>
-      ) : error ? ( // Display error message if there's an error
-        <div>Error: {error.message}</div>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
+      ));
+    } else if (error) {
+      return <div>Error: {error.message}</div>;
+    } else {
+      return <div>Loading...</div>;
+    }
+  };
+
+  return (
     <div>
-      {/* Add the download button to download the full report */}
-      <button onClick={handleDownloadReport}>Download Report</button>
+      <div>
+        <h2>Unit Readiness Section</h2>
+        {renderUnitReadinessData()}
+      </div>
+      <div>
+        {/* Add the download button to download the full report */}
+        <button onClick={handleDownloadReport}>Download Report</button>
+      </div>
     </div>
-  </div>
-);
+  );
 }
