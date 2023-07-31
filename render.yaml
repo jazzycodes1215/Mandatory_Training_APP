@@ -2,7 +2,7 @@ services:
 - type: web
   name: frontend
   runtime: docker
-  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/mandatory-training
+  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/mandatory-training.git
   plan: free
   region: oregon
   rootDir: frontend
@@ -10,7 +10,7 @@ services:
 - type: web
   name: backend
   runtime: docker
-  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/back-end
+  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/back-end.git
   rootDir: backend
   healthCheckPath: /
 databases:
