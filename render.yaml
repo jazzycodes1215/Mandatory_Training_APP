@@ -10,7 +10,6 @@ services:
   healthCheckPath: /
 - type: web
   name: backend
-  plan: free
   runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   dockerfilePath: ./back-end/dockerfile
