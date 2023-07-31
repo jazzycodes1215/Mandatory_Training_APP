@@ -2,15 +2,17 @@ services:
 - type: web
   name: frontend
   runtime: docker
-  repo: https://github.com/Devinekyle/Mandatory_Training_APP/tree/3a73dfe5b6c4882ceb2985e60ba5d2d9452ec440/mandatory-training
+  repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   plan: free
   region: oregon
   rootDir: frontend
+  dockerfilePath: ./mandatory-training/dockerfile
   healthCheckPath: /
 - type: web
   name: backend
   runtime: docker
-  repo: https://github.com/Devinekyle/Mandatory_Training_APP/tree/3a73dfe5b6c4882ceb2985e60ba5d2d9452ec440/back-end
+  repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
+  dockerfilePath: ./back-end/dockerfile
   rootDir: backend
   healthCheckPath: /
 databases:
