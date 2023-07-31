@@ -10,6 +10,10 @@ export default function UtmTableDataRow({ userData, uniqueTrainingIds }) {
   
       completionDate.setHours(0, 0, 0, 0);
   
+      if (training.interval === null) {
+        return 'up-to-date';
+      }
+  
       const dueDate = new Date(completionDate);
       dueDate.setFullYear(dueDate.getFullYear() + Math.floor(training.interval / 365));
       dueDate.setDate(dueDate.getDate() + (training.interval % 365));
@@ -25,6 +29,7 @@ export default function UtmTableDataRow({ userData, uniqueTrainingIds }) {
       return 'overdue';
     }
   };
+  
 
   return (
     <tr>
