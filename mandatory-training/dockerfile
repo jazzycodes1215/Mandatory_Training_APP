@@ -6,6 +6,4 @@ COPY . /client/app
 
 EXPOSE 3000
 
-RUN npm install
-
-ENTRYPOINT ["NPM", "START"]
+ENTRYPOINT ["frontendstart.sh"]
