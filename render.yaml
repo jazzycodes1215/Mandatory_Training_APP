@@ -28,7 +28,7 @@ services:
       name: X-Frame-Options
       value: sameorigin
   routes:
-    - type: Rewrite
+    - type: rewrite
       source: /*
       destination: /index.html
   envVars:
