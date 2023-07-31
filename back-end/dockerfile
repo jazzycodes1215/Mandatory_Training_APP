@@ -6,6 +6,6 @@ COPY . /back-end/
 
 EXPOSE 4000
 
-RUN chmod u+x backendstart.sh
+RUN npm install
 
-CMD ["sh", "./backendstart.sh"]
+CMD ["npm", "start"]
