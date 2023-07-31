@@ -1,11 +1,14 @@
+# syntax = docker/dockerfile:1.2
 FROM node:latest
 
-WORKDIR /server/app
+WORKDIR /back-end/back-end/
 
-COPY . /server/app
+COPY . /back-end/back-end/
 
 EXPOSE 4000
 
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env
 RUN npm install
 
-ENTRYPOINT ["npm", "start"]
+CMD ["npm", "run", "prod"]
+
