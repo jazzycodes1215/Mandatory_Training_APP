@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import '../stylesheets/global.css'
 
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'

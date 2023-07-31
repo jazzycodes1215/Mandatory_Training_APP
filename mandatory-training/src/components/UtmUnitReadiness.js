@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck';
 import '../stylesheets/UtmUnitReadiness.css';
 

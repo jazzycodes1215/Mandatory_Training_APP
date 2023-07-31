@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link, useNavigate} from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App';
+import { AppContext, fetchURL } from '../App';
 import SchoolIcon from '@mui/icons-material/School';
 import '../stylesheets/login.css';
 import useUserCheck from '../hooks/useUserCheck'
