@@ -1,3 +1,3 @@
-cd mandatory-training
-npm i
+cd /mandatory-training/
+npm install
 npm start
