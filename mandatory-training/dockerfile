@@ -1,11 +1,11 @@
 FROM node:latest
 
-WORKDIR /mandatory-training/
+WORKDIR ./mandatory-training/
 
-COPY . /mandatory-training/
+COPY . ./mandatory-training/
 
 EXPOSE 3000
 
-RUN chmod u+x frontendstart.sh
+RUN npm install
 
-ENTRYPOINT ["sh", "./frontendstart.sh"]
+CMD ["npm", "start"]
