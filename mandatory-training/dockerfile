@@ -1,8 +1,8 @@
 FROM node:latest
 
-WORKDIR /mandatory-training
+WORKDIR /
 
-COPY . /client/app
+COPY . /
 
 EXPOSE 3000
 
