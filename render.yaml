@@ -5,7 +5,6 @@ services:
   buildCommand: yarn build
   staticPublishPath: ./build
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
-  plan: free
   rootDir: ./mandatory-training/
   buildFilter:
       paths:
