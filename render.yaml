@@ -1,0 +1,18 @@
+services:
+- type: web
+  name: frontend
+  runtime: docker
+  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/mandatory-training
+  region: oregon
+  rootDir: frontend
+  healthCheckPath: /
+- type: web
+  name: backend
+  runtime: docker
+  repo: https://github.com/jazzycodes1215/Mandatory_Training_APP/tree/main/back-end
+  rootDir: backend
+  healthCheckPath: /
+databases:
+  name: prod
+  databaseName: utm_tool
+  user: postgres
