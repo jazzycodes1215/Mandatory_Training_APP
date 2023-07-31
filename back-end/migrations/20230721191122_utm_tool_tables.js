@@ -70,8 +70,16 @@ exports.up = function(knex) {
       table.string('comment');
       table.boolean('read_status');
       table.datetime('submission_date');
-      table.date('completetion_date');
+      table.date('completion_date');
       table.date('approval_date');
+    })
+    .createTable('files', table => {
+      table.increments('id').primary();
+      table.string('file_name').notNullable;
+      table.binary('file_content').notNullable;
+      table.string('file_type');
+      table.integer('user_id').unsigned();
+      table.foreign('user_id').references('users.id').onDelete('CASCADE');;
     });
 };
 
@@ -81,6 +89,7 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
   return knex.schema
+  .dropTableIfExists('files')
   .dropTableIfExists('training_status')
   .dropTableIfExists('duty_trainings')
   .dropTableIfExists('user_duties')

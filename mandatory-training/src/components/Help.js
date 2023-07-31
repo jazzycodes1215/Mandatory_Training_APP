@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App';
 import '../stylesheets/help.css';
+import FileUpload from './FileUpload';
 
 export default function Help() {
     const { testStr } = useContext(AppContext);
