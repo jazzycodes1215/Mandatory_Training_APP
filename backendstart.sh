@@ -1,3 +1,3 @@
-cd ./back-end/
+cd /back-end/
 npm i
 npm start
