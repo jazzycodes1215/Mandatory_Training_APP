@@ -17,12 +17,44 @@ export default function RequiredTraining() {
     const [subordinates, setSubordinates] = useState([]);
     const [supervisor, setSupervisor] = useState(false);
     const [expanded, setExpanded] = useState(null);
-    const {validToken, validatedUserType, userID} = useUserCheck()
+    const [trainingStatus, setTrainingStatus] = useState([]);
+    const [completionDates, setCompletionDates] = useState([]);
+    const {validToken, validatedUserType, userID} = useUserCheck();
 
     useEffect(() => {
+        fetchTrainingStatus(userID);
         fetchRequiredTraining();
         fetchSubordinates();
     }, [validToken, supervisor]);
+
+    useEffect(() => {
+        const tempCompletionDates = requiredTraining.map((training) => {
+            let filtered = trainingStatus.filter((status) => status.training_name === training.name);
+            let latestCompletionDate = null;
+            for (const item of filtered) {
+                if (item.completetion_date && (!latestCompletionDate || item.completetion_date > latestCompletionDate)) {
+                latestCompletionDate = item.completetion_date;
+                }
+            }
+            return { name: training.name, completion_date: latestCompletionDate };
+        });
+        console.log(tempCompletionDates);
+        setCompletionDates(tempCompletionDates);
+    }, [requiredTraining, trainingStatus]);
+
+    const fetchTrainingStatus = async (id) => {
+        try {
+            if(!id)
+            {
+                return;
+            }
+            const response = await fetch(`http://localhost:4000/user/status/${id}`);
+            const data = await response.json();
+            setTrainingStatus(data);
+        } catch (error) {
+            console.error('Error fetching training statuses', error);
+        }
+    }
 
     const fetchRequiredTraining = async () => {
         try {
@@ -118,25 +150,45 @@ export default function RequiredTraining() {
                                             background: '#555',
                                         },
                                         }}>
-                                        {requiredTraining.map((training, index) => (
-                                            <ListItem
-                                            key={index}
-                                            disableGutters
-                                            style={{'marginBottom': '20px', padding: 0}}
-                                            secondaryAction={
-                                                <Link to={`/required-training/${training.id}`}>
-                                                    <IconButton aria-label="info">
-                                                    <InfoIcon />
-                                                    </IconButton>
-                                                </Link>
+                                        {requiredTraining.map((training, index) => {
+                                            let found = completionDates.find((status) => status.name === training.name);
+                                            let dueDate;
+                                            let completed;
+                                            if (found && found.completion_date) {
+                                                const completionDate = new Date(found.completion_date);
+                                                completed = completionDate.toISOString().split('T')[0];
+                                                const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
+                                                const newDueDate = new Date(completionDate.getTime() + intervalInMilliseconds);
+                                                dueDate = newDueDate.toISOString().split('T')[0];
+                                            } else {
+                                                const today = new Date();
+                                                const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
+                                                const newDueDate = new Date(today.getTime() + intervalInMilliseconds);
+                                                dueDate = newDueDate.toISOString().split('T')[0];
+                                                completed = 'Not completed'
                                             }
-                                            >
-                                            <ListItemText
-                                            primary={training.name}
-                                            secondary={training.interval}
-                                            />
-                                            </ListItem>
-                                        ))}
+                                            return (
+                                                <ListItem
+                                                key={index}
+                                                disableGutters
+                                                style={{'marginBottom': '20px', padding: 0}}
+                                                secondaryAction={
+                                                    <Link to={`/required-training/${training.id}`}>
+                                                        <IconButton aria-label="info">
+                                                        <InfoIcon />
+                                                        </IconButton>
+                                                    </Link>
+                                                }
+                                                >
+                                                <ListItemText
+                                                primary={training.name}
+                                                secondary={
+                                                    `Last Completed: ${completed} | Training Interval: ${training.interval? `${training.interval} days` : 'N/A'} | Due: ${dueDate}`
+                                                }
+                                                />
+                                                </ListItem>
+                                            )
+                                        })}
                                     </List>
                                 </ListContainer>
                             </AccordionDetails>
