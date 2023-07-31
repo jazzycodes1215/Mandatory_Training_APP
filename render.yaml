@@ -9,6 +9,9 @@ services:
   dockerfilePath: ./mandatory-training/dockerfile
   dockerCommand: sh /mandatory-training/frontendstart.sh
   healthCheckPath: /
+  envVars:
+  - key:
+    value: 3000
 - type: web
   name: backend
   runtime: docker
@@ -17,6 +20,9 @@ services:
   dockerCommand: sh /back-end/backendstart.sh
   rootDir: ./
   healthCheckPath: /
+  envVars:
+  - key:
+    value: 4000
 databases:
 - name: prod
   plan: free
