@@ -14,7 +14,7 @@ services:
   runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   dockerfilePath: ./back-end/dockerfile
-  dockerCommand: /back-end/backendstart.sh
+  dockerCommand: sh /back-end/backendstart.sh
   rootDir: ./
   healthCheckPath: /
 databases:
