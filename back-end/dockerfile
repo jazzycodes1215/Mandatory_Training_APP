@@ -6,4 +6,4 @@ COPY . /back-end
 
 EXPOSE 4000
 
-ENTRYPOINT ["frontendstart.sh"]
+ENTRYPOINT ["backendstart.sh"]
