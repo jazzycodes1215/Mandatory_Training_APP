@@ -18,6 +18,7 @@ export default function RequiredTraining() {
     const [supervisor, setSupervisor] = useState(false);
     const [expanded, setExpanded] = useState(null);
     const [trainingStatus, setTrainingStatus] = useState([]);
+    const [completionDates, setCompletionDates] = useState([]);
     const {validToken, validatedUserType, userID} = useUserCheck();
 
     useEffect(() => {
@@ -27,8 +28,7 @@ export default function RequiredTraining() {
     }, [validToken, supervisor]);
 
     useEffect(() => {
-        let tempTrainingStatus = [];
-        requiredTraining.map((training) => {
+        const tempCompletionDates = requiredTraining.map((training) => {
             let filtered = trainingStatus.filter((status) => status.training_name === training.name);
             let latestCompletionDate = null;
             for (const item of filtered) {
@@ -36,11 +36,11 @@ export default function RequiredTraining() {
                 latestCompletionDate = item.completetion_date;
                 }
             }
-            tempTrainingStatus.push({name: training.name, completion_date: latestCompletionDate});
+            return { name: training.name, completion_date: latestCompletionDate };
         });
-        console.log(tempTrainingStatus);
-        setTrainingStatus(tempTrainingStatus);
-    }, [requiredTraining])
+        console.log(tempCompletionDates);
+        setCompletionDates(tempCompletionDates);
+    }, [requiredTraining, trainingStatus]);
 
     const fetchTrainingStatus = async (id) => {
         try {
@@ -151,7 +151,7 @@ export default function RequiredTraining() {
                                         },
                                         }}>
                                         {requiredTraining.map((training, index) => {
-                                            let found = trainingStatus.find((status) => status.name === training.name);
+                                            let found = completionDates.find((status) => status.name === training.name);
                                             let dueDate;
                                             let completed;
                                             if (found && found.completion_date) {
