@@ -1,3 +1,3 @@
-cd /back-end/back-end/
+cd /back-end/
 npm install
 npm run
