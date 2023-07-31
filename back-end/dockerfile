@@ -6,4 +6,6 @@ COPY . /back-end
 
 EXPOSE 4000
 
+RUN chmod u+x backendstart.sh
+
 CMD ["./backendstart.sh"]
