@@ -6,7 +6,6 @@ services:
   staticPublishPath: ./build
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   plan: free
-  region: oregon
   rootDir: ./mandatory-training/
   buildFilter:
       paths:
