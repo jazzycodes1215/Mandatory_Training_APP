@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm start --prefix mandatory-training ${start} && npm run --prefix back-end ${start}",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
