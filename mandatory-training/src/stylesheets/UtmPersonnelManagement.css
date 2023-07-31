@@ -1,0 +1,75 @@
+.personnel-management-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 90%;
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  }
+  
+  .personnel-container {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  .personnel-container p {
+    margin: 5px 0;
+  }
+  
+  .personnel-container div {
+    margin-left: 20px;
+  }
+  
+  .training-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .training-card {
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .training-card p {
+    margin: 0;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .add-button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .selected-user {
+    background-color: #f0f0f0;
+  }
+  
+  /* Styling for loading and error messages */
+  .loading,
+  .error {
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .error {
+    color: red;
+  }
