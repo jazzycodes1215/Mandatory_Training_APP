@@ -8,4 +8,4 @@ EXPOSE 4000
 
 RUN npm install
 
-CMD ["npm", "start"]
+ENTRYPOINT ["NPM", "START"]
