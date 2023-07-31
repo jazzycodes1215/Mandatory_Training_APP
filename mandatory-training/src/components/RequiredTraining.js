@@ -32,13 +32,12 @@ export default function RequiredTraining() {
             let filtered = trainingStatus.filter((status) => status.training_name === training.name);
             let latestCompletionDate = null;
             for (const item of filtered) {
-                if (item.completetion_date && (!latestCompletionDate || item.completetion_date > latestCompletionDate)) {
-                latestCompletionDate = item.completetion_date;
+                if (item.completion_date && (!latestCompletionDate || item.completion_date > latestCompletionDate)) {
+                latestCompletionDate = item.completion_date;
                 }
             }
             return { name: training.name, completion_date: latestCompletionDate };
         });
-        console.log(tempCompletionDates);
         setCompletionDates(tempCompletionDates);
     }, [requiredTraining, trainingStatus]);
 
