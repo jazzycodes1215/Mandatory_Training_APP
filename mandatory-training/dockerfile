@@ -6,4 +6,6 @@ COPY . /
 
 EXPOSE 3000
 
-ENTRYPOINT ["frontendstart.sh"]
+RUN chmod u+x frontendstart.sh
+
+ENTRYPOINT ["./frontendstart.sh"]
