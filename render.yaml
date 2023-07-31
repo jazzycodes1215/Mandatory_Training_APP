@@ -9,7 +9,7 @@ services:
   dockerfilePath: ./mandatory-training/dockerfile
   healthCheckPath: /
   envVars:
-  - key:
+  - key: PORT
     value: 3000
 - type: web
   name: backend
@@ -19,7 +19,7 @@ services:
   rootDir: ./
   healthCheckPath: /
   envVars:
-  - key:
+  - key: PORT
     value: 4000
 databases:
 - name: prod
