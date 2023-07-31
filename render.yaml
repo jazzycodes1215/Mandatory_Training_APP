@@ -7,7 +7,6 @@ services:
   region: oregon
   rootDir: ./
   dockerfilePath: ./mandatory-training/dockerfile
-  dockerCommand: sh /mandatory-training/frontendstart.sh
   healthCheckPath: /
   envVars:
   - key:
@@ -17,7 +16,6 @@ services:
   runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   dockerfilePath: ./back-end/dockerfile
-  dockerCommand: sh /back-end/backendstart.sh
   rootDir: ./
   healthCheckPath: /
   envVars:
