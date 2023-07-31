@@ -13,24 +13,11 @@ services:
     value: 3000
 - type: web
   name: backend
-  runtime: static
-  staticPublishPath: ./build
+  runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
+  dockerfilePath: ./dockerfile
   rootDir: ./back-end/
   healthCheckPath: /
-  buildFilter:
-      paths:
-      - src/**/*.js
-      ignoredPaths:
-      - src/**/*.test.js
-  headers:
-    - path: /*
-      name: X-Frame-Options
-      value: sameorigin
-  routes:
-    - type: rewrite
-      source: /*
-      destination: /index.html
   envVars:
   - key: PORT
     value: 4000
