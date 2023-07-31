@@ -6,6 +6,4 @@ COPY . /back-end
 
 EXPOSE 4000
 
-RUN npm install
-
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["frontendstart.sh"]
