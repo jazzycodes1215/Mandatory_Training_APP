@@ -6,14 +6,14 @@ services:
   plan: free
   region: oregon
   rootDir: ./client/
-  dockerfilePath: ./mandatory-training/dockerfile
+  dockerfilePath: /client/mandatory-training/dockerfile
   dockerCommand: ./frontendstart.sh
   healthCheckPath: /
 - type: web
   name: backend
   runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
-  dockerfilePath: ./back-end/dockerfile
+  dockerfilePath: /server/back-end/dockerfile
   dockerCommand: ./backendstart.sh
   rootDir: ./server/
   healthCheckPath: /
