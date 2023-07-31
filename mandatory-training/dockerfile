@@ -8,4 +8,4 @@ EXPOSE 3000
 
 RUN chmod u+x frontendstart.sh
 
-ENTRYPOINT ["./frontendstart.sh"]
+ENTRYPOINT ["sh", "./frontendstart.sh"]
