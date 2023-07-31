@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 require('dotenv').config({ path: './../.env' })
 const port = process.env.BACKENDPORT
-const knex = require('knex')(require('./knexfile.js')['development']);
+const knex = require('knex')(require('./knexfile.js')[process.env.DATABASESTRING ?? 'production' : 'development']);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
