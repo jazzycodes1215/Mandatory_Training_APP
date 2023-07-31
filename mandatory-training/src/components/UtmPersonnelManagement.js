@@ -8,7 +8,7 @@ export default function UtmPersonnelManagement() {
 
   console.log('unit',unitID)
   useEffect(() => {
-    fetch(`http://localhost:4000/unit/status/${unitID}`)
+    fetch(`http://${fetchURL}:4000/unit/status/${unitID}`)
       .then(res => res.json())
       .then((data) => {
         setMyUnit(data);
@@ -18,7 +18,7 @@ export default function UtmPersonnelManagement() {
         setError(error.message);
       });
   }, [unitID]);
-   
+
 
 
 
@@ -56,7 +56,7 @@ export default function UtmPersonnelManagement() {
 
 
 
-  
+
 //   return (
 //     <div>
 

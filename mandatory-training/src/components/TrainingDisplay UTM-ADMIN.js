@@ -18,7 +18,7 @@ export default function TrainingDisplayUTM() {
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
-    const response = await fetch(`http://localhost:4000/training/${training}`)
+    const response = await fetch(`http://${fetchURL}:4000/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
   }
@@ -100,7 +100,7 @@ export default function TrainingDisplayUTM() {
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
         <h2>Training Statistics</h2>
-        
+
       </RightDiv>
       </FlexDiv>
       : null}

@@ -8,6 +8,7 @@ import {
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 
 export const AppContext = createContext();
+export const fetchURL = process.env.FETCH ? process.env.FETCH : 'localhost';
 
 const App = ()=> {
 

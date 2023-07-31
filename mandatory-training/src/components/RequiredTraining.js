@@ -30,7 +30,7 @@ export default function RequiredTraining() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/requiredtraining/${userID}`);
+            const response = await fetch(`http://${fetchURL}:4000/requiredtraining/${userID}`);
             const data = await response.json();
             setRequiredTraining(data);
         } catch (error) {
@@ -39,7 +39,7 @@ export default function RequiredTraining() {
     };
     const fetchSubordinates = async () => {
         //Dirty hack for checking if supervisor. May need to add a way to pull from DB
-        const response = await fetch(`http://localhost:4000/users`);
+        const response = await fetch(`http://${fetchURL}:4000/users`);
         const data = await response.json();
         let tempSup = false;
         if(data?.find(element => element.supervisor_id === userID))
@@ -59,7 +59,7 @@ export default function RequiredTraining() {
                 let mappedData = [];
                 for ( const index in subordinates )
                 {
-                    let response = await fetch(`http://localhost:4000/requiredtraining/${subordinates[index].id}`)
+                    let response = await fetch(`http://${fetchURL}:4000/requiredtraining/${subordinates[index].id}`)
                     let data = await response.json();
                     mappedData.push({name: `${subordinates[index].last_name}, ${subordinates[index].first_name}`, subordinate_id: subordinates[index].id, data: data});
                 }

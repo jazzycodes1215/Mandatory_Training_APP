@@ -49,7 +49,7 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData)};
-        let response = await fetch(`http://localhost:4000/login`, header)
+        let response = await fetch(`http://${fetchURL}:4000/login`, header)
         let status = response.status;
         let data = await response.json();
         if(status === 201)

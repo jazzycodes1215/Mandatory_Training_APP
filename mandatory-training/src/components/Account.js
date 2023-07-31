@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 import { Button } from '@mui/material'
@@ -40,7 +40,7 @@ export default function Account() {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/users`);
+            const response = await fetch(`http://${fetchURL}:4000/users`);
             const data = await response.json();
             setUsers(data);
         } catch (error) {
@@ -50,7 +50,7 @@ export default function Account() {
 
     const fetchDuties  = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties`);
+            const response = await fetch(`http://${fetchURL}:4000/duties`);
             const data = await response.json();
             setDuties(data);
         } catch (error) {
@@ -64,7 +64,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/users/${userID}`);
+            const response = await fetch(`http://${fetchURL}:4000/users/${userID}`);
             const data = await response.json();
             setAccount(data);
             setFirst(data.first_name);
@@ -84,7 +84,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/users/${account.supervisor_id}`);
+            const response = await fetch(`http://${fetchURL}:4000/users/${account.supervisor_id}`);
             const data = await response.json();
             setSupervisorAccount(data);
         } catch (error) {
@@ -94,7 +94,7 @@ export default function Account() {
 
     const fetchUserDuties = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties/${userID}`);
+            const response = await fetch(`http://${fetchURL}/duties/${userID}`);
             const data = await response.json();
             setUserDuties(data);
         } catch (error) {
@@ -117,7 +117,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/units/`);
+            const response = await fetch(`http://${fetchURL}:4000/units/`);
             const data = await response.json();
             setUnits(data);
         } catch (error) {
@@ -144,7 +144,7 @@ export default function Account() {
         {
             return;
         }
-        return fetch(`http://localhost:4000/registration/${userID}`,{
+        return fetch(`http://${fetchURL}:4000/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({first_name: firstname, "last_name": lastname, "unit": unitid , password: password, rank_id: rank, email: email})

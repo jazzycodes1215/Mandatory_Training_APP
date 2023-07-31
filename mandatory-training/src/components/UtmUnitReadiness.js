@@ -14,7 +14,7 @@ export default function UtmUnitReadiness() {
         if (!unitID) {
           return;
         }
-        const response = await fetch(`http://localhost:4000/unit/status/${unitID}`);
+        const response = await fetch(`http://${fetchURL}:4000/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           console.log(data)
@@ -42,7 +42,7 @@ export default function UtmUnitReadiness() {
     if (unitReadinessData) {
       // Extract the list of unique training names from the data
       const trainingNames = [...new Set(unitReadinessData.flatMap((userData) => userData.map((training) => training.training_name)))];
-  
+
       return (
         <div>
           <table className="readiness-table">
@@ -71,7 +71,7 @@ export default function UtmUnitReadiness() {
                           statusClass = 'up-to-date';
                         }
                       }
-  
+
                       return (
                         <td key={userTraining.training_id} className={statusClass}>
                           {userTraining.most_recent_completion_date ? userTraining.most_recent_completion_date : 'overdue'}
