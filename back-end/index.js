@@ -931,6 +931,25 @@ app.get('/unit/status/:unitId', async (req, res) => {
 //     res.status(500).json({ message: 'Error retrieving users', error });
 //   }
 // });
+
+//endpoint for the UTM to delete a training from the user
+app.delete('/user/status/:userId/:trainingId', async (req, res) => {
+  const userId = req.params.userId;
+  const trainingId = req.params.trainingId;
+  try {
+    const userTrainingDelete = await knex('training_status')
+      .where('user_id', userId)
+      .where('training_status.id', trainingId)
+      .del();
+    if (userTrainingDelete) {
+      res.json({ message: 'Training removed successfully' });
+    } else {
+      res.status(404).json({ message: 'Training not found for the user' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting training', error });
+  }
+});
 //////////////////////////////////////////////////UTM management ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
 
