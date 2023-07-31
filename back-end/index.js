@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-const port = 4000
+require('dotenv').config({ path: './../.env' })
+const port = process.env.BACKENDPORT
 const knex = require('knex')(require('./knexfile.js')['development']);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -10,7 +11,7 @@ const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-let secretKey = '';
+const secretKey = process.env.PRIVATE;
 
 //required endpoint functionalities
 {/* <Route path='/' element={<Help />} />
@@ -803,21 +804,21 @@ try {
 
 app.listen(port, () => {
 
-  crypto.generateKeyPair('rsa', {
-    modulusLength: 4096,
-    publicKeyEncoding: {
-      type: 'spki',
-      format: 'pem',
-    },
-    privateKeyEncoding: {
-      type: 'pkcs8',
-      format: 'pem',
-    },
-  }, (err, publicKey, privateKey) => {
-    // Handle errors and use the generated key pair.
-    if(err) console.log(err)
-    secretKey = privateKey;
-  });
+  // crypto.generateKeyPair('rsa', {
+  //   modulusLength: 4096,
+  //   publicKeyEncoding: {
+  //     type: 'spki',
+  //     format: 'pem',
+  //   },
+  //   privateKeyEncoding: {
+  //     type: 'pkcs8',
+  //     format: 'pem',
+  //   },
+  // }, (err, publicKey, privateKey) => {
+  //   // Handle errors and use the generated key pair.
+  //   if(err) console.log(err)
+  //   secretKey = privateKey;
+  // });
 
   console.log(`listening on port ${port}`)
 })
