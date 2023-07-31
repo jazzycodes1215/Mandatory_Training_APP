@@ -16,6 +16,8 @@
   
   .personnel-container p {
     margin: 5px 0;
+    font-size: 16px;
+  line-height: 2;
   }
   
   .personnel-container div {
@@ -24,17 +26,18 @@
   
   .training-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  grid-gap: 20px; 
   }
   
   .training-card {
+    padding: 20px;
     border: 1px solid #ccc;
-    background-color: white;
-    padding: 10px;
-    text-align: center;
+    background-color: #f9f9f9;
+    font-size: 16px; 
+    line-height: 1.5; 
   }
+  
   
   .training-card p {
     margin: 0;
@@ -72,4 +75,17 @@
   
   .error {
     color: red;
+  }
+
+  .training-card.due {
+   
+    border-color: #ff6347; /* Red border for due training */
+    background-color: #ffe4e1; /* Red background for due training */
+    font-weight: bold; /* Additional style to indicate due training */
+  }
+  
+  .training-card.not-due {
+    /* Add styles for the training card when it's not due */
+    border-color: #98fb98; /* Green border for not due training */
+    background-color: #f0fff0; /* Green background for not due training */
   }
