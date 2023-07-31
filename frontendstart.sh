@@ -1,3 +1,3 @@
-cd /mandatory-training/
+cd /mandatory-training/client/
 npm install
 npm start
