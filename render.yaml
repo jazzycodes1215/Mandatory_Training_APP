@@ -7,7 +7,7 @@ services:
   region: oregon
   rootDir: ./
   dockerfilePath: ./mandatory-training/dockerfile
-  dockerCommand: /mandatory-training/frontendstart.sh
+  dockerCommand: sh /mandatory-training/frontendstart.sh
   healthCheckPath: /
 - type: web
   name: backend
