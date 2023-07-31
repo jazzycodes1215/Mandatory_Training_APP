@@ -47,7 +47,7 @@ const App = ()=> {
                             <Route path='/account/*' element={<Account />} />
                             <Route path='/required-training/' element={<RequiredTraining />} />
                             <Route path='/subordinate-training/:id' element={<SubordinateTraining />} />
-                            {<Route path='/required-training/:training/*' element={<TrainingDisplay />} /> }
+                            <Route path='/required-training/:training/*' element={<TrainingDisplay />} />
                             <Route path='/training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />
                             <Route path='/unit-training-manager/*' element={<UTM />} />
@@ -56,7 +56,7 @@ const App = ()=> {
                             <Route path='/trainingdisplay' element={<TrainingDisplay />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
                             <Route path='/*' element={<Help />} /> catch all
-                            
+
                         </Routes>
                     </BodyContainer>
                 </BrowserRouter>
