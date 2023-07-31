@@ -1,3 +1,3 @@
 cd /back-end/
-npm i
+npm install
 npm start
