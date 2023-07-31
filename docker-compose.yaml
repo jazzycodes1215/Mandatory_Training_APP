@@ -1,0 +1,56 @@
+# The Docker Config version. Do not change.
+version: "3.8"
+services:
+  frontend:
+    build: frontend
+    container_name: frontend
+    volumes:
+      - "/client/app"
+    ports:
+      - "0.0.0.0:3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - server
+
+  server:
+    build: backend
+    container_name: backend
+    volumes:
+      - "/server/app"
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+    environment:
+      PGDB: utm_tool
+      PGUSER: postgres
+      PGPWD: hello
+      PGADD: db
+      PGPORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: hello
+      POSTGRES_DB: ZPREFIX
+
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: pg_isready -U postgres
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  db-data:
