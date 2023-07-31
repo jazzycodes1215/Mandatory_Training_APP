@@ -952,7 +952,18 @@ app.get('/unit/status/:unitId', async (req, res) => {
       })
       .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
 
-    // Group the training data by user information
+    // Create a mapping of user IDs to their completed training IDs
+    const completedTrainingsMap = {};
+    users.forEach((user) => {
+      if (user.most_recent_completion_date) {
+        if (!completedTrainingsMap[user.id]) {
+          completedTrainingsMap[user.id] = new Set();
+        }
+        completedTrainingsMap[user.id].add(user.training_id);
+      }
+    });
+
+    // Group the training data by user information and include pending trainings
     const groupedData = users.reduce((acc, user) => {
       const { rank_name, last_name, first_name } = user;
       const userData = acc[`${rank_name}_${last_name}_${first_name}`];
