@@ -23,7 +23,7 @@ export default function Training() {
     display: grid;
     margin-top: 30px;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 8vh 80vh; 
+    grid-template-rows: 8vh 80vh;
   `;
 
     const Subhead =styled.div`
@@ -62,7 +62,7 @@ export default function Training() {
 
     // const fetchRequiredTraining = async (e) => {
     //     try {
-    //         const response = await fetch(`http://localhost:4000/requiredTraining/`);
+    //         const response = await fetch(`http://${fetchURL}:4000/requiredTraining/`);
     //         const data = await response.json();
     //         setRequiredTraining(data);
     //     } catch (error) {
@@ -78,8 +78,8 @@ export default function Training() {
 
       const SelectedBtn = (btn) => {
       switch (btn) {
-        
-        case 1:  
+
+        case 1:
         document.getElementById("btn1").classList.remove("btnDeactivated");
         document.getElementById("btn2").classList.add("btnDeactivated");
         document.getElementById("btn3").classList.add("btnDeactivated");
@@ -126,7 +126,7 @@ export default function Training() {
     return (
         <>
 
-    
+
         <TRContainer className='boy'>
             <Subhead>
                 <h1>Trainings</h1>
@@ -153,7 +153,7 @@ export default function Training() {
 
 export const TrainingCard = styled.div`
 display: grid;
-grid-template-rows: .5fr 2fr .5fr; 
+grid-template-rows: .5fr 2fr .5fr;
 border: 1px solid black;
 width: 20%;
 height: 50%;

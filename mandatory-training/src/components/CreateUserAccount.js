@@ -33,7 +33,7 @@ export default function CreateUserAccount() {
         },
         body: JSON.stringify(userData)};
         //Maybe don't go to the login login... API
-        let response = await fetch(`http://localhost:4000/createAccount`, header)
+        let response = await fetch(`http://${fetchURL}:4000/createAccount`, header)
         let status = response.status;
         let data = await response.json();
         console.log(data);

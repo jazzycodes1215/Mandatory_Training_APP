@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link , useNavigate} from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails
@@ -33,14 +33,14 @@ export default function Admin() {
                 },
                 body: JSON.stringify(validToken)
             }
-            let response = await fetch(`http://localhost:4000/tickets/`, method)
+            let response = await fetch(`http://${fetchURL}:4000/tickets/`, method)
             let data = response.json();
             setTickets(data);
         }
     }
 
     const fetchUsers = async () => {
-        let response = await fetch(`http://localhost:4000/users`)
+        let response = await fetch(`http://${fetchURL}:4000/users`)
         let data = await response.json();
         setUsers(data);
     }
@@ -105,7 +105,7 @@ export default function Admin() {
             },
             body: JSON.stringify({role_id: roleToSet[userToDelete]})}
         console.log(method);
-        const response = await fetch(`http://localhost:4000/users/${userToDelete}`, method)
+        const response = await fetch(`http://${fetchURL}:4000/users/${userToDelete}`, method)
         const data = await response.json();
         if(response.ok)
         {
@@ -125,7 +125,7 @@ export default function Admin() {
                 },
                 method: 'DELETE'
             }
-            let response = await fetch(`http://localhost:4000/users/${userToDelete}`, method)
+            let response = await fetch(`http://${fetchURL}:4000/users/${userToDelete}`, method)
             if(response.ok)
             {
                 console.log("User Deleted");
