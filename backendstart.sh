@@ -1,4 +1,4 @@
 #!/bin/ash
-cd ./back-end/
+cd /server/back-end/
 npm install
 npm run
