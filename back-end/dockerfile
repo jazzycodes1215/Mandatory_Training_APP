@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.2
 FROM node:latest
 
 WORKDIR /back-end/back-end/
@@ -6,6 +7,7 @@ COPY . /back-end/back-end/
 
 EXPOSE 4000
 
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env
 RUN npm install
 
 CMD ["npm", "start"]
