@@ -1,4 +1,4 @@
 #!/bin/ash
-cd ./mandatory-training/
+cd /client/mandatory-training/
 npm install
 npm start
