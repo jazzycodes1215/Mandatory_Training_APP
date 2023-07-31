@@ -13,6 +13,6 @@ services:
   rootDir: backend
   healthCheckPath: /
 databases:
-  name: prod
+- name: prod
   databaseName: utm_tool
   user: postgres
