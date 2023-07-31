@@ -1,11 +1,11 @@
   import { useState, useEffect, useContext, createContext } from 'react';
   import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
   import styled from 'styled-components';
-  import { AppContext } from '../App';
+  import { AppContext, fetchURL } from '../App';
   import UtmUnitReadiness from './UtmUnitReadiness';
   import UtmPersonnelManagement from './UtmPersonnelManagement';
   import UtmNotifications from './UtmNotifications';
-import { Training } from '.';
+  import { Training } from '.';
 
   export default function UTM() {
     const initialSelectedTab = localStorage.getItem('selectedTab') || 'notifications';

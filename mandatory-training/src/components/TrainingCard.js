@@ -6,6 +6,7 @@ import { TrainingCardMid } from './Training';
 import { TrainingCardBot } from './Training';
 import { Training } from './Training';
 import { useNavigate, Link } from 'react-router-dom'
+import { fetchURL } from '../App'
 
 export default function Card(props) {
 

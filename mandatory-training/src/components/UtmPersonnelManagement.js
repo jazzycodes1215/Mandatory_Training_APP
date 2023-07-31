@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import useUserCheck from '../hooks/useUserCheck'
+import { fetchURL } from '../App'
 
 export default function UtmPersonnelManagement() {
   const [myUnit, setMyUnit] = useState([])

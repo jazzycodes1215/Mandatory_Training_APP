@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 export default function CreateUserAccount() {

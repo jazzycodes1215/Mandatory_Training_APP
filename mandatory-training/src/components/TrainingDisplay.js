@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 

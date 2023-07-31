@@ -3,6 +3,7 @@
 // import { useNotificationCenter } from 'react-toastify/addons/use-notification-center';
 import '../stylesheets/UtmNotifications.css'
 import { useEffect, useState } from "react";
+import { fetchURL } from '../App'
 
 export default function UtmNotifications() {
   const [notifications, setNotifications] = useState([]);
