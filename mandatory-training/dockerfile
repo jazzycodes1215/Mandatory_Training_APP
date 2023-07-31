@@ -1,8 +1,8 @@
 FROM node:latest
 
-WORKDIR /
+WORKDIR /client/
 
-COPY . /
+COPY . /client/
 
 EXPOSE 3000
 
