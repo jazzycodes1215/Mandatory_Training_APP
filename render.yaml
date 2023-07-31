@@ -6,7 +6,7 @@ services:
   plan: free
   region: oregon
   rootDir: ./mandatory-training/mandatory-training/
-  dockerfilePath: ./mandatory-training/dockerfile
+  dockerfilePath: ./dockerfile
   healthCheckPath: /
   envVars:
   - key: PORT
@@ -15,7 +15,7 @@ services:
   name: backend
   runtime: docker
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
-  dockerfilePath: ./back-end/dockerfile
+  dockerfilePath: ./dockerfile
   rootDir: ./back-end/back-end/
   healthCheckPath: /
   envVars:
