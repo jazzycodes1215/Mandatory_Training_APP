@@ -5,7 +5,7 @@ services:
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   plan: free
   region: oregon
-  rootDir: ./mandatory-training/
+  rootDir: ./client/
   dockerfilePath: ./mandatory-training/dockerfile
   dockerCommand: ./frontendstart.sh
   healthCheckPath: /
@@ -15,7 +15,7 @@ services:
   repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
   dockerfilePath: ./back-end/dockerfile
   dockerCommand: ./backendstart.sh
-  rootDir: ./back-end/
+  rootDir: ./server/
   healthCheckPath: /
 databases:
 - name: prod
