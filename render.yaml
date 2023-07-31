@@ -15,4 +15,4 @@ services:
 databases:
 - name: prod
   databaseName: utm_tool
-  user: postgres
+  user: app_user
