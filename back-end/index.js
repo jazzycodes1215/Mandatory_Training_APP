@@ -136,6 +136,57 @@ app.get('/duties/:user_id', async (req, res) => {
   }
 });
 
+//endpoint for getting all subordinates and their training status for a specific user
+app.get('/user/subordinates/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const users = await knex('users')
+      .select(
+        'users.id',
+        'users.last_name',
+        'users.first_name',
+        'ranks.name as rank_name',
+        'trainings.id as training_id',
+        'trainings.name as training_name',
+        'trainings.interval',
+        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
+      )
+      .where('users.supervisor_id', userId)
+      .join('ranks', 'users.rank_id', 'ranks.id')
+      .join('user_duties', 'users.id', 'user_duties.user_id')
+      .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
+      .join('trainings', 'duty_trainings.training_id', 'trainings.id')
+      .leftJoin('training_status', (join) => {
+        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
+        join.on('training_status.completion_date', '=', function () {
+          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
+        });
+      })
+      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
+
+    // Group the training data by user information
+    const groupedData = users.reduce((acc, user) => {
+      const { rank_name, last_name, first_name } = user;
+      const userData = acc[`${rank_name}_${last_name}_${first_name}`];
+      if (userData) {
+        userData.push(user);
+      } else {
+        acc[`${rank_name}_${last_name}_${first_name}`] = [user];
+      }
+      return acc;
+    }, {});
+
+    const result = Object.values(groupedData);
+
+    console.log('Response Data:', result);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error retrieving users:', error);
+    res.status(500).json({ message: 'Error retrieving users', error });
+  }
+});
+
 //endpoint for updating a user. Admin will most likely use this
 app.patch('/users/:id', async (req, res) => {
   const userId = req.params.id;
