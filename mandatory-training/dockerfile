@@ -1,8 +1,8 @@
 FROM node:latest
 
-WORKDIR ./mandatory-training/
+WORKDIR /mandatory-training/mandatory-training/
 
-COPY . ./mandatory-training/
+COPY . /mandatory-training/mandatory-training/
 
 EXPOSE 3000
 
