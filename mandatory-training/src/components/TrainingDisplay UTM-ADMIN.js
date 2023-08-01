@@ -31,6 +31,9 @@ export default function TrainingDisplayUTM() {
     setSource(`${data.source}`);
   }
 
+
+
+
   useEffect(()=>
   {
     fetchTraining();
@@ -41,9 +44,11 @@ export default function TrainingDisplayUTM() {
       <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
           <div className='editTraining'>
-          <p>Edit</p>
-          <img src={mySvg} alt="mmm"></img>
-        </div>
+          <button onClick={()=>(EditPage())}>
+            <p>Edit</p>
+            <img src={mySvg} alt="mmm"></img>
+            </button>
+            </div>
       </div>
       {trainingData ?
       <FlexDiv>
