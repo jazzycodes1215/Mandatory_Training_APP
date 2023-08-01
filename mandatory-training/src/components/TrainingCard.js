@@ -20,7 +20,7 @@ export default function Card(props) {
 
     const fetchRequiredTraining = async () => {
         try {
-            const response = await fetch(`http://${fetchURL}/requiredTraining/${props.endp}`);
+            const response = await fetch(`${fetchURL}/requiredTraining/${props.endp}`);
             const data = await response.json();
             setRequiredTraining(data);
         } catch (error) {

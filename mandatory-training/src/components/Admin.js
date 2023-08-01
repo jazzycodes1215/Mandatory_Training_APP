@@ -33,14 +33,14 @@ export default function Admin() {
                 },
                 body: JSON.stringify(validToken)
             }
-            let response = await fetch(`http://${fetchURL}/tickets/`, method)
+            let response = await fetch(`${fetchURL}/tickets/`, method)
             let data = response.json();
             setTickets(data);
         }
     }
 
     const fetchUsers = async () => {
-        let response = await fetch(`http://${fetchURL}/users`)
+        let response = await fetch(`${fetchURL}/users`)
         let data = await response.json();
         setUsers(data);
     }
@@ -105,7 +105,7 @@ export default function Admin() {
             },
             body: JSON.stringify({role_id: roleToSet[userToDelete]})}
         console.log(method);
-        const response = await fetch(`http://${fetchURL}/users/${userToDelete}`, method)
+        const response = await fetch(`${fetchURL}/users/${userToDelete}`, method)
         const data = await response.json();
         if(response.ok)
         {
@@ -125,7 +125,7 @@ export default function Admin() {
                 },
                 method: 'DELETE'
             }
-            let response = await fetch(`http://${fetchURL}/users/${userToDelete}`, method)
+            let response = await fetch(`${fetchURL}/users/${userToDelete}`, method)
             if(response.ok)
             {
                 console.log("User Deleted");
