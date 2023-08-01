@@ -513,27 +513,25 @@ app.get('/requiredTraining/ADT', async (req, res) => {
     }
   });
 
-
-app.get('/requiredTraining/:id', async (req, res) => {
-  const {id} = req.params;
-  try {
-    //I tried not to use knex.raw I swear.
-    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
-    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
-    WHERE user_duties.user_id = ?`, [id])
-    if(trainings?.rows)
-    {
-      res.status(201).json(trainings?.rows)
+  app.get('/requiredTraining/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const trainings = await knex('trainings')
+        .select('trainings.id', 'name', 'interval')
+        .join('duty_trainings', 'trainings.id', '=', 'duty_trainings.training_id')
+        .join('user_duties', 'duty_trainings.duty_id', '=', 'user_duties.duty_id')
+        .where('user_duties.user_id', id);
+  
+      if (trainings.length > 0) {
+        res.status(200).json(trainings);
+      } else {
+        res.status(200).json([]);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    else
-    {
-      res.status(404);
-    }
-
-  } catch (error) {
-    console.log(error)
-  }
-})
+  });
 
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
@@ -561,7 +559,7 @@ app.get('/requiredTraining/:id', async (req, res) => {
             res.status(200).json({ message: 'Training updated successfully' });
           } else {
             res.status(404).json({ message: 'Training not found' });
-           }
+          }
     } catch (error) {
       res.status(500).json({ message: 'Error updating training data', error });
     }
