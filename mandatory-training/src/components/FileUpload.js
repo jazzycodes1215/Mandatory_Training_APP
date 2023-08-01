@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App';
-import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
+import useUserCheck from '../hooks/useUserCheck'
+// import Button from '@mui/material/Button';
+// import SendIcon from '@mui/icons-material/Send';
+// import Input from '@mui/material/Input';
 
 const FileUpload = () => {
+  const { userID } = useUserCheck();
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -13,25 +16,25 @@ const FileUpload = () => {
   };
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
+    event.preventDefault();
 
-    if (selectedFile) {
+    if (selectedFile && userID) {
       // Create a new FormData object and append the selected file to it
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('user_id', userID);
 
       try {
-        // Send the file to the backend using fetch or axios
+        // Send the file to the backend using fetch
         const response = await fetch('http://localhost:4000/upload', {
           method: 'POST',
           body: formData,
         });
 
         if (response.ok) {
-          // File uploaded successfully
           console.log('File uploaded successfully');
+          console.log(userID);
         } else {
-          // Handle the error
           console.error('Error uploading file');
         }
       } catch (error) {
@@ -42,10 +45,10 @@ const FileUpload = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="file" onChange={handleFileChange} />
-    <Button variant="contained" type='submit' endIcon={<SendIcon />}>Submit</Button>
-  </form>
+      <input type='file' onChange={handleFileChange} />
+      <button variant="contained" type='submit'>Submit</button>
+    </form>
   );
-}
+};
 
 export default FileUpload;

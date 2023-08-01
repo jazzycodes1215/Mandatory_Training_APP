@@ -1,0 +1,41 @@
+services:
+- type: web
+  name: frontend
+  runtime: static
+  buildCommand: yarn build
+  staticPublishPath: ./build
+  repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
+  rootDir: ./mandatory-training/
+  buildFilter:
+      paths:
+      - src/**/*.js
+      ignoredPaths:
+      - src/**/*.test.js
+  headers:
+    - path: /*
+      name: X-Frame-Options
+      value: sameorigin
+  routes:
+    - type: rewrite
+      source: /*
+      destination: /index.html
+  healthCheckPath: /
+  envVars:
+  - key: PORT
+    value: 3000
+- type: web
+  name: backend
+  runtime: docker
+  repo: https://github.com/Devinekyle/Mandatory_Training_APP.git
+  dockerfilePath: ./dockerfile
+  rootDir: ./back-end/
+  healthCheckPath: /
+  envVars:
+  - key: PORT
+    value: 4000
+databases:
+- name: prod
+  plan: free
+  databaseName: utm_tool
+  user: app_user
+

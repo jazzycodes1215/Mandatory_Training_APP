@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import '../stylesheets/global.css'
 
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'
@@ -158,7 +158,7 @@ export default function Header() {
                 <MenuItem onClick={()=>{navigate('/administrator'); handleCloseUserMenu()}}>
                   <Typography textAlign="center">Admin View</Typography>
                 </MenuItem> : []/*It doesn't take react fragments... */}
-                {validatedUserType === 3 ?
+                {validatedUserType >= 3 ?
                 <MenuItem onClick={()=>{navigate('/unit-training-manager'); handleCloseUserMenu()}}>
                   <Typography textAlign="center">UTM View</Typography>
                 </MenuItem> : []}

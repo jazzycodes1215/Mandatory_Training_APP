@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck';
 import UtmReadinessTable from './UtmReadinessTable';
+import UtmUnitReport from './UtmUnitReport'
 import '../stylesheets/UtmUnitReadiness.css';
 
 export default function UtmUnitReadiness() {
@@ -14,7 +16,7 @@ export default function UtmUnitReadiness() {
         if (!unitID) {
           return;
         }
-        const response = await fetch(`http://localhost:4000/unit/status/${unitID}`);
+        const response = await fetch(`${fetchURL}/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           setUnitReadinessData(data);
@@ -32,18 +34,20 @@ export default function UtmUnitReadiness() {
     fetchUnitReadinessData();
   }, [unitID]);
 
-  const handleDownloadReport = () => {
-    // Implement the logic to generate and download the CSV report here
-  };
-
   return (
     <div className="readiness-container">
       <div>
         <h2>Unit Readiness Section</h2>
-        <UtmReadinessTable unitReadinessData={unitReadinessData} />
-      </div>
-      <div>
-        <button onClick={handleDownloadReport}>Download Report</button>
+        {unitReadinessData ? (
+          <>
+            <UtmReadinessTable unitReadinessData={unitReadinessData} />
+            <UtmUnitReport unitReadinessData={unitReadinessData} />
+          </>
+        ) : error ? (
+          <div>Error: {error}</div>
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
     </div>
   );

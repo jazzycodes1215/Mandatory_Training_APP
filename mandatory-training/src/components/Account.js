@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 import { Button } from '@mui/material'
@@ -17,6 +17,7 @@ export default function Account() {
     const [supervisorId, setSupervisorId] = useState(null);
     const [supervisorAccount, setSupervisorAccount] = useState('');
     const [units, setUnits] = useState([]);
+    const [role, setRole] = useState(null);
     const [firstname, setFirst] = useState(null);
     const [lastname, setLast] = useState(null);
     const [email, setEmail] = useState(null);
@@ -26,7 +27,9 @@ export default function Account() {
     const [updated, setUpdated] = useState(false);
     const [userDuties, setUserDuties] = useState([]);
     const [duties, setDuties] = useState([]);
+    const [selectedDuties, setSelectedDuties] = useState([]);
     const [users, setUsers] = useState([]);
+
     useEffect(() => {
         fetchAccount();
         fetchDuties();
@@ -40,12 +43,14 @@ export default function Account() {
     }, [supervisor]);
 
     useEffect(() => {
-        fetchSupervisor();
-    }, [account]);
+        if (account?.supervisor_id) {
+            fetchSupervisor();
+        }
+    }, [userID, account?.supervisor_id]);
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/users`);
+            const response = await fetch(`${fetchURL}/users`);
             const data = await response.json();
             setUsers(data);
         } catch (error) {
@@ -55,7 +60,7 @@ export default function Account() {
 
     const fetchDuties  = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties`);
+            const response = await fetch(`${fetchURL}/duties`);
             const data = await response.json();
             setDuties(data);
         } catch (error) {
@@ -69,7 +74,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/users/${userID}`);
+            const response = await fetch(`${fetchURL}/users/${userID}`);
             const data = await response.json();
             setAccount(data);
             setFirst(data.first_name);
@@ -78,6 +83,7 @@ export default function Account() {
             setUnit(data.unit_id);
             setPassword(data.password);
             setRank(data.rank_id);
+            setRole(data.role_id);
         } catch (error) {
             console.error('Error fetching user data', error);
         }
@@ -89,7 +95,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/users/${account.supervisor_id}`);
+            const response = await fetch(`${fetchURL}/users/${account.supervisor_id}`);
             const data = await response.json();
             setSupervisorAccount(data);
         } catch (error) {
@@ -107,7 +113,7 @@ export default function Account() {
 
     const fetchUserDuties = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/duties/${userID}`);
+            const response = await fetch(`${fetchURL}/duties/${userID}`);
             const data = await response.json();
             setUserDuties(data);
         } catch (error) {
@@ -130,7 +136,7 @@ export default function Account() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/units/`);
+            const response = await fetch(`${fetchURL}/units/`);
             const data = await response.json();
             setUnits(data);
         } catch (error) {
@@ -150,6 +156,36 @@ export default function Account() {
     const handleSubmitDetails = () => {
         setEditMode(false);
         handlePatch();
+        handlePut();
+    }
+
+    const handleSelectDutiesChange = (e) => {
+        // Get all the selected options and map them to an array of values
+        const selectedOptions = Array.from(e.target.selectedOptions);
+        const selectedValues = selectedOptions.map((option) => parseInt(option.value));
+        setSelectedDuties(selectedValues);
+      }
+
+    const handlePut = () => {
+        if(!password)
+        {
+            return;
+        }
+        return fetch(`${fetchURL}/duties/${userID}`,{
+            method:"PUT",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({duty_ids: selectedDuties}), 
+        })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                return res.json().then(data => { throw new Error(data.error) });
+            }
+        })
+        .catch(err => {
+            window.alert(err.message);
+        });
     }
 
     const handlePatch = () => {
@@ -157,10 +193,10 @@ export default function Account() {
         {
             return;
         }
-        return fetch(`http://localhost:4000/registration/${userID}`,{
+        return fetch(`${fetchURL}/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId})
+            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
         })
             .then(res => {
                 if (res.ok) {
@@ -170,7 +206,6 @@ export default function Account() {
                 }
             })
             .then(data=>{
-                setToken(data.token)
                 setUpdated(!updated);
             })
             .catch(err => {
@@ -231,7 +266,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectDuties">Duties:</Label>
-                <SelectAccountInfo id="selectDuties" multiple required>
+                <SelectAccountInfo onChange={handleSelectDutiesChange} id="selectDuties" multiple required>
                     {duties?.map((element)=> {
                         return (
                             <option value={element.id}>{element.title}</option>

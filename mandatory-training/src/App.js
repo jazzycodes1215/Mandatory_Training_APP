@@ -8,6 +8,7 @@ import {
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 
 export const AppContext = createContext();
+export const fetchURL = process.env.REACT_APP_FETCH ? process.env.REACT_APP_FETCH : 'http://localhost:4000';
 
 const App = ()=> {
 
@@ -54,7 +55,7 @@ const App = ()=> {
                             <Route path='/unit-training-manager/*' element={<UTM />} />
                             <Route path='/administrator/*' element={<Admin />} />
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
-                            <Route path='/trainingdisplayUTM' element={<TrainingDisplayUTM />} />
+                            <Route path='/training-UTM/:training/*' element={<TrainingDisplayUTM />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
                             <Route path='/*' element={<Help />} /> catch all
 

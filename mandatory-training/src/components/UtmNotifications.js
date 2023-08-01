@@ -1,5 +1,6 @@
 import '../stylesheets/UtmNotifications.css'
 import { useEffect, useState } from "react";
+import { fetchURL } from '../App'
 import UtmNotificationSend from './UtmNotificationSend';
 import { Route, Routes, Link} from 'react-router-dom';
 
@@ -7,9 +8,9 @@ import { Route, Routes, Link} from 'react-router-dom';
 
 export default function UtmNotifications() {
   const [notifications, setNotifications] = useState([]);
-  
+
   useEffect(() => {
-    fetch(`http://localhost:4000/notifications`)
+    fetch(`${fetchURL}/notifications`)
     .then(res => res.json())
     .then((data) => setNotifications(data))
     .catch((error) => console.error('Error fetching notifications:', error));
@@ -17,7 +18,7 @@ export default function UtmNotifications() {
     console.log(notifications)
 
   const handleDeleteNotification = (id) => {
-    fetch(`http://localhost:4000/notifications/${id}`, {
+    fetch(`${fetchURL}/notifications/${id}`, {
        method: 'DELETE',
     })
       .then((res) => res.json())
@@ -30,7 +31,7 @@ export default function UtmNotifications() {
     };
 
   const handleMarkAsRead = (id) => {
-    fetch(`http://localhost:4000/notifications/${id}`, {
+    fetch(`${fetchURL}/notifications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ read_status: true }),
       headers: {
@@ -74,7 +75,7 @@ export default function UtmNotifications() {
 
 // const handleNotification = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:4000/notifications`);
+  //     const response = await fetch(`${fetchURL}/notifications`);
   //     const data = await response.json();
   //     if (response.ok) {
   //       data.notifications.forEach((notification) => {

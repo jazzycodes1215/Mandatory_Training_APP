@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 
 /*TL;Dont wanna read the code. It returns an object with two values
 validToken: This means that this has ran the fetch request and the user still has a valid token. This is to reduce strain
@@ -77,7 +77,7 @@ export const useUserCheck = () =>
       {
         return;
       }
-      let response = await fetch(`http://localhost:4000/login`, header)
+      let response = await fetch(`${fetchURL}/login`, header)
       let status = response.status;
       let data = await response.json();
       if(status === 201)
