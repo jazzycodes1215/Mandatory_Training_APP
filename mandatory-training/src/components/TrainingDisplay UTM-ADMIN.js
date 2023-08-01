@@ -1,8 +1,9 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext, createElement, useRef} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
 import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
+import ContentEditable from 'react-contenteditable';
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -16,17 +17,24 @@ export default function TrainingDisplayUTM() {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState({})
   const navigate = useNavigate();
+  const [editable, setEditable] = useState(true)
+  const inputRef = useRef()
+  const [saveButton, setSaveButton] = useState(false)
+  const [editmode, setEditmode] = useState(false)
+
+  const [source, setSource] = useState('')
 
   const fetchTraining = async () => {
     const response = await fetch(`${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
+    setSource(`${data.source}`);
   }
 
-  // useEffect(()=>
-  // {
-  //   fetchTraining();
-  // }, training)
+  useEffect(()=>
+  {
+    fetchTraining();
+  }, [training])
 
   return (
     <>
