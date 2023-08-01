@@ -4,6 +4,7 @@ import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 import ContentEditable from 'react-contenteditable';
+import EditView from './EditTraining';
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -21,6 +22,8 @@ export default function TrainingDisplayUTM() {
   const inputRef = useRef()
   const [saveButton, setSaveButton] = useState(false)
   const [editmode, setEditmode] = useState(false)
+  const [trainingProp, setTrainingprop] = useState()
+
 
   const [source, setSource] = useState('')
 
@@ -32,9 +35,7 @@ export default function TrainingDisplayUTM() {
   }
 
   const EditPage = () => {
-    setEditable(true)
-    setSaveButton(true)
-    setEditmode(true)
+    setEditmode(!editmode)
   }
 
 
@@ -56,7 +57,8 @@ export default function TrainingDisplayUTM() {
       </div>
       {trainingData ?
       <FlexDiv>
-      <LeftDiv>
+     
+     {!editmode && ( <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
           <ListHeader>{trainingData.name}</ListHeader>
@@ -123,7 +125,12 @@ export default function TrainingDisplayUTM() {
           }}>
 
         </Box>
-      </LeftDiv>
+      
+      </LeftDiv>)}
+
+      {editmode && (
+        <EditView props={trainingData}/>)}
+
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
         <h2>Training Statistics</h2>
@@ -136,28 +143,28 @@ export default function TrainingDisplayUTM() {
   )
 }
 
-const FlexDiv = styled.div`
+export const FlexDiv = styled.div`
 overflow: hidden;
 display: flex;`
 
-const LeftDiv = styled.div`
+export const LeftDiv = styled.div`
 width: 75vw;
 overflow: hidden;
 align-items: center;
 `
 
-const RightDiv = styled.div`
+export const RightDiv = styled.div`
 width: 25vw;
 overflow: hidden;
 display: flex;
 flex-direction: column;
 `
 
-const SubDiv = styled.div`
+export const SubDiv = styled.div`
 overflow: hidden;
 margin-left: 3vw;`
 
-const ButtonTraining = styled.button`
+export const ButtonTraining = styled.button`
     background-color: MidnightBlue;
     color: white;
     font-size: 1em;
@@ -178,16 +185,16 @@ const ButtonTraining = styled.button`
     }
 `;
 
-const ListTitle = styled.div`
+export const ListTitle = styled.div`
 display: flex;
 flex-direction: row;
 width: 100%;
 align-items: center;
 `;
-const ListHeader = styled.span`
+export const ListHeader = styled.span`
 font-size: xxx-large;
 font-weight: 700;
 `;
-const ListSubHeader = styled.span`
+export const ListSubHeader = styled.span`
 font-size: x-large;
 `;
