@@ -1,35 +1,42 @@
-.readiness-container {
-    max-height: 1100px; /* Set the maximum height for the chart container */
-    overflow-y: auto; /* Enable vertical scrolling if the content overflows */
-  }
-  
-  .user-chart {
-    margin-bottom: 20px;
-  }
-  
-  .training-bar {
-    background-color: #007bff;
-    color: #fff;
-    padding: 8px;
-    margin-bottom: 5px;
-  }
-  
-  /* Optionally, add some styles to the training bar to represent the intervals visually */
-  .training-bar::before {
-    content: '';
-    display: block;
-    width: var(--interval-width, 0);
-    height: 10px;
-    background-color: #ffc107;
-    transition: width 0.3s ease;
-  }
-  
-  /* Add inline style to the training bar to dynamically adjust the width based on the interval */
-  .training-bar[style*='interval:']::before {
-    --interval-width: calc(100% * (attr(style:match('interval:(\\d+)'), 1) / 100));
-  }
+.readiness-table td {
+  text-align: center;
+  border: 1px solid black;
+  padding: 8px;
+}
 
-  /* UtmUnitReadiness.css */
+.readiness-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.readiness-container {
+  max-height: 1100px;
+  overflow-y: auto;
+}
+
+.user-chart {
+  margin-bottom: 20px;
+}
+
+.training-bar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px;
+  margin-bottom: 5px;
+}
+
+.training-bar::before {
+  content: '';
+  display: block;
+  width: var(--interval-width, 0);
+  height: 10px;
+  background-color: #ffc107;
+  transition: width 0.3s ease;
+}
+
+.training-bar[style*='interval:']::before {
+  --interval-width: calc(100% * (attr(style:match('interval:(\\d+)'), 1) / 100));
+}
 
 .overdue {
   background-color: #ff0000;
@@ -37,13 +44,20 @@
 }
 
 .due-soon {
-  background-color: #ffc0cb;
+  background-color: #e28102;
+  color: #fff;
 }
 
 .coming-due {
-  background-color: #ffff00;
+  background-color: #a7aa00;
+  color: #fff;
 }
 
 .up-to-date {
-  background-color: #98fb98;
+  background-color: #018501;
+  color: #fff;
+}
+
+.not-applicable {
+  background-color: #ffffff;
 }

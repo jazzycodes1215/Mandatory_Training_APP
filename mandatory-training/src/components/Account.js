@@ -14,6 +14,7 @@ export default function Account() {
     const [editMode, setEditMode] = useState(false);
     const [account, setAccount] = useState({});
     const [supervisor, setSupervisor] = useState(null);
+    const [supervisorId, setSupervisorId] = useState(null);
     const [supervisorAccount, setSupervisorAccount] = useState('');
     const [units, setUnits] = useState([]);
     const [firstname, setFirst] = useState(null);
@@ -33,6 +34,10 @@ export default function Account() {
         fetchUserDuties();
         fetchUnits();
     }, [userID, validatedUserType, updated]);
+
+    useEffect(() => {
+        findSupervisorId();
+    }, [supervisor]);
 
     useEffect(() => {
         fetchSupervisor();
@@ -92,6 +97,14 @@ export default function Account() {
         }
     }
 
+    const findSupervisorId = () => {
+        let found = users?.find((element)=> `${element.first_name} ${element.last_name}` === supervisor);
+        if (found) {
+            setSupervisorId(found.supervisor_id);
+            console.log(found.supervisor_id);
+        }
+    }
+
     const fetchUserDuties = async () => {
         try {
             const response = await fetch(`${fetchURL}/duties/${userID}`);
@@ -147,7 +160,7 @@ export default function Account() {
         return fetch(`${fetchURL}/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({first_name: firstname, "last_name": lastname, "unit": unitid , password: password, rank_id: rank, email: email})
+            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId})
         })
             .then(res => {
                 if (res.ok) {

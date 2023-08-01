@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
-require('dotenv').config({ path: '/etc/secrets/.env' })
-const port = process.env.PORT;
+console.log(process.env.NODE_ENV)
+require('dotenv').config({ path: `${process.env.NODE_ENV}` })
+const port = process.env.BACKENDPORT;
 const knex = require('knex')(require('./knexfile.js')[process.env.DATABASESTRING ? 'production' : 'development']);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -133,6 +134,57 @@ app.get('/duties/:user_id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving duties', error });
+  }
+});
+
+//endpoint for getting all subordinates and their training status for a specific user
+app.get('/user/subordinates/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const users = await knex('users')
+      .select(
+        'users.id',
+        'users.last_name',
+        'users.first_name',
+        'ranks.name as rank_name',
+        'trainings.id as training_id',
+        'trainings.name as training_name',
+        'trainings.interval',
+        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
+      )
+      .where('users.supervisor_id', userId)
+      .join('ranks', 'users.rank_id', 'ranks.id')
+      .join('user_duties', 'users.id', 'user_duties.user_id')
+      .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
+      .join('trainings', 'duty_trainings.training_id', 'trainings.id')
+      .leftJoin('training_status', (join) => {
+        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
+        join.on('training_status.completion_date', '=', function () {
+          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
+        });
+      })
+      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
+
+    // Group the training data by user information
+    const groupedData = users.reduce((acc, user) => {
+      const { rank_name, last_name, first_name } = user;
+      const userData = acc[`${rank_name}_${last_name}_${first_name}`];
+      if (userData) {
+        userData.push(user);
+      } else {
+        acc[`${rank_name}_${last_name}_${first_name}`] = [user];
+      }
+      return acc;
+    }, {});
+
+    const result = Object.values(groupedData);
+
+    console.log('Response Data:', result);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error retrieving users:', error);
+    res.status(500).json({ message: 'Error retrieving users', error });
   }
 });
 
@@ -775,54 +827,7 @@ app.delete('/notifications/:id', async (req, res) => {
 
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
-/*
-//return subordinates
-
-app.get('/users/', async (req, res) => {
-const supervisorId = req.query.supervisorId;
-
-try {
-  // Fetch all users with the specified supervisor ID
-  const users = await knex('users')
-    .where('supervisor_id', supervisorId)
-    .select('*');
-
-  if (users.length === 0) {
-    return res.status(404).json({ message: 'No account found with the specified supervisor ID' });
-  }
-
-  res.json(users);
-} catch (error) {
-  res.status(500).json({ message: 'Error retrieving account', error });
-}
-});
-*/
-
-
-
-
-
-app.listen(port, () => {
-
-  // crypto.generateKeyPair('rsa', {
-  //   modulusLength: 4096,
-  //   publicKeyEncoding: {
-  //     type: 'spki',
-  //     format: 'pem',
-  //   },
-  //   privateKeyEncoding: {
-  //     type: 'pkcs8',
-  //     format: 'pem',
-  //   },
-  // }, (err, publicKey, privateKey) => {
-  //   // Handle errors and use the generated key pair.
-  //   if(err) console.log(err)
-  //   secretKey = privateKey;
-  // });
-
-  console.log(`listening on port ${port}`)
-})
-
+//////////////////////////////////////////////////UTM management ENDPOINTS///////////////////////////////////////////////////////////////////////////
 //Endpoint for getting an individuals training Status
 app.get('/user/status/:userId', async (req, res) => {
   const userId = req.params.userId;
@@ -873,6 +878,59 @@ app.get('/user/status/:userId', async (req, res) => {
 });
 
 
+//ENDPOINT for getting a units training status
+app.get('/unit/status/:unitId', async (req, res) => {
+  const unitId = req.params.unitId;
+  try {
+    const users = await knex('users')
+      .select(
+        'users.id',
+        'users.last_name',
+        'users.first_name',
+        'ranks.name as rank_name',
+        'trainings.id as training_id',
+        'trainings.name as training_name',
+        'trainings.interval',
+        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
+      )
+      .where('users.unit_id', unitId)
+      .join('ranks', 'users.rank_id', 'ranks.id')
+      .join('user_duties', 'users.id', 'user_duties.user_id')
+      .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
+      .join('trainings', 'duty_trainings.training_id', 'trainings.id')
+      .leftJoin('training_status', (join) => {
+        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
+        join.on('training_status.completion_date', '=', function () {
+          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
+        });
+      })
+      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
+
+    // Group the training data by user information
+    const groupedData = users.reduce((acc, user) => {
+      const { rank_name, last_name, first_name } = user;
+      const userData = acc[`${rank_name}_${last_name}_${first_name}`];
+      if (userData) {
+        userData.push(user);
+      } else {
+        acc[`${rank_name}_${last_name}_${first_name}`] = [user];
+      }
+      return acc;
+    }, {});
+
+    const result = Object.values(groupedData);
+
+    console.log('Response Data:', result);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error retrieving users:', error);
+    res.status(500).json({ message: 'Error retrieving users', error });
+  }
+});
+
+
+// I THINK WE CAN DELETE THIS ENDPOINT????
 // app.get('/unit/status/:unitId', async (req, res) => {
 //   const unitId = req.params.unitId;
 
@@ -926,55 +984,80 @@ app.get('/user/status/:userId', async (req, res) => {
 //   }
 // });
 
-app.get('/unit/status/:unitId', async (req, res) => {
-  const unitId = req.params.unitId;
+//endpoint for the UTM to delete a training from the user
+app.delete('/user/status/:userId/:trainingId', async (req, res) => {
+  const userId = req.params.userId;
+  const trainingId = req.params.trainingId;
   try {
-    const users = await knex('users')
-      .select(
-        'users.id',
-        'users.last_name',
-        'users.first_name',
-        'ranks.name as rank_name',
-        'trainings.id as training_id',
-        'trainings.name as training_name',
-        'trainings.interval',
-        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
-      )
-      .where('users.unit_id', unitId)
-      .join('ranks', 'users.rank_id', 'ranks.id')
-      .join('user_duties', 'users.id', 'user_duties.user_id')
-      .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
-      .join('trainings', 'duty_trainings.training_id', 'trainings.id')
-      .leftJoin('training_status', (join) => {
-        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
-        join.on('training_status.completion_date', '=', function () {
-          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
-        });
-      })
-      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
-
-    // Group the training data by user information
-    const groupedData = users.reduce((acc, user) => {
-      const { rank_name, last_name, first_name } = user;
-      const userData = acc[`${rank_name}_${last_name}_${first_name}`];
-      if (userData) {
-        userData.push(user);
-      } else {
-        acc[`${rank_name}_${last_name}_${first_name}`] = [user];
-      }
-      return acc;
-    }, {});
-
-    const result = Object.values(groupedData);
-
-    console.log('Response Data:', result);
-
-    res.json(result);
+    const userTrainingDelete = await knex('training_status')
+      .where('user_id', userId)
+      .where('training_status.id', trainingId)
+      .del();
+    if (userTrainingDelete) {
+      res.json({ message: 'Training removed successfully' });
+    } else {
+      res.status(404).json({ message: 'Training not found for the user' });
+    }
   } catch (error) {
-    console.error('Error retrieving users:', error);
-    res.status(500).json({ message: 'Error retrieving users', error });
+    res.status(500).json({ message: 'Error deleting training', error });
   }
 });
+//////////////////////////////////////////////////UTM management ENDPOINTS///////////////////////////////////////////////////////////////////////////
+
+
+/*
+//return subordinates
+
+app.get('/users/', async (req, res) => {
+const supervisorId = req.query.supervisorId;
+
+try {
+  // Fetch all users with the specified supervisor ID
+  const users = await knex('users')
+    .where('supervisor_id', supervisorId)
+    .select('*');
+
+  if (users.length === 0) {
+    return res.status(404).json({ message: 'No account found with the specified supervisor ID' });
+  }
+
+  res.json(users);
+} catch (error) {
+  res.status(500).json({ message: 'Error retrieving account', error });
+}
+});
+*/
+
+
+
+
+
+app.listen(port, () => {
+
+  // crypto.generateKeyPair('rsa', {
+  //   modulusLength: 4096,
+  //   publicKeyEncoding: {
+  //     type: 'spki',
+  //     format: 'pem',
+  //   },
+  //   privateKeyEncoding: {
+  //     type: 'pkcs8',
+  //     format: 'pem',
+  //   },
+  // }, (err, publicKey, privateKey) => {
+  //   // Handle errors and use the generated key pair.
+  //   if(err) console.log(err)
+  //   secretKey = privateKey;
+  // });
+
+  console.log(`listening on port ${port}`)
+})
+
+
+
+
+
+
 
 //ENDPOINT TO UPLOAD FILE
 app.post('/upload', upload.single('file'), (req, res) => {
