@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useUserCheck from '../hooks/useUserCheck';
 import UtmReadinessTable from './UtmReadinessTable';
+import UtmUnitReport from './UtmUnitReport';
 import '../stylesheets/UtmUnitReadiness.css';
 
 export default function UtmUnitReadiness() {
@@ -32,18 +33,20 @@ export default function UtmUnitReadiness() {
     fetchUnitReadinessData();
   }, [unitID]);
 
-  const handleDownloadReport = () => {
-    // Implement the logic to generate and download the CSV report here
-  };
-
   return (
     <div className="readiness-container">
       <div>
         <h2>Unit Readiness Section</h2>
-        <UtmReadinessTable unitReadinessData={unitReadinessData} />
-      </div>
-      <div>
-        <button onClick={handleDownloadReport}>Download Report</button>
+        {unitReadinessData ? (
+          <>
+            <UtmReadinessTable unitReadinessData={unitReadinessData} />
+            <UtmUnitReport unitReadinessData={unitReadinessData} />
+          </>
+        ) : error ? (
+          <div>Error: {error}</div>
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
     </div>
   );
