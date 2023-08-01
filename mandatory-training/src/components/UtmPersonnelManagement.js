@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react"
 import useUserCheck from '../hooks/useUserCheck'
-<<<<<<< HEAD
 import { fetchURL } from '../App'
-=======
 import '../stylesheets/UtmPersonnelManagement.css'
 
 function calculateDueDate(completionDate, interval) {
@@ -25,7 +23,6 @@ function calculateDueDate(completionDate, interval) {
     due,
   };
 }
->>>>>>> origin
 
 export default function UtmPersonnelManagement() {
   const [myUnit, setMyUnit] = useState([])
@@ -166,7 +163,6 @@ export default function UtmPersonnelManagement() {
 }
 
 
-<<<<<<< HEAD
 
 
 
@@ -184,5 +180,3 @@ export default function UtmPersonnelManagement() {
 //     </div>
 //   )
 // }
-=======
->>>>>>> origin

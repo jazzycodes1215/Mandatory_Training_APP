@@ -104,6 +104,7 @@ export default function RequiredTraining() {
                 setSubordinates(mappedData);
             } catch (error) {
                 console.error('Error fetching your subordinates', error); }
+            }
         try {
             if(!userID)
             {
@@ -142,6 +143,10 @@ export default function RequiredTraining() {
             },
             }}>
             {subordinates.map((subordinate) => {
+                if(!subordinate?.map)
+                {
+                    return;
+                }
                 return subordinate.map((training, index)=> {
                     let dueDate = null;
                     if (training.most_recent_completion_date) {
