@@ -18,7 +18,7 @@ export default function TrainingDisplayUTM() {
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
-    const response = await fetch(`http://${fetchURL}:4000/training/${training}`)
+    const response = await fetch(`http://${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
   }

@@ -10,7 +10,7 @@ export default function UtmNotifications() {
   // const { notifications, clear, markAllAsRead, markAsRead  } = useNotificationCenter();
 
   useEffect(() => {
-    fetch(`http://${fetchURL}:4000/notifications`)
+    fetch(`http://${fetchURL}/notifications`)
     .then(res => res.json())
     .then((data) => setNotifications(data))
     .catch((error) => console.error('Error fetching notifications:', error));
@@ -18,7 +18,7 @@ export default function UtmNotifications() {
     console.log(notifications)
 
   const handleDeleteNotification = (id) => {
-    fetch(`http://${fetchURL}:4000/notifications/${id}`, {
+    fetch(`http://${fetchURL}/notifications/${id}`, {
        method: 'DELETE',
     })
       .then((res) => res.json())
@@ -31,7 +31,7 @@ export default function UtmNotifications() {
     };
 
   const handleMarkAsRead = (id) => {
-    fetch(`http://${fetchURL}:4000/notifications/${id}`, {
+    fetch(`http://${fetchURL}/notifications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ read_status: true }),
       headers: {
@@ -69,7 +69,7 @@ export default function UtmNotifications() {
 
 // const handleNotification = async () => {
   //   try {
-  //     const response = await fetch(`http://${fetchURL}:4000/notifications`);
+  //     const response = await fetch(`http://${fetchURL}/notifications`);
   //     const data = await response.json();
   //     if (response.ok) {
   //       data.notifications.forEach((notification) => {
