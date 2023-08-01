@@ -22,7 +22,7 @@ export default function TrainingDisplay() {
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
-    const response = await fetch(`http://${fetchURL}:4000/training/${training}`)
+    const response = await fetch(`http://${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
   }
@@ -32,7 +32,7 @@ export default function TrainingDisplay() {
     {
       return;
     }
-    const response = await fetch(`http://${fetchURL}:4000/unit/status/${unitID}`)
+    const response = await fetch(`http://${fetchURL}/unit/status/${unitID}`)
     const data = await response.json();
     let subordinate = [];
     let overdueSubordinates = [];

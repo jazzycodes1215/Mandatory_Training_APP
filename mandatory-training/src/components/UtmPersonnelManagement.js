@@ -9,7 +9,7 @@ export default function UtmPersonnelManagement() {
 
   console.log('unit',unitID)
   useEffect(() => {
-    fetch(`http://${fetchURL}:4000/unit/status/${unitID}`)
+    fetch(`http://${fetchURL}/unit/status/${unitID}`)
       .then(res => res.json())
       .then((data) => {
         setMyUnit(data);
