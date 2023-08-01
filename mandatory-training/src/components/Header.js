@@ -158,7 +158,7 @@ export default function Header() {
                 <MenuItem onClick={()=>{navigate('/administrator'); handleCloseUserMenu()}}>
                   <Typography textAlign="center">Admin View</Typography>
                 </MenuItem> : []/*It doesn't take react fragments... */}
-                {validatedUserType === 3 ?
+                {validatedUserType >= 3 ?
                 <MenuItem onClick={()=>{navigate('/unit-training-manager'); handleCloseUserMenu()}}>
                   <Typography textAlign="center">UTM View</Typography>
                 </MenuItem> : []}
