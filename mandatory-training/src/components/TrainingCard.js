@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { InnerTraining } from './Training';
 import { TrainingCard } from './Training';
 import { TrainingCardTop } from './Training';
@@ -35,9 +35,9 @@ export default function Card(props) {
 
     return(
             <InnerTraining>
-                    {requiredTraining.map((training, index) => 
+                    {requiredTraining.map((training, index) =>
                     <TrainingCard
-                    className='training-card' 
+                    className='training-card'
                     key={index}
                     >
                         <TrainingCardTop>
@@ -52,7 +52,7 @@ export default function Card(props) {
                             <InfoIcon />
                             </IconButton>
                         </Link>
-                        </TrainingCardBot>   
+                        </TrainingCardBot>
                     </TrainingCard> )}
                 </InnerTraining>
 )}

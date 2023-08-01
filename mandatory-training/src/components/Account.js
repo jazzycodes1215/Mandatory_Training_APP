@@ -199,7 +199,6 @@ export default function Account() {
                 }
             })
             .then(data=>{
-                setToken(data.token)
                 setUpdated(!updated);
             })
             .catch(err => {
