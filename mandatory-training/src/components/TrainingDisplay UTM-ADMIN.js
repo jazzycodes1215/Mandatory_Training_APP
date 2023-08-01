@@ -31,7 +31,11 @@ export default function TrainingDisplayUTM() {
     setSource(`${data.source}`);
   }
 
-
+  const EditPage = () => {
+    setEditable(true)
+    setSaveButton(true)
+    setEditmode(true)
+  }
 
 
   useEffect(()=>
