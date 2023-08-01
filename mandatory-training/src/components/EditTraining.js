@@ -81,7 +81,28 @@ return (
                 <Divider orientation="vertical" flexItem />
                 <Grid sx={{paddingRight: 2}}>
                 <h5>Duty:</h5>
-                  {`Duty: ${trainingData.source}`}
+                  <select>
+                    <option value="Guardian">Guardian</option>
+                    <option value="Comsec Responsible Officer">Comsec Responsible Officer</option>
+                    <option value="Unit Fitness Program Manager">Unit Fitness Program Manager</option>
+                    <option value="Antiterrorism Officer">Antiterrorism Officer</option>
+                    <option value="Unit Deployment Manager">Unit Deployment Manager</option>
+                    <option value="Unit Training Manager">Unit Training Manager</option>
+                    <option value="Space Systems Operations">Space Systems Operations</option>
+                    <option value="All Source Intel">All Source Intel</option>
+                    <option value="Imagery Analyst / GEOINT'">Imagery Analyst / GEOINT'</option>
+                    <option value="ELINT Analyst (SIGINT)">ELINT Analyst (SIGINT)</option>
+                    <option value="COMINT Analyst (SIGINT)">COMINT Analyst (SIGINT)</option>
+                    <option value="Cyber Intel Analyst'">Cyber Intel Analyst'</option>
+                    <option value="Analysis and Reporting (Fusion Analyst)">Analysis and Reporting (Fusion Analyst)</option>
+                    <option value="Targeting Analyst">Targeting Analyst</option>
+                    <option value="Intelligence">Intelligence</option>
+                    <option value="Cyber Ops - Network Ops">Cyber Ops - Network Ops</option>
+                    <option value="Cyber Ops - System Ops">Cyber Ops - System Ops</option>
+                    <option value="Cyber Ops - RF Ops (SATCOM)">Cyber Ops - RF Ops (SATCOM)</option>
+                    <option value="Cyber Ops - Defensive Cyber Ops">Cyber Ops - Defensive Cyber Ops</option>
+                    <option value="Software Development Ops (SFSC Agnostic)">Software Development Ops (SFSC Agnostic)</option>
+                  </select>
                 </Grid>
               </Box>
           </SubDiv>
