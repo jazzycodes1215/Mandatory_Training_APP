@@ -1,13 +1,13 @@
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css'
-// import { useNotificationCenter } from 'react-toastify/addons/use-notification-center';
 import '../stylesheets/UtmNotifications.css'
 import { useEffect, useState } from "react";
 import { fetchURL } from '../App'
+import UtmNotificationSend from './UtmNotificationSend';
+import { Route, Routes, Link} from 'react-router-dom';
+
+
 
 export default function UtmNotifications() {
   const [notifications, setNotifications] = useState([]);
-  // const { notifications, clear, markAllAsRead, markAsRead  } = useNotificationCenter();
 
   useEffect(() => {
     fetch(`${fetchURL}/notifications`)
@@ -49,8 +49,13 @@ export default function UtmNotifications() {
       .catch((error) => console.error('Error marking notification as read:', error));
   };
 
+  const handleSendNotification = () => {
+    return <UtmNotificationSend />;
+  };
 
     return (
+      <div>
+        <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button>
       <div className = "notification-container">
          <h3>Notification Inbox</h3>
         {notifications.map((notification) => (
@@ -63,6 +68,7 @@ export default function UtmNotifications() {
           <button className="mark-as-read-button" onClick={() => handleMarkAsRead(notification.id)}>Mark as Read</button>
           </div>
         ))}
+      </div>
       </div>
     );
   }

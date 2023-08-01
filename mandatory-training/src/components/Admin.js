@@ -66,7 +66,6 @@ export default function Admin() {
 
     const handleToggle = (value) =>
     {
-        console.log(value);
         if(userToDelete === value)
         {
             setUserToDelete(null);
@@ -187,6 +186,7 @@ export default function Admin() {
                             },
                             }}>
                             {modState === 'delUser' ? users?.map((element, index)=>{
+
                                 return (
                                     <ListItem
                                         key={index}
@@ -257,7 +257,6 @@ export default function Admin() {
                             {modState == 'delUser' ?
                             <>
                                 <ButtonTraining onClick={handleDelete}>Delete User</ButtonTraining>
-                                <ButtonTraining>Modify User</ButtonTraining>
                             </>
                              :  <>
                                     {modState == 'promUser' ? <ButtonTraining onClick={handleProm}>Promote User</ButtonTraining>
