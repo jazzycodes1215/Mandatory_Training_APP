@@ -39,10 +39,6 @@ export default function Header() {
     navigate('/login');
   }
 
-  const handleUtmButtonClick = () => {
-    navigate('/unit-training-manager');
-  };
-
   const {validToken, validatedUserType} = useUserCheck()
 
   return (
@@ -131,15 +127,6 @@ export default function Header() {
                 </Button>
             </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              <Button
-                onClick={handleUtmButtonClick}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                UTM View
-              </Button>
-            </Box>
-
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -168,9 +155,13 @@ export default function Header() {
                   <Typography  textAlign="center">Account</Typography>
                 </MenuItem> : []}
                 {validatedUserType === 4 ?
-                <MenuItem onClick={()=>navigate('/administrator')}>
-                  <Typography textAlign="center">Admin Page</Typography>
+                <MenuItem onClick={()=>{navigate('/administrator'); handleCloseUserMenu()}}>
+                  <Typography textAlign="center">Admin View</Typography>
                 </MenuItem> : []/*It doesn't take react fragments... */}
+                {validatedUserType === 3 ?
+                <MenuItem onClick={()=>{navigate('/unit-training-manager'); handleCloseUserMenu()}}>
+                  <Typography textAlign="center">UTM View</Typography>
+                </MenuItem> : []}
                 {validToken ?
                   <MenuItem onClick={() => {handleLogout(); handleCloseUserMenu()}}>
                     <Typography textAlign="center">Logout</Typography>
