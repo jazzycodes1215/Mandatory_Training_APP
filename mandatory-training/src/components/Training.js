@@ -62,7 +62,7 @@ export default function Training() {
 
     // const fetchRequiredTraining = async (e) => {
     //     try {
-    //         const response = await fetch(`http://${fetchURL}/requiredTraining/`);
+    //         const response = await fetch(`${fetchURL}/requiredTraining/`);
     //         const data = await response.json();
     //         setRequiredTraining(data);
     //     } catch (error) {

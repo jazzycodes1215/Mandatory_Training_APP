@@ -15,7 +15,7 @@ export default function UtmUnitReadiness() {
         if (!unitID) {
           return;
         }
-        const response = await fetch(`http://${fetchURL}/unit/status/${unitID}`);
+        const response = await fetch(`${fetchURL}/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           console.log(data)

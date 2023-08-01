@@ -22,7 +22,7 @@ const FileUpload = () => {
 
       try {
         // Send the file to the backend using fetch or axios
-        const response = await fetch(`http://${fetchURL}/upload`, {
+        const response = await fetch(`${fetchURL}/upload`, {
           method: 'POST',
           body: formData,
         });

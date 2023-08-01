@@ -29,7 +29,7 @@ export default function SubordinateTraining() {
           {
               return;
           }
-          const response = await fetch(`http://${fetchURL}/requiredtraining/${userID}`);
+          const response = await fetch(`${fetchURL}/requiredtraining/${userID}`);
           const data = await response.json();
           setRequiredTraining(data);
       } catch (error) {
