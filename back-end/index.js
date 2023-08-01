@@ -93,7 +93,7 @@ app.get('/users/:id', async (req, res) => {
     const user = await knex('users')
       .join('ranks', 'users.rank_id', 'ranks.id')
       .join('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
+      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -133,6 +133,28 @@ app.get('/duties/:user_id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving duties', error });
+  }
+});
+
+// Endpoint for updating duties for a specific user
+app.put('/duties/:user_id', async (req, res) => {
+  console.log(req.body);
+  const userId = req.params.user_id;
+  const {duty_ids} = req.body;
+  if (!duty_ids || !Array.isArray(duty_ids) || duty_ids.length === 0) {
+    return res.status(400).json({ message: 'Invalid duties data provided' });
+  }
+  try {
+    // Delete all the current duties assigned to the user
+    await knex('user_duties').where('user_id', userId).del();
+    // Insert the new duties for the user into the user_duties table
+    const insertPromises = duty_ids.map((dutyId) => {
+      return knex('user_duties').insert({ user_id: userId, duty_id: dutyId });
+    });
+    await Promise.all(insertPromises);
+    res.json({ message: 'Duties updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating duties', error });
   }
 });
 
@@ -291,15 +313,17 @@ app.post('/registration', async (req, res) => {
 
 //endpoint for account to register their account that was already created
 app.patch('/registration/:id', async (req, res) => {
+  console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, supervisor_id, role_id} = req.body;
   const hashedPass = bcrypt.hashSync(password, 10)
   const userAccountUpdate = {
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
-      role_id: 2
+      supervisor_id: supervisor_id,
+      role_id: role_id
   }
 
   try {
@@ -513,27 +537,25 @@ app.get('/requiredTraining/ADT', async (req, res) => {
     }
   });
 
-
-app.get('/requiredTraining/:id', async (req, res) => {
-  const {id} = req.params;
-  try {
-    //I tried not to use knex.raw I swear.
-    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
-    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
-    WHERE user_duties.user_id = ?`, [id])
-    if(trainings?.rows)
-    {
-      res.status(201).json(trainings?.rows)
+  app.get('/requiredTraining/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const trainings = await knex('trainings')
+        .select('trainings.id', 'name', 'interval')
+        .join('duty_trainings', 'trainings.id', '=', 'duty_trainings.training_id')
+        .join('user_duties', 'duty_trainings.duty_id', '=', 'user_duties.duty_id')
+        .where('user_duties.user_id', id);
+  
+      if (trainings.length > 0) {
+        res.status(200).json(trainings);
+      } else {
+        res.status(200).json([]);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    else
-    {
-      res.status(404);
-    }
-
-  } catch (error) {
-    console.log(error)
-  }
-})
+  });
 
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
@@ -561,7 +583,7 @@ app.get('/requiredTraining/:id', async (req, res) => {
             res.status(200).json({ message: 'Training updated successfully' });
           } else {
             res.status(404).json({ message: 'Training not found' });
-           }
+          }
     } catch (error) {
       res.status(500).json({ message: 'Error updating training data', error });
     }
