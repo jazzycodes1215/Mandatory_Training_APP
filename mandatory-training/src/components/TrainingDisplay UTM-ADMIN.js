@@ -1,8 +1,9 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext, createElement, useRef} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
 import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
+import ContentEditable from 'react-contenteditable';
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -16,26 +17,42 @@ export default function TrainingDisplayUTM() {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState({})
   const navigate = useNavigate();
+  const [editable, setEditable] = useState(true)
+  const inputRef = useRef()
+  const [saveButton, setSaveButton] = useState(false)
+  const [editmode, setEditmode] = useState(false)
+
+  const [source, setSource] = useState('')
 
   const fetchTraining = async () => {
     const response = await fetch(`${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
+    setSource(`${data.source}`);
   }
 
-  // useEffect(()=>
-  // {
-  //   fetchTraining();
-  // }, training)
+  const EditPage = () => {
+    setEditable(true)
+    setSaveButton(true)
+    setEditmode(true)
+  }
+
+
+  useEffect(()=>
+  {
+    fetchTraining();
+  }, [training])
 
   return (
     <>
       <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
           <div className='editTraining'>
-          <p>Edit</p>
-          <img src={mySvg} alt="mmm"></img>
-        </div>
+          <button onClick={()=>(EditPage())}>
+            <p>Edit</p>
+            <img src={mySvg} alt="mmm"></img>
+            </button>
+            </div>
       </div>
       {trainingData ?
       <FlexDiv>
@@ -62,16 +79,26 @@ export default function TrainingDisplayUTM() {
               },
             }}
           >
-                <Grid>
+                <Grid sx={{
+                  paddingLeft: 2
+                }}>
+                  <h5>Type</h5>
                   {trainingData.type_name}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
+                <h5>Interval</h5>
                   {`Time Requirement: ${trainingData.interval} days`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
+                <h5>Source</h5>
                   {`Source: ${trainingData.source}`}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid sx={{paddingRight: 2}}>
+                <h5>Duty</h5>
+                  {`Duty: ${trainingData.source}`}
                 </Grid>
               </Box>
           </SubDiv>
@@ -124,7 +151,6 @@ width: 25vw;
 overflow: hidden;
 display: flex;
 flex-direction: column;
-
 `
 
 const SubDiv = styled.div`
@@ -156,6 +182,7 @@ const ListTitle = styled.div`
 display: flex;
 flex-direction: row;
 width: 100%;
+align-items: center;
 `;
 const ListHeader = styled.span`
 font-size: xxx-large;

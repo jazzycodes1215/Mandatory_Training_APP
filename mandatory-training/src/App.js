@@ -55,7 +55,7 @@ const App = ()=> {
                             <Route path='/unit-training-manager/*' element={<UTM />} />
                             <Route path='/administrator/*' element={<Admin />} />
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
-                            <Route path='/trainingdisplayUTM' element={<TrainingDisplayUTM />} />
+                            <Route path='/training-UTM/:training/*' element={<TrainingDisplayUTM />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
                             <Route path='/*' element={<Help />} /> catch all
 
