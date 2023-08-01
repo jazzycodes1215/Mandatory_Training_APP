@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App';
+import { AppContext, fetchURL } from '../App';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -22,7 +22,7 @@ const FileUpload = () => {
 
       try {
         // Send the file to the backend using fetch or axios
-        const response = await fetch('http://localhost:4000/upload', {
+        const response = await fetch(`${fetchURL}/upload`, {
           method: 'POST',
           body: formData,
         });

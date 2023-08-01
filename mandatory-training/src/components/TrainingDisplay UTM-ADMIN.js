@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 
@@ -18,7 +18,7 @@ export default function TrainingDisplayUTM() {
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
-    const response = await fetch(`http://localhost:4000/training/${training}`)
+    const response = await fetch(`${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
   }
@@ -100,7 +100,7 @@ export default function TrainingDisplayUTM() {
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
         <h2>Training Statistics</h2>
-        
+
       </RightDiv>
       </FlexDiv>
       : null}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link, useNavigate} from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App';
+import { AppContext, fetchURL } from '../App';
 import SchoolIcon from '@mui/icons-material/School';
 import '../stylesheets/login.css';
 import useUserCheck from '../hooks/useUserCheck'
@@ -49,7 +49,7 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData)};
-        let response = await fetch(`http://localhost:4000/login`, header)
+        let response = await fetch(`${fetchURL}/login`, header)
         let status = response.status;
         let data = await response.json();
         if(status === 201)

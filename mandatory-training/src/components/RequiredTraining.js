@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext,} from 'react';
 import { useNavigate, Link } from 'react-router-dom'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 
@@ -66,7 +66,7 @@ export default function RequiredTraining() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/requiredtraining/${userID}`);
+            const response = await fetch(`${fetchURL}/requiredtraining/${userID}`);
             const data = await response.json();
             setRequiredTraining(data);
         } catch (error) {
@@ -74,7 +74,37 @@ export default function RequiredTraining() {
         }
     };
 
-    const fetchSubordinates = async () => {
+    const fetchSubordinates = async () =>
+    {
+        //Dirty hack for checking if supervisor. May need to add a way to pull from DB
+        const response = await fetch(`${fetchURL}/users`);
+        const data = await response.json();
+        let tempSup = false;
+        if(data?.find(element => element.supervisor_id === userID))
+        {
+            tempSup = true;
+            setSupervisor(true)
+        }
+        if (supervisor || tempSup) {
+            let subordinates = [];
+            data.forEach((element)=>{
+                if(element.supervisor_id === userID)
+                {
+                    subordinates.push(element);
+                }
+            })
+            try {
+                let mappedData = [];
+                for ( const index in subordinates )
+                {
+                    let response = await fetch(`${fetchURL}/requiredtraining/${subordinates[index].id}`)
+                    let data = await response.json();
+                    mappedData.push({name: `${subordinates[index].last_name}, ${subordinates[index].first_name}`, subordinate_id: subordinates[index].id, data: data});
+                }
+                setSubordinates(mappedData);
+            } catch (error) {
+                console.error('Error fetching your subordinates', error); }
+            }
         try {
             if(!userID)
             {
@@ -83,7 +113,8 @@ export default function RequiredTraining() {
             const response = await fetch(`http://localhost:4000/user/subordinates/${userID}`);
             const data = await response.json();
             setSubordinates(data);
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Error fetching your required training', error);
         }
     };
@@ -112,6 +143,10 @@ export default function RequiredTraining() {
             },
             }}>
             {subordinates.map((subordinate) => {
+                if(!subordinate?.map)
+                {
+                    return;
+                }
                 return subordinate.map((training, index)=> {
                     let dueDate = null;
                     if (training.most_recent_completion_date) {

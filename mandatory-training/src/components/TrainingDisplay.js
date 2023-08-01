@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 
@@ -22,7 +22,7 @@ export default function TrainingDisplay() {
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
-    const response = await fetch(`http://localhost:4000/training/${training}`)
+    const response = await fetch(`${fetchURL}/training/${training}`)
     const data = await response.json();
     setTrainingData(data);
   }
@@ -32,7 +32,7 @@ export default function TrainingDisplay() {
     {
       return;
     }
-    const response = await fetch(`http://localhost:4000/unit/status/${unitID}`)
+    const response = await fetch(`${fetchURL}/unit/status/${unitID}`)
     const data = await response.json();
     let subordinate = [];
     let overdueSubordinates = [];
