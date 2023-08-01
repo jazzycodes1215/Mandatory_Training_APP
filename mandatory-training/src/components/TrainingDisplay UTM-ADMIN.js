@@ -142,7 +142,6 @@ width: 25vw;
 overflow: hidden;
 display: flex;
 flex-direction: column;
-
 `
 
 const SubDiv = styled.div`
@@ -174,6 +173,7 @@ const ListTitle = styled.div`
 display: flex;
 flex-direction: row;
 width: 100%;
+align-items: center;
 `;
 const ListHeader = styled.span`
 font-size: xxx-large;
