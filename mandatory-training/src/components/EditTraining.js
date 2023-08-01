@@ -13,14 +13,16 @@ import ContentEditable from "react-contenteditable";
 export default function EditView(props) {
     const {training} = useParams();
     const [trainingData, setTrainingData] = useState([])
+    const [name, setName] = useState('')
 
     useEffect(() => {
         console.log(training)
         fetchRequiredTraining();
     }, [training]);
 
-    const HandleChangeName = () => {
-        
+    const HandleChangeName = evt => {
+        setName(evt.target.textContent)
+        console.log(name)
     }
 
     const fetchRequiredTraining = async () => {
@@ -31,7 +33,6 @@ export default function EditView(props) {
             const data = await response.json();
 
             setTrainingData(data);
-            console.log(data)
 
         } catch (error) {
             console.error('Error fetching your required training', error);
