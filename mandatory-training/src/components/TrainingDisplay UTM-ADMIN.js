@@ -70,16 +70,26 @@ export default function TrainingDisplayUTM() {
               },
             }}
           >
-                <Grid>
+                <Grid sx={{
+                  paddingLeft: 2
+                }}>
+                  <h5>Type</h5>
                   {trainingData.type_name}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
+                <h5>Interval</h5>
                   {`Time Requirement: ${trainingData.interval} days`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
+                <h5>Source</h5>
                   {`Source: ${trainingData.source}`}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid sx={{paddingRight: 2}}>
+                <h5>Duty</h5>
+                  {`Duty: ${trainingData.source}`}
                 </Grid>
               </Box>
           </SubDiv>
