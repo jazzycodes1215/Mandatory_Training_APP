@@ -3,9 +3,7 @@
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-
-require('dotenv').config({ path: '/etc/secrets/.env' })
-
+require('dotenv').config()
 module.exports = {
 
   development: {
