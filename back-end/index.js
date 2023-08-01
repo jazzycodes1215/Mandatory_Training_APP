@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-require('dotenv').config({ path: '/etc/secrets/.env' })
+console.log(process.env.NODE_ENV)
+require('dotenv').config({ path: `${process.env.NODE_ENV}` })
 const port = process.env.BACKENDPORT;
 const knex = require('knex')(require('./knexfile.js')[process.env.DATABASESTRING ? 'production' : 'development']);
 const cors = require('cors');

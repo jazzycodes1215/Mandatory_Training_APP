@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "it": "npm uninstall bcrypt && npm i bcrypt",
-    "start": "npx knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run && nodemon index.js",
-    "prod": "npx knex migrate:rollback --all --env production && npx knex migrate:latest --env production && npx knex seed:run --env production && nodemon index.js",
+    "start": "npx knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run && NODE_ENV=./../.env nodemon index.js",
+    "prod": "npx knex migrate:rollback --all --env production && npx knex migrate:latest --env production && npx knex seed:run --env production && NODE_ENV=/etc/secrets/.env nodemon index.js ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
