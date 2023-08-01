@@ -1063,7 +1063,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   const fileContent = fs.readFileSync(req.file.path);
   const fileName = req.file.originalname;
   const fileType = req.file.mimetype;
-  const userId = req.body.userID;
+  const userId = req.body.user_id;
 
   knex ('files')
   .insert({ file_name: fileName, file_content: fileContent, file_type: fileType, user_id: userId })

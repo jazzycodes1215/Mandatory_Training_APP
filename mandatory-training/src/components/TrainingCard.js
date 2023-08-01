@@ -8,6 +8,10 @@ import { Training } from './Training';
 import { useNavigate, Link } from 'react-router-dom'
 import { fetchURL } from '../App'
 
+import { IconButton } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+
+
 export default function Card(props) {
 
 
@@ -31,13 +35,10 @@ export default function Card(props) {
 
     return(
             <InnerTraining>
-                    {requiredTraining.map((training, index) =>
+                    {requiredTraining.map((training, index) => 
                     <TrainingCard
+                    className='training-card' 
                     key={index}
-                    secondaryAction={
-                        <Link to={`/required-training/${training.id}`}>
-                        </Link>
-                    }
                     >
                         <TrainingCardTop>
                         </TrainingCardTop>
@@ -46,7 +47,12 @@ export default function Card(props) {
                             <h3>{training.name}</h3>
                         </TrainingCardMid>
                         <TrainingCardBot>
-                        </TrainingCardBot>
+                        <Link to={`/training-UTM/${training.id}`}>
+                            <IconButton aria-label="info">
+                            <InfoIcon />
+                            </IconButton>
+                        </Link>
+                        </TrainingCardBot>   
                     </TrainingCard> )}
                 </InnerTraining>
 )}
