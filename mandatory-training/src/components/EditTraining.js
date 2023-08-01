@@ -7,6 +7,7 @@ import { Box, Grid, Divider  } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import mySvg from '../Icons/16px/Settings.svg'
 import '../stylesheets/training.css'
+import ContentEditable from "react-contenteditable";
 
 
 export default function EditView(props) {
@@ -17,6 +18,10 @@ export default function EditView(props) {
         console.log(training)
         fetchRequiredTraining();
     }, [training]);
+
+    const HandleChangeName = () => {
+        
+    }
 
     const fetchRequiredTraining = async () => {
 
@@ -37,7 +42,7 @@ return (
 <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
-          <ListHeader>{trainingData.name}</ListHeader>
+          <ListHeader><ContentEditable html={trainingData.name} onChange={HandleChangeName}></ContentEditable></ListHeader>
         </ListTitle>
         <SubDiv>
           <Box
