@@ -60,22 +60,27 @@ return (
                 <Grid sx={{
                   paddingLeft: 2
                 }}>
-                  <h5>Type</h5>
-                  {trainingData.type_name}
+                  <h5>Type:</h5>
+                <select>
+                  <option value="Primary Training">Primary Training</option>
+                  <option value="Auxiliary Training">Auxilary Training</option>
+                  <option value="Professiional Military Education">Professional Military Education</option>
+                  <option value="Additional Training">Additional Training </option>
+                </select>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
-                <h5>Interval</h5>
+                <h5>Interval:</h5>
                   {`Time Requirement: ${trainingData.interval} days`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
-                <h5>Source</h5>
+                <h5>Source:</h5>
                   {`Source: ${trainingData.source}`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid sx={{paddingRight: 2}}>
-                <h5>Duty</h5>
+                <h5>Duty:</h5>
                   {`Duty: ${trainingData.source}`}
                 </Grid>
               </Box>
