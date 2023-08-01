@@ -136,6 +136,28 @@ app.get('/duties/:user_id', async (req, res) => {
   }
 });
 
+// Endpoint for updating duties for a specific user
+app.put('/duties/:user_id', async (req, res) => {
+  console.log(req.body);
+  const userId = req.params.user_id;
+  const {duty_ids} = req.body;
+  if (!duty_ids || !Array.isArray(duty_ids) || duty_ids.length === 0) {
+    return res.status(400).json({ message: 'Invalid duties data provided' });
+  }
+  try {
+    // Delete all the current duties assigned to the user
+    await knex('user_duties').where('user_id', userId).del();
+    // Insert the new duties for the user into the user_duties table
+    const insertPromises = duty_ids.map((dutyId) => {
+      return knex('user_duties').insert({ user_id: userId, duty_id: dutyId });
+    });
+    await Promise.all(insertPromises);
+    res.json({ message: 'Duties updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating duties', error });
+  }
+});
+
 //endpoint for getting all subordinates and their training status for a specific user
 app.get('/user/subordinates/:userId', async (req, res) => {
   const userId = req.params.userId;

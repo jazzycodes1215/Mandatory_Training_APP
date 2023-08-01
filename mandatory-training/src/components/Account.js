@@ -27,6 +27,7 @@ export default function Account() {
     const [updated, setUpdated] = useState(false);
     const [userDuties, setUserDuties] = useState([]);
     const [duties, setDuties] = useState([]);
+    const [selectedDuties, setSelectedDuties] = useState([]);
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -155,6 +156,29 @@ export default function Account() {
     const handleSubmitDetails = () => {
         setEditMode(false);
         handlePatch();
+        handlePut();
+    }
+
+    const handlePut = () => {
+        if(!password)
+        {
+            return;
+        }
+        return fetch(`${fetchURL}/duties/${userID}`,{
+            method:"PUT",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({duty_ids: selectedDuties}), 
+        })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                return res.json().then(data => { throw new Error(data.error) });
+            }
+        })
+        .catch(err => {
+            window.alert(err.message);
+        });
     }
 
     const handlePatch = () => {
@@ -236,7 +260,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectDuties">Duties:</Label>
-                <SelectAccountInfo id="selectDuties" multiple required>
+                <SelectAccountInfo onChange={(e)=>{setSelectedDuties(e.target.value)}} id="selectDuties" multiple required>
                     {duties?.map((element)=> {
                         return (
                             <option value={element.id}>{element.title}</option>
