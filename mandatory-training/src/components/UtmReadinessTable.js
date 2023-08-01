@@ -6,7 +6,6 @@ export default function UtmReadinessTable({ unitReadinessData }) {
     return <div>Loading...</div>;
   }
 
-  // Create an array of all unique training IDs
   const uniqueTrainingIds = Array.from(
     new Set(unitReadinessData.flatMap((userData) => userData.map((training) => training.training_id)))
   );

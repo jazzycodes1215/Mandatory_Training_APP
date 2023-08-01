@@ -5,7 +5,7 @@
 }
 
 h1 {
-    font-family: 'Source Serif Pro';font-size: 22px;
+    font-family: 'Source Serif Pro';font-size: 50px;
     color: #0F3D68;
 }
 
@@ -24,4 +24,25 @@ p {
 
 .header {
     background-color: #3478b2;
+}
+
+button {
+    background-color: MidnightBlue;
+    color: white;
+    font-size: 1em;
+    margin: 1em 0;
+    border: 2px solid #007BFF;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+        background-color: white;
+        color: #007BFF;
+    }
+
+    &:focus {
+        outline: none;
+        border: 2px solid #0056b3;
+    }
 }
