@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck';
 import UtmReadinessTable from './UtmReadinessTable';
-import UtmUnitReport from './UtmUnitReport';
+import UtmUnitReport from './UtmUnitReport'
 import '../stylesheets/UtmUnitReadiness.css';
 
 export default function UtmUnitReadiness() {
