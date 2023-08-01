@@ -93,7 +93,7 @@ app.get('/users/:id', async (req, res) => {
     const user = await knex('users')
       .join('ranks', 'users.rank_id', 'ranks.id')
       .join('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
+      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -291,15 +291,17 @@ app.post('/registration', async (req, res) => {
 
 //endpoint for account to register their account that was already created
 app.patch('/registration/:id', async (req, res) => {
+  console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, supervisor_id, role_id} = req.body;
   const hashedPass = bcrypt.hashSync(password, 10)
   const userAccountUpdate = {
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
-      role_id: 2
+      supervisor_id: supervisor_id,
+      role_id: role_id
   }
 
   try {

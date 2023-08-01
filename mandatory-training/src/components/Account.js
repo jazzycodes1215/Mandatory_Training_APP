@@ -17,6 +17,7 @@ export default function Account() {
     const [supervisorId, setSupervisorId] = useState(null);
     const [supervisorAccount, setSupervisorAccount] = useState('');
     const [units, setUnits] = useState([]);
+    const [role, setRole] = useState(null);
     const [firstname, setFirst] = useState(null);
     const [lastname, setLast] = useState(null);
     const [email, setEmail] = useState(null);
@@ -27,6 +28,7 @@ export default function Account() {
     const [userDuties, setUserDuties] = useState([]);
     const [duties, setDuties] = useState([]);
     const [users, setUsers] = useState([]);
+
     useEffect(() => {
         fetchAccount();
         fetchDuties();
@@ -40,8 +42,10 @@ export default function Account() {
     }, [supervisor]);
 
     useEffect(() => {
-        fetchSupervisor();
-    }, [account]);
+        if (account?.supervisor_id) {
+            fetchSupervisor();
+        }
+    }, [userID, account?.supervisor_id]);
 
     const fetchUsers = async () => {
         try {
@@ -78,6 +82,7 @@ export default function Account() {
             setUnit(data.unit_id);
             setPassword(data.password);
             setRank(data.rank_id);
+            setRole(data.role_id);
         } catch (error) {
             console.error('Error fetching user data', error);
         }
@@ -160,7 +165,7 @@ export default function Account() {
         return fetch(`http://localhost:4000/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId})
+            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
         })
             .then(res => {
                 if (res.ok) {
