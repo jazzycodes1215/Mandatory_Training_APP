@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck';
 import UtmReadinessTable from './UtmReadinessTable';
 import UtmUnitReport from './UtmUnitReport';
@@ -15,7 +16,7 @@ export default function UtmUnitReadiness() {
         if (!unitID) {
           return;
         }
-        const response = await fetch(`http://localhost:4000/unit/status/${unitID}`);
+        const response = await fetch(`${fetchURL}/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
           setUnitReadinessData(data);

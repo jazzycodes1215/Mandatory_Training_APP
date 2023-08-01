@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import useUserCheck from '../hooks/useUserCheck'
+import { fetchURL } from '../App'
 import '../stylesheets/UtmPersonnelManagement.css'
 
 function calculateDueDate(completionDate, interval) {
@@ -34,7 +35,7 @@ export default function UtmPersonnelManagement() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/unit/status/${unitID}`);
+        const res = await fetch(`${fetchURL}/unit/status/${unitID}`);
         const data = await res.json();
         const updatedData = data.map((personnel) =>
           personnel.map((training) => {
@@ -64,7 +65,7 @@ export default function UtmPersonnelManagement() {
   }, [unitID]);
 
 
-   
+
   const handleUserClick = (userIndex) => {
     if (selectedUser === myUnit[userIndex]) {
       setSelectedUser(null);
@@ -73,7 +74,7 @@ export default function UtmPersonnelManagement() {
     }
   };
 
-  
+
 
   // const handleAddTraining = () => {
   //   // Implement the logic to add training to the selected user.
@@ -162,3 +163,20 @@ export default function UtmPersonnelManagement() {
 }
 
 
+
+
+
+
+//   return (
+//     <div>
+
+//       <div>
+//       <h2>Manage Personnel Section</h2>
+//       {/* Add a fetch to grab all personnel of the UTM's unit */}
+//       </div>
+//       <div>
+//         {/* Add the sub-menu content for the Manage Personnel section? */}
+//       </div>
+//     </div>
+//   )
+// }

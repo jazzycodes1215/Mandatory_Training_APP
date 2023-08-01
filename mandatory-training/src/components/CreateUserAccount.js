@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
 export default function CreateUserAccount() {
@@ -33,7 +33,7 @@ export default function CreateUserAccount() {
         },
         body: JSON.stringify(userData)};
         //Maybe don't go to the login login... API
-        let response = await fetch(`http://localhost:4000/createAccount`, header)
+        let response = await fetch(`${fetchURL}/createAccount`, header)
         let status = response.status;
         let data = await response.json();
         console.log(data);

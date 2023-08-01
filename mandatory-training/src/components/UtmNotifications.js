@@ -1,15 +1,16 @@
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css'
-// import { useNotificationCenter } from 'react-toastify/addons/use-notification-center';
 import '../stylesheets/UtmNotifications.css'
 import { useEffect, useState } from "react";
+import { fetchURL } from '../App'
+import UtmNotificationSend from './UtmNotificationSend';
+import { Route, Routes, Link} from 'react-router-dom';
+
+
 
 export default function UtmNotifications() {
   const [notifications, setNotifications] = useState([]);
-  // const { notifications, clear, markAllAsRead, markAsRead  } = useNotificationCenter();
 
   useEffect(() => {
-    fetch(`http://localhost:4000/notifications`)
+    fetch(`${fetchURL}/notifications`)
     .then(res => res.json())
     .then((data) => setNotifications(data))
     .catch((error) => console.error('Error fetching notifications:', error));
@@ -17,7 +18,7 @@ export default function UtmNotifications() {
     console.log(notifications)
 
   const handleDeleteNotification = (id) => {
-    fetch(`http://localhost:4000/notifications/${id}`, {
+    fetch(`${fetchURL}/notifications/${id}`, {
        method: 'DELETE',
     })
       .then((res) => res.json())
@@ -30,7 +31,7 @@ export default function UtmNotifications() {
     };
 
   const handleMarkAsRead = (id) => {
-    fetch(`http://localhost:4000/notifications/${id}`, {
+    fetch(`${fetchURL}/notifications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ read_status: true }),
       headers: {
@@ -48,8 +49,13 @@ export default function UtmNotifications() {
       .catch((error) => console.error('Error marking notification as read:', error));
   };
 
+  const handleSendNotification = () => {
+    return <UtmNotificationSend />;
+  };
 
     return (
+      <div>
+        <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button>
       <div className = "notification-container">
          <h3>Notification Inbox</h3>
         {notifications.map((notification) => (
@@ -63,12 +69,13 @@ export default function UtmNotifications() {
           </div>
         ))}
       </div>
+      </div>
     );
   }
 
 // const handleNotification = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:4000/notifications`);
+  //     const response = await fetch(`${fetchURL}/notifications`);
   //     const data = await response.json();
   //     if (response.ok) {
   //       data.notifications.forEach((notification) => {
