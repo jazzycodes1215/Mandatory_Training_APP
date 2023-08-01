@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext,} from 'react';
 import { useNavigate, Link } from 'react-router-dom'
-import { AppContext } from '../App'
+import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 
@@ -29,7 +29,7 @@ export default function SubordinateTraining() {
           {
               return;
           }
-          const response = await fetch(`http://localhost:4000/requiredtraining/${userID}`);
+          const response = await fetch(`${fetchURL}/requiredtraining/${userID}`);
           const data = await response.json();
           setRequiredTraining(data);
       } catch (error) {

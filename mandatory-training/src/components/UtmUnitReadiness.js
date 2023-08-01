@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck';
+import UtmReadinessTable from './UtmReadinessTable';
 import '../stylesheets/UtmUnitReadiness.css';
 
 export default function UtmUnitReadiness() {
@@ -7,17 +9,15 @@ export default function UtmUnitReadiness() {
   const { unitID } = useUserCheck();
   const [error, setError] = useState(null);
 
-  // Fetch the unit readiness data when the component mounts
   useEffect(() => {
     const fetchUnitReadinessData = async () => {
       try {
         if (!unitID) {
           return;
         }
-        const response = await fetch(`http://localhost:4000/unit/status/${unitID}`);
+        const response = await fetch(`${fetchURL}/unit/status/${unitID}`);
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
           setUnitReadinessData(data);
         } else {
           const errorData = await response.text();
@@ -33,7 +33,6 @@ export default function UtmUnitReadiness() {
     fetchUnitReadinessData();
   }, [unitID]);
 
-  // Function to handle downloading the full report as a CSV file
   const handleDownloadReport = () => {
     // Implement the logic to generate and download the CSV report here
   };
@@ -42,7 +41,7 @@ export default function UtmUnitReadiness() {
     if (unitReadinessData) {
       // Extract the list of unique training names from the data
       const trainingNames = [...new Set(unitReadinessData.flatMap((userData) => userData.map((training) => training.training_name)))];
-  
+
       return (
         <div>
           <table className="readiness-table">
@@ -71,7 +70,7 @@ export default function UtmUnitReadiness() {
                           statusClass = 'up-to-date';
                         }
                       }
-  
+
                       return (
                         <td key={userTraining.training_id} className={statusClass}>
                           {userTraining.most_recent_completion_date ? userTraining.most_recent_completion_date : 'overdue'}
@@ -95,15 +94,14 @@ export default function UtmUnitReadiness() {
   };
 
   return (
-    <div className='readiness-container'>
+    <div className="readiness-container">
       <div>
         <h2>Unit Readiness Section</h2>
-        {renderUnitReadinessData()}
+        <UtmReadinessTable unitReadinessData={unitReadinessData} />
       </div>
       <div>
-        {/* Add the download button to download the full report */}
         <button onClick={handleDownloadReport}>Download Report</button>
       </div>
     </div>
   );
-};
+}

@@ -6,10 +6,11 @@ import { TrainingCardMid } from './Training';
 import { TrainingCardBot } from './Training';
 import { Training } from './Training';
 import { useNavigate, Link } from 'react-router-dom'
+import { fetchURL } from '../App'
 
 export default function Card(props) {
 
-    
+
     const [requiredTraining, setRequiredTraining] = useState([])
 
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function Card(props) {
 
     const fetchRequiredTraining = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/requiredTraining/${props.endp}`);
+            const response = await fetch(`${fetchURL}/requiredTraining/${props.endp}`);
             const data = await response.json();
             setRequiredTraining(data);
         } catch (error) {
@@ -31,7 +32,7 @@ export default function Card(props) {
     return(
             <InnerTraining>
                     {requiredTraining.map((training, index) =>
-                    <TrainingCard 
+                    <TrainingCard
                     key={index}
                     secondaryAction={
                         <Link to={`/required-training/${training.id}`}>
@@ -45,7 +46,7 @@ export default function Card(props) {
                             <h3>{training.name}</h3>
                         </TrainingCardMid>
                         <TrainingCardBot>
-                        </TrainingCardBot>   
+                        </TrainingCardBot>
                     </TrainingCard> )}
                 </InnerTraining>
 )}

@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
-require('dotenv').config({ path: './../.env' })
-const port = process.env.BACKENDPORT
-const knex = require('knex')(require('./knexfile.js')['development']);
+require('dotenv').config();
+const port = process.env.BACKENDPORT;
+const knex = require('knex')(require('./knexfile.js')[process.env.DATABASESTRING ? 'production' : 'development']);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -60,7 +60,7 @@ app.get('/users', async (req, res) => {
   try {
     const users = await knex('users')
     .join('units', 'users.unit_id', 'units.id')
-    .select('*')
+    .select('users.id', 'email', 'dodID', 'first_name', 'last_name', 'units.name', 'password', 'rank_id', 'role_id', 'supervisor_id', 'unit_id')
     .then(data => res.status(200).json(data));
   } catch (error) {
     res.status(500).json({

@@ -1,49 +1,71 @@
 import { useState, useEffect } from "react"
 import useUserCheck from '../hooks/useUserCheck'
+import { fetchURL } from '../App'
 import '../stylesheets/UtmPersonnelManagement.css'
 
 function calculateDueDate(completionDate, interval) {
-    const dueDate = new Date(completionDate);
-    dueDate.setFullYear(dueDate.getFullYear() + interval);
-    return dueDate;
+  if (!completionDate) {
+    // If completionDate is null, consider it as due
+    return {
+      completionDate: null,
+      due: true,
+    };
   }
+
+  const dueDate = new Date(completionDate);
+  dueDate.setFullYear(dueDate.getFullYear() + interval);
+
+  const currentDate = new Date();
+  const due = currentDate > dueDate;
+
+  return {
+    completionDate: due ? null : dueDate,
+    due,
+  };
+}
 
 export default function UtmPersonnelManagement() {
   const [myUnit, setMyUnit] = useState([])
   const {unitID, userID} = useUserCheck();
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   console.log('unit',unitID)
   useEffect(() => {
-    fetch(`http://localhost:4000/unit/status/${unitID}`)
-      .then(res => res.json())
-      .then((data) => {
-        const processedData = Array.isArray(data) ? data : [data]; // Ensure that data is always an array
-        const updatedData = processedData.map((personnel) => {
-          const processedPersonnel = personnel.map((training) => {
-            const completionDate = new Date(training.most_recent_completion_date);
-            const interval = training.interval;
-            const dueDate = calculateDueDate(completionDate, interval);
-            const currentDate = new Date();
-  
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${fetchURL}/unit/status/${unitID}`);
+        const data = await res.json();
+        const updatedData = data.map((personnel) =>
+          personnel.map((training) => {
+            const { completionDate, due } = calculateDueDate(
+              training.most_recent_completion_date,
+              training.interval
+            );
+
             return {
               ...training,
-              due: currentDate > dueDate,
+              completionDate,
+              due,
             };
-          });
-  
-          return processedPersonnel.length > 0 ? processedPersonnel : null;
-        });
-  
+          })
+        );
+
         setMyUnit(updatedData);
-      })
-      .catch((error) => {
+        setLoading(false);
+      } catch (error) {
         console.error('Error fetching myUnit:', error);
         setError(error.message);
-      });
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [unitID]);
-   
+
+
+
   const handleUserClick = (userIndex) => {
     if (selectedUser === myUnit[userIndex]) {
       setSelectedUser(null);
@@ -52,7 +74,7 @@ export default function UtmPersonnelManagement() {
     }
   };
 
-  
+
 
   // const handleAddTraining = () => {
   //   // Implement the logic to add training to the selected user.
@@ -85,48 +107,76 @@ export default function UtmPersonnelManagement() {
 
   return (
     <div className="personnel-management-container">
-      {Array.isArray(myUnit) ? (
-  <div>
-    {myUnit.map((personnel, index) => (
-      <div
-        key={index}
-        className={`personnel-container ${
-          selectedUser === personnel ? "selected-user" : ""
-        }`}
-        onClick={() => handleUserClick(index)}
-      >
-        {personnel && personnel.length > 0 ? (
-          <p>
-            {personnel[0].rank_name}, {personnel[0].first_name} {personnel[0].last_name}
-          </p>
-        ) : (
-          <p>No personnel data available</p>
-        )}
-        {selectedUser === personnel && personnel && personnel.length > 0 && (
-          <div className="training-grid">
-            {personnel.map((training, innerIndex) => (
-              <div
-                key={innerIndex}
-                className={`training-card ${training.due ? "due" : "not-due"}`}
-              >
-                <p>Training Name: {training.training_name}</p>
-                <p>Completion Date: {new Date(training.most_recent_completion_date).toDateString()}</p>
-                <p>Due Date: {new Date(new Date(training.most_recent_completion_date).setFullYear(new Date(training.most_recent_completion_date).getFullYear() + 1)).toDateString()}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-) : error ? (
-  <div>Error: {error.message}</div>
-) : (
-  <div>Loading...</div>
-)}
+      {loading ? (
+        <div>Loading...</div>
+      ) : Array.isArray(myUnit) ? (
+        <div>
+          {myUnit.map((personnel, index) => (
+            <div
+              key={index}
+              className={`personnel-container ${
+                personnel[0].due ? "due" : "not-due"
+              } ${selectedUser === personnel ? "selected-user" : ""}`}
+              onClick={() => handleUserClick(index)}
+            >
+              {personnel && personnel.length > 0 ? (
+                <p>
+                  {personnel[0].rank_name}, {personnel[0].first_name}{" "}
+                  {personnel[0].last_name}
+                </p>
+              ) : (
+                <p>No personnel data available</p>
+              )}
+              {selectedUser === personnel && personnel && personnel.length > 0 && (
+                <div className="training-grid">
+                  {personnel.map((training, innerIndex) => (
+                    <div
+                      key={innerIndex}
+                      className={`training-card ${
+                        training.due ? "due" : "not-due"
+                      }`}
+                    >
+                      <p>Training Name: {training.training_name}</p>
+                      <p>
+                        Completion Date:{" "}
+                        {new Date(training.most_recent_completion_date).toDateString()}
+                      </p>
+                      <p>
+                        Due Date:{" "}
+                        {new Date(new Date(training.most_recent_completion_date).setFullYear(
+                            new Date(training.most_recent_completion_date).getFullYear() + 1)).toDateString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <div>Error: Data format is incorrect</div>
+      )}
     </div>
   );
 }
 
 
-  
+
+
+
+
+//   return (
+//     <div>
+
+//       <div>
+//       <h2>Manage Personnel Section</h2>
+//       {/* Add a fetch to grab all personnel of the UTM's unit */}
+//       </div>
+//       <div>
+//         {/* Add the sub-menu content for the Manage Personnel section? */}
+//       </div>
+//     </div>
+//   )
+// }
