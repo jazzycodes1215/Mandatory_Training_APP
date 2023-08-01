@@ -159,6 +159,13 @@ export default function Account() {
         handlePut();
     }
 
+    const handleSelectDutiesChange = (e) => {
+        // Get all the selected options and map them to an array of values
+        const selectedOptions = Array.from(e.target.selectedOptions);
+        const selectedValues = selectedOptions.map((option) => parseInt(option.value));
+        setSelectedDuties(selectedValues);
+      }
+
     const handlePut = () => {
         if(!password)
         {
@@ -259,7 +266,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectDuties">Duties:</Label>
-                <SelectAccountInfo onChange={(e)=>{setSelectedDuties(e.target.value)}} id="selectDuties" multiple required>
+                <SelectAccountInfo onChange={handleSelectDutiesChange} id="selectDuties" multiple required>
                     {duties?.map((element)=> {
                         return (
                             <option value={element.id}>{element.title}</option>
