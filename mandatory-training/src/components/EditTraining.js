@@ -21,8 +21,10 @@ export default function EditView(props) {
     const fetchRequiredTraining = async () => {
 
         try {
-            const response = await fetch(`${fetchURL}/requiredTraining/${training}`);
+            const response = await fetch(`${fetchURL}/training/${training}`);
+
             const data = await response.json();
+
             setTrainingData(data);
             console.log(data)
 
