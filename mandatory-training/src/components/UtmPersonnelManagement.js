@@ -4,6 +4,7 @@ import { fetchURL } from '../App'
 import '../stylesheets/UtmPersonnelManagement.css'
 import { useNavigate, Route, Routes } from "react-router-dom";
 import UtmPersonellTrainingDetails from "./UtmPersonellTrainingDetails.js";
+import FileList from './FileList'
 
 function calculateDueDate(completionDate, interval) {
   if (!completionDate) {
@@ -135,6 +136,7 @@ export default function UtmPersonnelManagement() {
                   {/* <button onClick={() => handleCloseClick(index)}>close</button> */}
                   {personnel[0].rank_name}, {personnel[0].first_name}{" "}
                   {personnel[0].last_name}
+
                 </p>
               ) : (
                 <p>No personnel data available</p>
@@ -185,7 +187,7 @@ export default function UtmPersonnelManagement() {
   // };
 
   // const handleDeleteTraining = (userID, trainingIndex) => {
-  //   fetch(`http://localhost:4000/user/status/${userID}`, {
+  //   fetch(`${fetchURL}/user/status/${userID}`, {
   //     method: 'DELETE',
   //   })
   //     .then((res) => res.json())

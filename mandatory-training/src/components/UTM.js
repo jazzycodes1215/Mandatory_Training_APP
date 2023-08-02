@@ -6,6 +6,7 @@
   import UtmPersonnelManagement from './UtmPersonnelManagement';
   import UtmNotifications from './UtmNotifications';
   import { Training } from '.';
+  import UtmUploadView from './UtmUploadView'
   import '../stylesheets/UtmNotifications.css'
 
   export default function UTM() {
@@ -27,6 +28,7 @@
         <Button onClick={() => handleTabChange('unitReadiness')}>Unit Readiness</Button>
         <Button onClick={() => handleTabChange('manageTraining')}>Manage Training</Button>
         <Button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</Button>
+        <Button onClick={() => handleTabChange('viewUploads')}>View Uploaded Certificates</Button>
 
         {/* Conditional rendering based on the selected tab */}
         {selectedTab === 'notifications' && (
@@ -43,6 +45,10 @@
 
         {selectedTab === 'managePersonnel' && (
         <UtmPersonnelManagement />
+        )}
+
+        {selectedTab === 'viewUploads' && (
+        <UtmUploadView />
         )}
       </>
     );

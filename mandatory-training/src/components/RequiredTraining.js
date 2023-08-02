@@ -29,7 +29,6 @@ export default function RequiredTraining() {
 
     useEffect(() => {
         listSubordinates();
-        console.log(subordinates);
     }, [subordinates]);
 
     useEffect(() => {
@@ -68,7 +67,13 @@ export default function RequiredTraining() {
             }
             const response = await fetch(`${fetchURL}/requiredtraining/${userID}`);
             const data = await response.json();
-            setRequiredTraining(data);
+            if(!Array.isArray(response)) {
+                setRequiredTraining([data]);
+            }
+            else {
+                setRequiredTraining(data);
+            }
+
         } catch (error) {
             console.error('Error fetching your required training', error);
         }
@@ -231,7 +236,7 @@ export default function RequiredTraining() {
                                             background: '#555',
                                         },
                                         }}>
-                                        {requiredTraining.map((training, index) => {
+                                        { requiredTraining ? requiredTraining.map((training, index) => {
                                             let found = completionDates.find((status) => status.name === training.name);
                                             let dueDate;
                                             let completed;
@@ -269,7 +274,7 @@ export default function RequiredTraining() {
                                                 />
                                                 </ListItem>
                                             )
-                                        })}
+                                        }) : null}
                                     </List>
                                 </ListContainer>
                             </AccordionDetails>
