@@ -1,7 +1,11 @@
+.viewport {
+  overflow-y: scroll;
+}
+
 .notification-container {
     width: 80%;
     margin: 0 auto;
-    padding: 20px;
+   
   }
   
   .notification-item {
@@ -51,3 +55,17 @@
   .mark-as-read-button:hover {
     scale: 1.1;
   }
+
+  .subheading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    text-transform: uppercase;
+}
+
+.subheading > h1 {
+    padding-top: 40px;
+    margin-bottom: 40px;
+}

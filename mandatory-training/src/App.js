@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Header, Help, Login, Account, RequiredTraining, SubordinateTraining, UTM,
-  Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay
+  Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay, ChangePassword
 } from './components';
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 
@@ -57,6 +57,7 @@ const App = ()=> {
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
                             <Route path='/training-UTM/:training/*' element={<TrainingDisplayUTM />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
+                            <Route path='/change-password/*' element={<ChangePassword />} />
                             <Route path='/*' element={<Help />} /> catch all
 
                         </Routes>
@@ -74,14 +75,17 @@ const AppWrapper = styled.div`
   inset: 0;
   overflow-y: hidden;
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: minmax(10%, auto) minmax(90%, auto);
   background-color: White;
 `;
 
 const HeaderContainer = styled.div`
-grid-row: 1 / 2;
+position: sticky;
+top: 0;
+z-index: 100;
+background-color: #ffffff;
 `
 const BodyContainer = styled.div`
-grid-row: 2 / 3;
-margin-top: 1em;
+padding-top: 1%; // Adjust this to match your header height
+overflow-y: auto;
 `
