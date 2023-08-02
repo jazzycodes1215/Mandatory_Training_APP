@@ -671,6 +671,27 @@ app.get('/units', async (req, res) => {
   }
 });
 
+//Endpoint for getting all users in a unit
+app.get('/units/users/:unitId', async (req, res) => {
+  const {unitId} = req.params;
+
+  try {
+    console.log(unitId);
+    const users = await knex('users')
+    .select('*')
+    .where('users.unit_id', unitId)
+    if(users) {
+      res.json(users);
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({
+      message: 'Error creating unit', error
+  })
+}})
+
 // endpoint for adding in a new unit
 app.post('/units', async (req, res) => {
   const newUnit = req.body; // Assuming the request body contains the necessary user data
@@ -681,7 +702,7 @@ app.post('/units', async (req, res) => {
       res.status(200).json({message: successful});
     })
   } catch (error) {
-    res.status(500).json({
+      res.status(500).json({
       message: 'Error creating unit', error
     });
   }
