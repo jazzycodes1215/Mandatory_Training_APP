@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext } from '../App';
 import useUserCheck from '../hooks/useUserCheck'
+import FileList from './FileList';
 // import Button from '@mui/material/Button';
 // import SendIcon from '@mui/icons-material/Send';
 // import Input from '@mui/material/Input';
@@ -16,7 +18,7 @@ const FileUpload = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     if (selectedFile && userID) {
       // Create a new FormData object and append the selected file to it
@@ -44,10 +46,13 @@ const FileUpload = () => {
   };
 
   return (
+  <>
     <form onSubmit={handleSubmit}>
       <input type='file' onChange={handleFileChange} />
       <button variant="contained" type='submit'>Submit</button>
     </form>
+    <FileList userID={userID}/>
+  </>
   );
 };
 

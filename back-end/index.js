@@ -537,25 +537,27 @@ app.get('/requiredTraining/ADT', async (req, res) => {
     }
   });
 
-  app.get('/requiredTraining/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-      const trainings = await knex('trainings')
-        .select('trainings.id', 'name', 'interval')
-        .join('duty_trainings', 'trainings.id', '=', 'duty_trainings.training_id')
-        .join('user_duties', 'duty_trainings.duty_id', '=', 'user_duties.duty_id')
-        .where('user_duties.user_id', id);
-  
-      if (trainings.length > 0) {
-        res.status(200).json(trainings);
-      } else {
-        res.status(200).json([]);
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: 'Internal server error' });
+
+app.get('/requiredTraining/:id', async (req, res) => {
+  const {id} = req.params;
+  try {
+    //I tried not to use knex.raw I swear.
+    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
+    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
+    WHERE user_duties.user_id = ?`, [id])
+    if(trainings?.rows)
+    {
+      res.status(201).json(trainings?.rows)
     }
-  });
+    else
+    {
+      res.status(404);
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+})
 
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
@@ -583,7 +585,7 @@ app.get('/requiredTraining/ADT', async (req, res) => {
             res.status(200).json({ message: 'Training updated successfully' });
           } else {
             res.status(404).json({ message: 'Training not found' });
-          }
+           }
     } catch (error) {
       res.status(500).json({ message: 'Error updating training data', error });
     }
@@ -1049,37 +1051,6 @@ try {
 });
 */
 
-
-
-
-
-app.listen(port, () => {
-
-  // crypto.generateKeyPair('rsa', {
-  //   modulusLength: 4096,
-  //   publicKeyEncoding: {
-  //     type: 'spki',
-  //     format: 'pem',
-  //   },
-  //   privateKeyEncoding: {
-  //     type: 'pkcs8',
-  //     format: 'pem',
-  //   },
-  // }, (err, publicKey, privateKey) => {
-  //   // Handle errors and use the generated key pair.
-  //   if(err) console.log(err)
-  //   secretKey = privateKey;
-  // });
-
-  console.log(`listening on port ${port}`)
-})
-
-
-
-
-
-
-
 //ENDPOINT TO UPLOAD FILE
 app.post('/upload', upload.single('file'), (req, res) => {
   const fileContent = fs.readFileSync(req.file.path);
@@ -1109,4 +1080,66 @@ app.get('/upload', async (req, res) => {
       message: 'Error retrieving users', error
     });
   }
+})
+
+//downloads first file in appropriate format(.pdf, docx, txt) with name given at upload
+app.get('/upload/:userID', async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const fileData = await knex('files')
+    .select('file_name', 'file_type', 'file_content')
+    .where('user_id', userID)
+    .first();
+
+    if (fileData) {
+      res.setHeader('Content-disposition', `attachment; filename=${fileData.file_name}`);
+      res.setHeader('Content-type', fileData.file_type);
+      res.send(fileData.file_content);
+    } else {
+      res.status(404).json({ error: 'File not found for this user' });
+    }
+  } catch(error) {
+    console.error('Error fetching file data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+//Supposed to view files uploaded by a given user
+app.get('/files/:userID', async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const files = await knex('files')
+      .select('id', 'file_name')
+      .where('user_id', userID);
+
+    res.status(200).json(files);
+  } catch (error) {
+    console.error('Error fetching files:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+
+
+app.listen(port, () => {
+
+  // crypto.generateKeyPair('rsa', {
+  //   modulusLength: 4096,
+  //   publicKeyEncoding: {
+  //     type: 'spki',
+  //     format: 'pem',
+  //   },
+  //   privateKeyEncoding: {
+  //     type: 'pkcs8',
+  //     format: 'pem',
+  //   },
+  // }, (err, publicKey, privateKey) => {
+  //   // Handle errors and use the generated key pair.
+  //   if(err) console.log(err)
+  //   secretKey = privateKey;
+  // });
+
+  console.log(`listening on port ${port}`)
 })
