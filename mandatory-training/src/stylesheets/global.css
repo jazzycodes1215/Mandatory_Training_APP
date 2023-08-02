@@ -27,7 +27,7 @@ p {
 }
 
 button {
-    background-color: MidnightBlue;
+    background-color: #1976d2;
     color: white;
     font-size: 1em;
     margin: 1em 0;
@@ -37,12 +37,10 @@ button {
     text-align: left;
 
     &:hover {
-        background-color: white;
-        color: #007BFF;
-    }
+        transition: all .5s ease;
 
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3;
+        background-color: white;
+        border: 1px solid #1976d2;
+        color: #1976d2;
     }
 }

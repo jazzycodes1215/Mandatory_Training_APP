@@ -48,7 +48,6 @@
   };
 
   const Button = styled.button`
-      background-color: MidnightBlue;
       color: white;
       font-size: 1em;
       margin: 1em;
