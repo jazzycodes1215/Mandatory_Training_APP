@@ -315,13 +315,14 @@ app.post('/registration', async (req, res) => {
 app.patch('/registration/:id', async (req, res) => {
   console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id, role_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id} = req.body;
   const hashedPass = bcrypt.hashSync(password, 10)
   const userAccountUpdate = {
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
+      password: newPassword,
       supervisor_id: supervisor_id,
       role_id: role_id
   }
@@ -335,6 +336,8 @@ app.patch('/registration/:id', async (req, res) => {
 
     if(user) {
       const passwordCheck = bcrypt.compareSync(password, user[0].password);
+      console.log(user);
+      console.log(password);
       console.log(passwordCheck);
       if (passwordCheck) {
         const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id, unit: user.unit_id}, secretKey, { algorithm: 'RS256' }, function(err, token) {

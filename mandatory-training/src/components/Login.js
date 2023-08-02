@@ -25,9 +25,7 @@ export default function Login() {
 
     const vidRef = useRef();
 
-    useEffect(()=>
-
-    {
+    useEffect(()=> {
         console.log(validToken);
         if(validToken)
         {
