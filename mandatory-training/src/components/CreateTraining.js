@@ -16,7 +16,28 @@ export default function CreateTraining() {
     const [lastName, setLastName] = useState(null);
     const [number, setNumber] = useState(null);
     const [summary, setSummary] = useState(null);
+    const [dutyOptions, setDutyOptions] = useState(null);
+    const [duties, setDuties] = useState(null);
 
+    useEffect(() => {
+        fetchDutyOptions();
+    }, []);
+    
+    const fetchDutyOptions  = async () => {
+        try {
+            const response = await fetch(`${fetchURL}/duties`);
+            const data = await response.json();
+            setDutyOptions(data);
+        } catch (error) {
+            console.error('Error fetching duty options', error);
+        }
+    };
+
+    const handleSelectDuties = (e) => {
+        const selectedOptions = Array.from(e.target.selectedOptions);
+        const selectedValues = selectedOptions.map((option) => parseInt(option.value));
+        setDuties(selectedValues);
+      }
 
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
@@ -78,8 +99,18 @@ export default function CreateTraining() {
                 </Row>
                 <Row>
                     <Column>
+                        <Label for="selectDuties">Training Duties:</Label>
+                        <SelectTrainingInfo onChange={handleSelectDuties} id="selectDuties" multiple required>
+                            {dutyOptions?.map((element)=> {
+                                return (
+                                    <option value={element.id}>{element.title}</option>
+                                )
+                            })}
+                        </SelectTrainingInfo>
+                    </Column>
+                    <Column>
                         <Label for="inputSummary">Training Summary:</Label>
-                        <InputSummary rows="8" onChange={(e)=>{setSummary(e.target.value)}} id="inputSummary" type="text"></InputSummary>
+                        <InputSummary rows="4" onChange={(e)=>{setSummary(e.target.value)}} id="inputSummary" type="text"></InputSummary>
                     </Column>
                 </Row>
             </TrainingInputContainer>
