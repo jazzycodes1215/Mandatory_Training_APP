@@ -31,7 +31,7 @@ export default function SubmitBug({ trainingId, setDisplay, userId }) {
       <Form onSubmit={handleSubmit}>
       <CloseButton onClick={()=>setDisplay(false)}>X</CloseButton>
         <h1>Report a Bug</h1>
-
+        <InputLabel>Training ID (Auto-filled)</InputLabel>
         <Input
           type="number"
           value={trainingId}
@@ -50,6 +50,9 @@ export default function SubmitBug({ trainingId, setDisplay, userId }) {
     </SubmitOverlay>
   );
 }
+
+const InputLabel = styled.p`
+align-self: flex-start`
 
 const Message = styled.div`
   position: absolute;

@@ -327,16 +327,19 @@ app.patch('/registration/:id', async (req, res) => {
   }
 
   try {
-    const user = await knex('users')
-    .where('id', userId)
-    .update(userAccountUpdate)
-    .returning('*')
-    .catch(e=>console.log(e));
+    const userPass = await knex('users').select('password').where('id', userId)
 
-    if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user[0].password);
+    if(userPass[0]?.password) {
+      const passwordCheck = bcrypt.compareSync(password, userPass[0].password);
       console.log(passwordCheck);
       if (passwordCheck) {
+        const user = await knex('users')
+        .where('id', userId)
+        .update(userAccountUpdate)
+        .returning('*')
+        .catch(e=>console.log(e));
+
+
         const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id, unit: user.unit_id}, secretKey, { algorithm: 'RS256' }, function(err, token) {
 
           if(err)
