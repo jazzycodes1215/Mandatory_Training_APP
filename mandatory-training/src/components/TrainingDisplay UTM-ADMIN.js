@@ -116,17 +116,12 @@ const forceUpdate = useForceUpdate();
                 <Divider orientation="vertical" flexItem />
                 <Grid>
                 <h5>Interval</h5>
-                  {`Time Requirement: ${trainingData.interval} days`}
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid>
-                <h5>Source</h5>
-                  {`Source: ${trainingData.source}`}
+                  {`${trainingData.interval} days`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid sx={{paddingRight: 2}}>
-                <h5>Duty</h5>
-                  {`Duty: ${trainingData.source}`}
+                <h5>Source</h5>
+                  {`${trainingData.source}`}
                 </Grid>
               </Box>
           </SubDiv>

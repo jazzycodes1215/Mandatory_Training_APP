@@ -12,7 +12,7 @@ import '../stylesheets/training.css'
 import ContentEditable from "react-contenteditable";
 
 
-export default function EditView(props) {
+export default function EditView() {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState([])
   const [name, setName] = useState('')
@@ -28,9 +28,6 @@ export default function EditView(props) {
 
 
   const handleUpdates = () => {
-    // setName(JSON.stringify(nameUpdate.current.innerHTML))
-    // console.log(nameUpdate.current.innerHTML)
-    console.log('type is here:', updatedType)
     handleUpdateTraining();
   }
 
@@ -40,7 +37,8 @@ export default function EditView(props) {
       const patchObject = {
         name: nameUpdate.current.innerHTML !== null ? nameUpdate.current.innerHTML : trainingData.name,
         type_id: updatedType !== null ? updatedType : trainingData.type_id,
-        interval: parseInt(intervalUpdate.current.innerHTML) !== null ? parseInt(intervalUpdate.current.innerHTML) : trainingData.interval
+        interval: parseInt(intervalUpdate.current.innerHTML) !== null ? parseInt(intervalUpdate.current.innerHTML) : trainingData.interval,
+        source: sourceUpdate.current.innerHTML !== null ? sourceUpdate.current.innerHTML : trainingData.interval
       };
   
       console.log(patchObject);
@@ -163,46 +161,12 @@ return (
                 <Divider orientation="vertical" flexItem />
                 <Grid>
                   <h5>Interval:</h5>
-                  {/* <p>Time Requirement:</p><ContentEditable className="changeMe" innerRef={intervalUpdate} tagName='p' html={trainingData.interval}></ContentEditable><p>days</p> */}
+                 <ContentEditable className="changeMe" innerRef={intervalUpdate} tagName='p' html={`${trainingData.interval}`}></ContentEditable><p>days</p>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
                   <h5>Source:</h5>
-                  {/* <input
-                    type="text"
-                    value={updatedSource !== null ? updatedSource : trainingData.source}
-                    onChange={(e) => setUpdatedSource(e.target.value)}
-                  /> */}
-                  {/* <p>Source:</p><ContentEditable className="changeMe" innerRef={sourceUpdate} tagName='p' html={trainingData.source}></ContentEditable> */}
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid sx={{paddingRight: 2}}>
-                  <h5>Duty:</h5>
-                  <select
-                    value={updatedDuty}
-                    onChange={(e) => setUpdatedDuty(parseInt(e.target.value))}
-                  >
-                    <option value="1">Guardian</option>
-                    <option value="2">Comsec Responsible Officer</option>
-                    <option value="3">Unit Fitness Program Manager</option>
-                    <option value="4">Antiterrorism Officer</option>
-                    <option value="5">Unit Deployment Manager</option>
-                    <option value="6">Unit Training Manager</option>
-                    <option value="7">Space Systems Operations</option>
-                    <option value="8">All Source Intel</option>
-                    <option value="9'">Imagery Analyst / GEOINT'</option>
-                    <option value="10">ELINT Analyst (SIGINT)</option>
-                    <option value="11">COMINT Analyst (SIGINT)</option>
-                    <option value="12'">Cyber Intel Analyst'</option>
-                    <option value="13">Analysis and Reporting (Fusion Analyst)</option>
-                    <option value="14">Targeting Analyst</option>
-                    <option value="15">Intelligence</option>
-                    <option value="16">Cyber Ops - Network Ops</option>
-                    <option value="17">Cyber Ops - System Ops</option>
-                    <option value="18">Cyber Ops - RF Ops (SATCOM)</option>
-                    <option value="19">Cyber Ops - Defensive Cyber Ops</option>
-                    <option value="20">Software Development Ops (SFSC Agnostic)</option>
-                  </select>
+                <ContentEditable className="changeMe" innerRef={sourceUpdate} tagName='p' html={trainingData.source}></ContentEditable>
                 </Grid>
               </Box>
           </SubDiv>
