@@ -96,6 +96,10 @@
 
 }
 
+.name {
+    font-size: xxx-large;
+}
+
 .changeMe {
     color: #007BFF;
 }
