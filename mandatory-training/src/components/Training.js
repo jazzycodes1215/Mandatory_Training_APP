@@ -113,6 +113,9 @@ export default function Training() {
         <>
      <div className='subheading'>
         <h1>Training</h1>
+        <Link to="/create-training">
+          <Button variant="contained" color="primary">Create New Training</Button>
+        </Link>
     </div>
 
         <TRContainer className='boy'>

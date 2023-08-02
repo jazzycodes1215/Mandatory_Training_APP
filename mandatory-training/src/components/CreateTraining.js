@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'

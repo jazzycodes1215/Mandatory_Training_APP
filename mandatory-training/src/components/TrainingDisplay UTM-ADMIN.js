@@ -27,15 +27,26 @@ export default function TrainingDisplayUTM() {
 
   const [source, setSource] = useState('')
 
+
+  function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update state to force render
+    // A function that increment 👆🏻 the previous state like here 
+    // is better than directly setting `setValue(value + 1)`
+}
+
+const forceUpdate = useForceUpdate();
+
   const fetchTraining = async () => {
-    const response = await fetch(`${fetchURL}/training/${training}`)
+    const response = await fetch(`${fetchURL}/requiredTraining/${training}`)
     const data = await response.json();
     setTrainingData(data);
-    setSource(`${data.source}`);
+    console.log(data)
   }
 
   const EditPage = () => {
-    setEditmode(!editmode)
+    forceUpdate();
+    setEditmode(!editmode);
   }
 
 
@@ -46,15 +57,30 @@ export default function TrainingDisplayUTM() {
 
   return (
     <>
+    {!editmode && (
       <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
           <div className='editTraining'>
           <button onClick={()=>(EditPage())}>
             <p>Edit</p>
-            <img src={mySvg} alt="mmm"></img>
+            <img src={mySvg} alt="(cog wheel)"></img>
             </button>
             </div>
-      </div>
+      </div>)}
+      
+      {editmode && (
+      <div className='top-menu'>
+      <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+          <div className='editTraining'>
+          <button onClick={()=>(
+            EditPage()
+            )}>
+            <p>Done</p>
+            <img src={mySvg} alt="(cog wheel)"></img>
+            </button>
+            </div>
+      </div>)}
+
       {trainingData ?
       <FlexDiv>
      
@@ -192,6 +218,9 @@ width: 100%;
 align-items: center;
 `;
 export const ListHeader = styled.span`
+display: flex;
+flex-direction: row;
+align-items: center
 font-size: xxx-large;
 font-weight: 700;
 `;

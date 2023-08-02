@@ -459,17 +459,35 @@ app.post('/login', async (req, res) => {
 
 //////////////////////////////////////////////////TRAINING REGISTRATION///////////////////////////////////////////////////////////////////////////
 //GET Request for getting all the training data
-app.get('/requiredTraining', async (req, res) => {
+app.get('/requiredTraining/', async (req, res) => {
   //
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
       .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .then(data => res.status(200).json(data));
+      .then(data => res.status(200).json(data))
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving training data', error });
   }
   });
+
+  app.get('/requiredTraining/:id', async (req, res) => {
+    const trainingId = req.params.id;
+    try { 
+      const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('trainings.id', trainingId)
+      .first()
+
+      if (trainings) {
+        res.json(trainings);
+      } else {
+        res.status(404).json({ message: 'Unit not found' });
+      }
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding training data', error });
+  }})  
 
 app.get('/requiredTraining/primaryTraining', async (req, res) => {
 
@@ -484,54 +502,35 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
   }
   });
 
-app.get('/requiredTraining/auxTraining', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Auxiliary Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-  });
-
-app.get('/requiredTraining/PME', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'rofessional Military Education')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-
-  });
-app.get('/requiredTraining/ADT', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Additional Duty Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-  });
 
   app.get('/training/:id', async (req, res) => {
     const trainingId = req.params.id;
     try {
       const training = await knex('trainings')
         .join('type', 'trainings.type_id', 'type.id')
-        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .leftJoin('duty_trainings', 'trainings.id', 'duty_trainings.training_id') // Left join to include duties
+        .leftJoin('duties', 'duty_training.duty_id', 'duties.id') // Left join to include duty details
+        .select(
+          'trainings.id',
+          'trainings.name',
+          'trainings.interval',
+          'trainings.source',
+          'type.name as type_name',
+          'type.id as type_id', 
+          knex.raw('GROUP_CONCAT(duties.name) as duties') // Group duty names into a comma-separated string
+        )
         .where('trainings.id', trainingId)
-        .first()
+        .groupBy('trainings.id') // Group by training ID to avoid duplicates
+        .first();
+  
       if (training) {
+        // Convert the comma-separated duties string to an array
+        if (training.duties) {
+          training.duties = training.duties.split(',');
+        } else {
+          training.duties = []; // If no duties found, set duties to an empty array
+        }
+  
         res.json(training);
       } else {
         res.status(404).json({ message: 'Training not found' });
@@ -541,27 +540,35 @@ app.get('/requiredTraining/ADT', async (req, res) => {
     }
   });
 
-
-app.get('/requiredTraining/:id', async (req, res) => {
-  const {id} = req.params;
-  try {
-    //I tried not to use knex.raw I swear.
-    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
-    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
-    WHERE user_duties.user_id = ?`, [id])
-    if(trainings?.rows)
-    {
-      res.status(201).json(trainings?.rows)
+  app.patch('/training/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, interval, source, type_id } = req.body;
+  
+    try {
+      // Build the update object with the fields to be updated
+      const updateObject = {};
+      if (name) updateObject.name = name;
+      if (interval) updateObject.interval = interval;
+      if (source) updateObject.source = source;
+      if (type_id) updateObject.type_id = type_id;
+  
+      // Perform the update query using the Knex query builder
+      const updatedCount = await knex('trainings')
+        .where('id', id)
+        .update(updateObject);
+  
+      if (updatedCount > 0) {
+        // If at least one row was updated, return a success response
+        res.status(200).json({ message: 'Training updated successfully' });
+      } else {
+        // If no rows were updated (no matching training found), return a not found response
+        res.status(404).json({ error: 'Training not found' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    else
-    {
-      res.status(404);
-    }
-
-  } catch (error) {
-    console.log(error)
-  }
-})
+  });
 
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
