@@ -14,6 +14,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function ChangePassword() {
     const {validatedUserType, validToken, userID} = useUserCheck();
+    const {setToken} = useContext(AppContext);
     const [showPassword, setShowPassword] = useState(false);
     const [pwd, setPwd] = useState("");
     const [newPwd, setNewPwd] = useState("");
@@ -41,6 +42,7 @@ export default function ChangePassword() {
         })
             .then(res => {
                 if (res.ok) {
+                    handleLogout();
                     return res.json();
                 } else {
                     return res.json().then(data => { throw new Error(data.error) });
@@ -50,6 +52,14 @@ export default function ChangePassword() {
                 setError(err.message);
             });
     }
+
+    const handleLogout = () => {
+        setToken(null);
+        sessionStorage.clear();
+        alert('Password updated successfully. You are logged out.');
+        navigate('/login');
+      }
+
     return (
         <>
        <video id="background-video" ref={ vidRef } autoPlay loop muted>
