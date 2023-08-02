@@ -83,5 +83,4 @@ grid-row: 1 / 2;
 `
 const BodyContainer = styled.div`
 grid-row: 2 / 3;
-margin-top: 1em;
 `

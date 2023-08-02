@@ -5,6 +5,7 @@ import { AppContext, fetchURL } from '../App';
 import SchoolIcon from '@mui/icons-material/School';
 import '../stylesheets/login.css';
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/global.css'
 
 import { Button, OutlinedInput, FormControl, InputLabel, IconButton, InputAdornment } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -69,10 +70,10 @@ export default function Login() {
             <section className="body">
                 <div className="container">
                     {validToken ? navigate("/") : <></>}
-                    <section className="title"><SchoolIcon /><h1>UTM Tool</h1></section>
+                    <section className="title"><SchoolIcon sx={{ color: '#0F3D68' }} id='schoolIcon'/><h1>UTM Tool</h1></section>
                     <section className="login">
                         {error ? <h2>{error}</h2> : <></>}
-                        <h2>Welcome to UTM Tool</h2>
+                        <h2>Welcome to the UTM Tool</h2>
                         <p>Please sign in to your account to continue</p>
                         <FormControl sx={{ml:2, mr:2, my:1}} variant="outlined">
                         <InputLabel htmlFor="email">Email</InputLabel>
@@ -108,7 +109,7 @@ export default function Login() {
                                 label="Password"
                             />
                         </FormControl>
-                        <Button variant="contained" sx={{backgroundColor: 'midnightblue'}} onClick={HandleSubmit}className="button">Login</Button>
+                        <Button id='login-btn' variant="contained" sx={{backgroundColor: '#0F3D68'}} onClick={HandleSubmit}>Login</Button>
                     </section>
                 </div>
             </section>

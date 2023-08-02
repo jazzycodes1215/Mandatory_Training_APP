@@ -1,5 +1,7 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
+import { useCallback } from "react";
+import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { fetchURL } from "../App";
 import { LeftDiv, ListHeader, ListTitle, SubDiv } from "./TrainingDisplay UTM-ADMIN";
@@ -14,16 +16,11 @@ export default function EditView(props) {
     const {training} = useParams();
     const [trainingData, setTrainingData] = useState([])
     const [name, setName] = useState('')
+    const itemDescRef = useRef(null);
 
     useEffect(() => {
-        console.log(training)
         fetchRequiredTraining();
     }, [training]);
-
-    const HandleChangeName = evt => {
-        setName(evt.target.textContent)
-        console.log(name)
-    }
 
     const fetchRequiredTraining = async () => {
 
@@ -39,11 +36,41 @@ export default function EditView(props) {
         }
     };
 
+    //update unchanged fields to their previous data
+
+
+
+    // const HandleSubmit = async () => {
+    //     let header = {
+    //         let trainingData = {name: first ? first : null, interval: last ? last : null, source: email ? email : null, password: pwd,
+    //             dodID: id, rank_id: rank ? rank : null, role_id: null, supervisor_id: null, unit_id: null}
+
+    //         method: "PATCH",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(userData)};
+    //         //Maybe don't go to the login login... API
+    //         let response = await fetch(`${fetchURL}/createAccount`, header)
+    //         let status = response.status;
+    //         let data = await response.json();
+    //         console.log(data);
+    //         if(status === 201)
+    //         {
+    //           //setUserType(data.userType);
+    //           //setToken(data.token)
+    //         }
+    //         else
+    //         {
+    //             setError(data.message)
+    //         }
+    // }
+
 return (    
 <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
-          <ListHeader><ContentEditable html={trainingData.name} onChange={HandleChangeName}></ContentEditable></ListHeader>
+          <ListHeader><ContentEditable innerRef={itemDescRef} tagName='p' html={trainingData.name}></ContentEditable></ListHeader>
         </ListTitle>
         <SubDiv>
           <Box
