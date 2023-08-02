@@ -3,6 +3,7 @@ import { useNavigate, Link, useParams } from 'react-router-dom'
 import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
+import SubmitBug from './SubmitBug'
 
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
@@ -13,6 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function TrainingDisplay() {
   const {training} = useParams();
+  const [displaySubmit, setDisplaySubmit] = useState(false);
   const [trainingData, setTrainingData] = useState({})
   const {validatedUserType, validToken, userID, unitID} = useUserCheck();
   const [isSupe, setIsSupe] = useState(false);
@@ -86,6 +88,7 @@ export default function TrainingDisplay() {
   }, [training])
   return (
     <>
+      {displaySubmit ? <SubmitBug trainingId={training} setDisplay={setDisplaySubmit} userId={userID}/>: null}
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
       {trainingData ?
       <FlexDiv>
@@ -149,7 +152,7 @@ export default function TrainingDisplay() {
       </LeftDiv>
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
-        <ButtonTraining onClick={()=>navigate(-1)}>Go To Training</ButtonTraining>
+        <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
         <ButtonTraining onClick={()=>navigate(-1)}>Submit Certificate</ButtonTraining>
         {subordinateData ?
         <div>
@@ -164,7 +167,7 @@ export default function TrainingDisplay() {
           <Box>
             {overdue ? overdue?.map(element=>element) : null}
           </Box>
-          <ButtonTraining>Submit Bug</ButtonTraining>
+          <ButtonTraining onClick={()=>setDisplaySubmit(!displaySubmit)}>Submit Bug</ButtonTraining>
         </div>
         : <></>}
       </RightDiv>

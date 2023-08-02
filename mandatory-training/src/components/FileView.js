@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 
-const FileView = ({ fileID, fileName }) => {
+const FileView = ({ file }) => {
   const [fileData, setFileData] = useState(null);
+  const [fileContent, setFileContent] = useState(null);
 
   const handleDownloadFile = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/upload/${fileID}`);
-      if (!response.ok) {
-        throw new Error('File not found');
-      }
-
       // Get the response headers to determine the file name and type
-      const fileType = response.headers.get('Content-Type');
-      const contentDispositionHeader = response.headers.get('Content-Disposition');
-      const fileName = contentDispositionHeader
-        ? contentDispositionHeader.split('filename=')[1]
-        : 'file.txt'; // Default name if header not available
+      const fileType = file.file_type;
+      const fileName = file.file_name;
 
-      // Read the response as a Blob
-      const fileBlob = await response.blob();
+      // Create a Blob object from the file content
+      const fileBlob = new Blob([file.file_content], { type: fileType });
 
       // Create a URL for the Blob object
       const fileURL = URL.createObjectURL(fileBlob);
@@ -29,19 +22,57 @@ const FileView = ({ fileID, fileName }) => {
         fileType,
         fileURL,
       });
+
+      // Trigger the download
+      const link = document.createElement('a');
+      link.href = fileURL;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error('Error downloading file:', error);
     }
   };
 
+  // const handleStreamFile = async () => {
+  //   try {
+  //     // Save the file content in state after reading
+  //     setFileContent(file.file_content);
+
+  //     // Save the file data in state
+  //     setFileData({
+  //       fileName: file.file_name,
+  //       fileType: file.file_type,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error streaming file:', error);
+  //   }
+  // };
+
+  // // Helper function to render the file content based on the file type
+  // const renderFileContent = () => {
+  //   if (!fileContent) return null;
+
+  //   if (file.type.includes('image/')) {
+  //     return <img src={fileContent} alt={file.name} />;
+  //   } else if (file.type === 'application/pdf') {
+  //     return <embed src={fileContent} type={file.type} width="100%" height="600px" />;
+  //   } else {
+  //     return <pre>{fileContent}</pre>;
+  //   }
+  // };
+
   return (
     <div>
-      <button onClick={handleDownloadFile}>Download File: {fileName}</button>
-      {fileData && (
-        <a href={fileData.fileURL} download={fileData.fileName}>
-          {fileData.fileName}
-        </a>
-      )}
+      <button onClick={handleDownloadFile}>Download File</button>
+      {/* <button onClick={handleStreamFile}>Read File</button>
+      {fileContent && (
+        <div>
+          <h4>File Content:</h4>
+          {renderFileContent()}
+        </div>
+      )} */}
     </div>
   );
 };

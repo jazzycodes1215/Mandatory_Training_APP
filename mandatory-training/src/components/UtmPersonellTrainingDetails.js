@@ -1,16 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-export default function UtmPersonellTrainingDetails({ userID }) {
-  const { trainingId } = useParams();
-  console.log("userID in UtmPersonellTrainingDetails:", userID);
-  // Fetch the detailed training information based on the trainingId
-  // You can use this ID to fetch the necessary data from your API or local state
+export default function UtmPersonellTrainingDetails() {
+  const { userId, trainingId } = useParams();
+
+  // Now you have both `userId` and `trainingId` available for further processing
 
   return (
     <div>
-     
-      <h2>Training Details for User ID: {userID}</h2>
+      <h2>Training Details for User ID: {userId}</h2>
       <h2>Training Details for Training ID: {trainingId}</h2>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
@@ -15,6 +14,10 @@ const FileUpload = () => {
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
+  };
+
+  const handleFileSelect = (file) => {
+    setSelectedFile(file);
   };
 
   const handleSubmit = async (event) => {
@@ -51,7 +54,7 @@ const FileUpload = () => {
       <input type='file' onChange={handleFileChange} />
       <button variant="contained" type='submit'>Submit</button>
     </form>
-    <FileList userID={userID}/>
+    <FileList userID={userID} onFileSelect={handleFileSelect} />
   </>
   );
 };
