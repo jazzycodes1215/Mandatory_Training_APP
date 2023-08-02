@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-const FileDownload = ({ userID }) => {
+const FileView = ({ fileID, fileName }) => {
   const [fileData, setFileData] = useState(null);
 
   const handleDownloadFile = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/upload/${userID}`);
+      const response = await fetch(`http://localhost:4000/upload/${fileID}`);
       if (!response.ok) {
-        throw new Error('File not found for this user');
+        throw new Error('File not found');
       }
 
       // Get the response headers to determine the file name and type
+      const fileType = response.headers.get('Content-Type');
       const contentDispositionHeader = response.headers.get('Content-Disposition');
       const fileName = contentDispositionHeader
         ? contentDispositionHeader.split('filename=')[1]
         : 'file.txt'; // Default name if header not available
-      const fileType = response.headers.get('Content-Type');
 
       // Read the response as a Blob
       const fileBlob = await response.blob();
@@ -36,7 +36,7 @@ const FileDownload = ({ userID }) => {
 
   return (
     <div>
-      <button onClick={handleDownloadFile}>Download File</button>
+      <button onClick={handleDownloadFile}>Download File: {fileName}</button>
       {fileData && (
         <a href={fileData.fileURL} download={fileData.fileName}>
           {fileData.fileName}
@@ -46,4 +46,4 @@ const FileDownload = ({ userID }) => {
   );
 };
 
-export default FileDownload;
+export default FileView;
