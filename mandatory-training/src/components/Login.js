@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext, useRef } from 'react';
 import { BrowserRouter, Route, Routes, Link, useNavigate} from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App';
@@ -6,6 +6,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import '../stylesheets/login.css';
 import useUserCheck from '../hooks/useUserCheck'
 import '../stylesheets/global.css'
+import vid from '../videos/vid.mp4'
 
 import { Button, OutlinedInput, FormControl, InputLabel, IconButton, InputAdornment } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -22,7 +23,10 @@ export default function Login() {
     const[error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const vidRef = useRef();
+
     useEffect(()=>
+
     {
         console.log(validToken);
         if(validToken)
@@ -67,6 +71,10 @@ export default function Login() {
     }
     return (
         <>
+       <video id="background-video" ref={ vidRef } autoPlay loop muted>
+            <source src={vid} type="video/mp4" />
+            Your browser does not support the video tag.
+         </video>
             <section className="body">
                 <div className="container">
                     {validToken ? navigate("/") : <></>}
