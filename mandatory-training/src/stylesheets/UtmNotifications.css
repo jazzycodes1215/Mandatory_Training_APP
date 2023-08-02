@@ -1,7 +1,12 @@
+.viewport {
+  overflow-y: scroll;
+}
+
 .notification-container {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
+   
   }
   
   .notification-item {

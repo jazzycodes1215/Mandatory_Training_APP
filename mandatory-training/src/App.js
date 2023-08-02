@@ -83,4 +83,5 @@ grid-row: 1 / 2;
 `
 const BodyContainer = styled.div`
 grid-row: 2 / 3;
+overflow-y: auto;
 `
