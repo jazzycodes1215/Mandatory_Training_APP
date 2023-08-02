@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {fetchURL} from '../App'
 
 const FileView = ({ fileID, fileName }) => {
   const [fileData, setFileData] = useState(null);

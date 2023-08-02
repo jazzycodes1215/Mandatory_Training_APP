@@ -5,7 +5,6 @@ import {fetchURL} from '../App'
 
 const FileList = ({ userID }) => {
   const [files, setFiles] = useState([]);
-
   useEffect(() => {
     // Fetch the list of files for the given userID
     const fetchFiles = async () => {
@@ -13,6 +12,7 @@ const FileList = ({ userID }) => {
         const response = await fetch(`${fetchURL}/files/${userID}`);
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           setFiles(data);
         }
       } catch (error) {
@@ -28,7 +28,7 @@ const FileList = ({ userID }) => {
       <ul>
         {files.map((file) => (
           <li key={file.id}>
-            <a href={`http://localhost:4000/upload/${userID}`} download={file.file_name}>
+            <a href={`${fetchURL}/upload/${userID}`} download={file.file_name}>
             {file.file_name}
             </a>
           </li>
