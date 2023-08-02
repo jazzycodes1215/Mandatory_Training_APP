@@ -28,8 +28,13 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   const navigate = useNavigate();
  
+=======
+  const navigate = useNavigate()
+
+>>>>>>> main
 
 
   console.log('unit',unitID)
@@ -102,7 +107,13 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
+<<<<<<< HEAD
   
+=======
+
+
+   console.log("userID in UtmPersonnelManagement:", userID);
+>>>>>>> main
   return (
     <div>
       <Routes>
@@ -113,6 +124,9 @@ export default function UtmPersonnelManagement() {
         <div>Loading...</div>
       ) : Array.isArray(myUnit) ? (
         <div>
+           <div className='subheading'>
+        <h1>Personnel Management</h1>
+     </div>
           <button className="close-button" onClick={() => handleCloseClick()}>Close user</button>
           {myUnit.map((personnel, index) => (
             <div
@@ -127,7 +141,7 @@ export default function UtmPersonnelManagement() {
                 }
               }}
             >
-              
+
               {personnel && personnel.length > 0 ? (
                 <p>
                   {/* <button onClick={() => handleCloseClick(index)}>close</button> */}

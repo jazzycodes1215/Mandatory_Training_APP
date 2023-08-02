@@ -34,9 +34,12 @@ export default function Account() {
         fetchAccount();
         fetchDuties();
         fetchUsers();
-        fetchUserDuties();
         fetchUnits();
     }, [userID, validatedUserType, updated]);
+
+    useEffect(() => {
+        fetchUserDuties();
+    }, [account])
 
     useEffect(() => {
         findSupervisorId();
@@ -106,8 +109,8 @@ export default function Account() {
     const findSupervisorId = () => {
         let found = users?.find((element)=> `${element.first_name} ${element.last_name}` === supervisor);
         if (found) {
-            setSupervisorId(found.supervisor_id);
-            console.log(found.supervisor_id);
+            setSupervisorId(found.id);
+            console.log(found.id);
         }
     }
 
@@ -220,8 +223,8 @@ export default function Account() {
                 <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
             </Column>
             <Column>
-                <Label for="inputPassword">Password (8 character minimum):</Label>
-                <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" minlength="8" required></InputAccountInfo>
+                <Label for="inputPassword">Enter Current Password to Confirm Changes:</Label>
+                <InputAccountInfo onChange={(e)=>{setPassword(e.target.value)}} id="inputPassword" type="password" required></InputAccountInfo>
             </Column>
         </Row>
         <Row>
@@ -282,6 +285,10 @@ export default function Account() {
             <Column>
                 <Label for="email">Email:</Label>
                 <AccountInfo id="email">{account.email}</AccountInfo>
+            </Column>
+            <Column>
+                <Label for="changePassword">Need to update your password?</Label>
+                <AccountInfo id="changePassword"><Link to="/change-password">Click here to change your password</Link></AccountInfo>
             </Column>
         </Row>
         <Row>

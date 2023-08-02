@@ -23,32 +23,18 @@ export default function Training() {
     display: grid;
     margin-top: 30px;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 8vh 80vh;
+    grid-template-rows: 80vh;
   `;
 
-    const Subhead =styled.div`
-    grid-area: 1 / 1 / 2 / 2;
-    display: flex;
-    width: 30%;
-    padding-left: 96px;
-    justify-content: flex-start;
-    align-items: center;`
 
     const Type =styled.div`
-    grid-area: 2 / 1 / 3 / 2;
+    grid-area: 1 / 1 / 2 / 2;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding-left: 100px;`
-
-    const Toggle =styled.div`
-    grid-area: 1 / 2 / 2 / 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;`
+    align-items: flex-start;`
 
     const Trainings =styled.div`
-    grid-area: 2 / 2 / 3 / 3;
+    grid-area: 1 / 2 / 2 / 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -125,12 +111,11 @@ export default function Training() {
 
     return (
         <>
-
+     <div className='subheading'>
+        <h1>Training</h1>
+    </div>
 
         <TRContainer className='boy'>
-            <Subhead>
-                <h1>Trainings</h1>
-            </Subhead>
             <Type className='top'>
                 <h2>Type</h2>
                 <div className='type-btns'>
@@ -153,13 +138,10 @@ export default function Training() {
 
 export const TrainingCard = styled.div`
 display: grid;
-grid-template-rows: .5fr 2fr .5fr;
+grid-template-rows: 2fr .5fr;
 border: 1px solid black;
 width: 20%;
 height: 50%;
-margin-bottom: 20px;
-&:hover {
-    cursor:pointer;
 `
 export const TrainingCardTop = styled.div`
 grid-column: 1;
@@ -168,7 +150,7 @@ grid-row: 1 / 2;
 `
 export const TrainingCardMid = styled.div`
 grid-column: 1;
-grid-row: 2 / 3;
+grid-row: 1 / 2;
 display: flex;
 flex-direction: column;
 align-items: flex-start;
@@ -190,5 +172,5 @@ width: 100%;
 height: 100%;
 gap: 20px;
 overflow-y: auto;
-padding-top: 20px;
+padding: 20px 0 70px 0;
 `

@@ -6,15 +6,15 @@
 
 h1 {
     font-family: 'Source Serif Pro';font-size: 50px;
-    color: #0F3D68;
+    color: #1976d2;
 }
 
 h2 {
-color: #0F3D68;
+color: #1976d2;
 }
 
 h3 {
-    color: #0F3D68;
+    color: #4aa1ed;
     font-size: 20px;
 }
 
@@ -27,22 +27,28 @@ p {
 }
 
 button {
-    background-color: MidnightBlue;
+    background-color: black;
     color: white;
     font-size: 1em;
     margin: 1em 0;
-    border: 2px solid #007BFF;
+    border: 2px solid #1976d2;
     border-radius: 3px;
     cursor: pointer;
     text-align: left;
 
     &:hover {
-        background-color: white;
-        color: #007BFF;
-    }
+        transition: all .5s ease;
 
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3;
+        background-color: white;
+        border: 1px solid #1976d2;
+        color: #1976d2;
     }
+}
+
+.errorLogin {
+    color: red;
+}
+
+#login-btn {
+    margin-bottom: 20px;
 }

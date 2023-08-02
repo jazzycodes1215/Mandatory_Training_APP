@@ -54,10 +54,12 @@ export default function UtmNotifications() {
   };
 
     return (
-      <div>
-        <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button>
+      <>
+        {/* <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button> */}
       <div className = "notification-container">
-         <h3>Notification Inbox</h3>
+      <div className='subheading'>
+         <h1>Notifications</h1>
+       </div>
         {notifications.map((notification) => (
           <div key ={notification.id} className="notification-item">
            <p className="notification-comment">{notification.comment}</p>
@@ -69,7 +71,7 @@ export default function UtmNotifications() {
           </div>
         ))}
       </div>
-      </div>
+      </>
     );
   }
 

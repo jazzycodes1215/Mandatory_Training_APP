@@ -1,12 +1,12 @@
 .boy {
-    padding: 20px 30px 0 30px;
+    padding: 0 1em 0 1em;
     height: 90vh;
     margin-bottom: 20px;
 
 }
 
 .mid > h3 {
-  padding-right: 40px;
+  padding-right: 10px;
 }
 
 .type-btns {
@@ -17,24 +17,20 @@
 }
 
 .type-btns > button {
-    background-color: MidnightBlue;
     color: white;
     font-size: 1em;
     margin: 1em 0;
     padding: .7em 4em;
-    border: 2px solid #007BFF;
+    border: none;
     border-radius: 3px;
     cursor: pointer;
     text-align: left;
 
     &:hover {
+        transition: all .3s ease;
         background-color: white;
         color: #007BFF;
-    }
-
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3;
+        border: 1px solid #007BFF;
     }
 }
 
@@ -51,7 +47,9 @@
 }
 
 .mid > p {
-    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 10px;
 }
 
 .editTraining {
@@ -100,4 +98,17 @@
 
 .changeMe {
     color: #007BFF;
+}
+
+.subheading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    text-transform: uppercase;
+}
+
+.subheading > h1 {
+    padding-top: 40px;
 }
