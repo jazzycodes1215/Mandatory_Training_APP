@@ -49,10 +49,10 @@
 
   const Button = styled.button`
       color: white;
-      font-size: 1em;
-      margin: 1em;
-      padding: 0.25em 1em;
-      border: 2px solid #007BFF;
+      font-size: .75em;
+      margin: 30px 1em 0 1em ;
+      padding: 0.4em 1em;
+      border: none;
       border-radius: 3px;
       cursor: pointer;
 

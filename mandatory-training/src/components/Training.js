@@ -23,23 +23,24 @@ export default function Training() {
     display: grid;
     margin-top: 30px;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 8vh 80vh;
+    grid-template-rows: 10vh 80vh;
   `;
 
     const Subhead =styled.div`
     grid-area: 1 / 1 / 2 / 2;
     display: flex;
     width: 30%;
-    padding-left: 96px;
     justify-content: flex-start;
-    align-items: center;`
+    align-items: center;
+    text-transform: uppercase;     
+    margin-bottom: 20px;`
 
     const Type =styled.div`
     grid-area: 2 / 1 / 3 / 2;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 100px;`
+    margin-top: 40px;`
 
     const Toggle =styled.div`
     grid-area: 1 / 2 / 2 / 3;
@@ -54,6 +55,7 @@ export default function Training() {
     justify-content: center;
     align-items: center;
     padding: 0 50px;
+    margin-top: 34px;
     `
 
     // useEffect(() => {
@@ -129,7 +131,7 @@ export default function Training() {
 
         <TRContainer className='boy'>
             <Subhead>
-                <h1>Trainings</h1>
+                <h1>Training</h1>
             </Subhead>
             <Type className='top'>
                 <h2>Type</h2>
