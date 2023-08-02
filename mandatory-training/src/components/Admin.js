@@ -129,6 +129,7 @@ export default function Admin() {
             {
                 console.log("User Deleted");
                 setUserToDelete(null);
+                fetchUsers();
             }
             else
             {
