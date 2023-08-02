@@ -102,13 +102,6 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
-<<<<<<< HEAD
-
-=======
-
-
-   console.log("userID in UtmPersonnelManagement:", userID);
->>>>>>> main
   return (
     <div>
       <Routes>
