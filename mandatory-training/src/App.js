@@ -75,14 +75,17 @@ const AppWrapper = styled.div`
   inset: 0;
   overflow-y: hidden;
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: minmax(10%, auto) minmax(90%, auto);
   background-color: White;
 `;
 
 const HeaderContainer = styled.div`
-grid-row: 1 / 2;
+position: sticky;
+top: 0;
+z-index: 100;
+background-color: #ffffff;
 `
 const BodyContainer = styled.div`
-grid-row: 2 / 3;
+padding-top: 1%; // Adjust this to match your header height
 overflow-y: auto;
 `

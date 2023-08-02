@@ -12,9 +12,10 @@ import CreateUserAccount from './CreateUserAccount';
 import SubordinateTraining from './SubordinateTraining';
 import TrainingDisplay from './TrainingDisplay';
 import ChangePassword from './ChangePassword'
+import SubmitBug from './SubmitBug'
 
 export {
     Header, Help, Login, Account, RequiredTraining, UTM,
     Training, CreateTraining, Admin, UserAccount, CreateUserAccount, SubordinateTraining,
-    TrainingDisplay, ChangePassword
+    TrainingDisplay, ChangePassword, SubmitBug
 }
