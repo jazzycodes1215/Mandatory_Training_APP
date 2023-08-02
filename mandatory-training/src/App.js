@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Header, Help, Login, Account, RequiredTraining, SubordinateTraining, UTM,
-  Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay
+  Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay, ChangePassword
 } from './components';
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 
@@ -57,6 +57,7 @@ const App = ()=> {
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
                             <Route path='/training-UTM/:training/*' element={<TrainingDisplayUTM />} />
                             <Route path='/create-account/*' element={<CreateUserAccount />} />
+                            <Route path='/change-password/*' element={<ChangePassword />} />
                             <Route path='/*' element={<Help />} /> catch all
 
                         </Routes>
