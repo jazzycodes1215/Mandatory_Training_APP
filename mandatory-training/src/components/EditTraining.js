@@ -39,7 +39,8 @@ export default function EditView(props) {
     try {
       const patchObject = {
         name: nameUpdate.current.innerHTML !== null ? nameUpdate.current.innerHTML : trainingData.name,
-        type_id: updatedType !== null ? updatedType : trainingData.type_name
+        type_id: updatedType !== null ? updatedType : trainingData.type_id,
+        interval: parseInt(intervalUpdate.current.innerHTML) !== null ? parseInt(intervalUpdate.current.innerHTML) : trainingData.interval
       };
   
       console.log(patchObject);
@@ -162,7 +163,7 @@ return (
                 <Divider orientation="vertical" flexItem />
                 <Grid>
                   <h5>Interval:</h5>
-                  <p>Time Requirement:</p><ContentEditable className="changeMe" innerRef={intervalUpdate} tagName='p' html={trainingData.interval}></ContentEditable><p>days</p>
+                  {/* <p>Time Requirement:</p><ContentEditable className="changeMe" innerRef={intervalUpdate} tagName='p' html={trainingData.interval}></ContentEditable><p>days</p> */}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
