@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
 
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
 
 export default function CreateTraining() {
     const [alignment, setAlignment] = useState('source');
@@ -37,14 +37,30 @@ export default function CreateTraining() {
         const selectedOptions = Array.from(e.target.selectedOptions);
         const selectedValues = selectedOptions.map((option) => parseInt(option.value));
         setDuties(selectedValues);
-      }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name,
+            type,
+            interval,
+            source,
+            firstName,
+            lastName,
+            number,
+            duties,
+        };
+    };
 
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
     };
 
     return (
-        <>
+        <CreateTrainingWrapper>
+            <h1>Create New Training</h1>
             <TrainingInputContainer>
                 <Row>
                     <Column>
@@ -108,21 +124,20 @@ export default function CreateTraining() {
                             })}
                         </SelectTrainingInfo>
                     </Column>
-                    <Column>
+                    {/* <Column>
                         <Label for="inputSummary">Training Summary:</Label>
                         <InputSummary rows="4" onChange={(e)=>{setSummary(e.target.value)}} id="inputSummary" type="text"></InputSummary>
-                    </Column>
+                    </Column> */}
                 </Row>
             </TrainingInputContainer>
-        </>
+            <ButtonContainer>
+                <Button variant="contained" onClick={handleSubmit} sx={{backgroundColor: 'MidnightBlue'}}>Submit Training</Button>
+            </ButtonContainer>
+        </CreateTrainingWrapper>
     )
 }
 
-const AccountHeader = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
+const CreateTrainingWrapper = styled.div`
 padding: 10px;
 `
 const TrainingInputContainer = styled.div`
@@ -145,7 +160,7 @@ width: 50%;
 height: fit-content;
 margin-left: 20px;
 margin-right: 20px;
-margin-top: 100px;
+margin-top: 50px;
 `
 const InputTrainingInfo = styled.input`
 align-self: stretch;
@@ -158,4 +173,9 @@ align-self: stretch;
 `
 const Label = styled.label`
 font-weight: 700;
+`
+const ButtonContainer = styled.div`
+display: flex;
+justify-content: center;
+margin: 50px;
 `
