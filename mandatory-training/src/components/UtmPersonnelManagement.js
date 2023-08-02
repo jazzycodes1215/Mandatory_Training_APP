@@ -106,6 +106,9 @@ export default function UtmPersonnelManagement() {
         <div>Loading...</div>
       ) : Array.isArray(myUnit) ? (
         <div>
+           <div className='subheading'>
+        <h1>Personnel Management</h1>
+     </div>
           <button className="close-button" onClick={() => handleCloseClick()}>Close user</button>
           {myUnit.map((personnel, index) => (
             <div

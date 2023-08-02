@@ -61,3 +61,17 @@
 .not-applicable {
   background-color: #ffffff;
 }
+
+.subheading {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.subheading > h1 {
+  padding-top: 40px;
+  margin-bottom: 40px;
+}

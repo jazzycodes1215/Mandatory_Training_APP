@@ -37,7 +37,9 @@ export default function UtmUnitReadiness() {
   return (
     <div className="readiness-container">
       <div>
-        <h2>Unit Readiness Section</h2>
+      <div className='subheading'>
+        <h1>Unit Readiness</h1>
+     </div>
         {unitReadinessData ? (
           <>
             <UtmReadinessTable unitReadinessData={unitReadinessData} />
