@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   display:flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   background-image: url("https://www.epiloguesystems.com/wp-content/uploads/2022/10/training-systems.webp");
   background-size: cover;
@@ -16,15 +16,23 @@
   border-color: black;
   display: flex;
   flex-direction: column;
+  align-items: center;
   color: midnightblue;
-  padding: 10px;
+  height: 100%;
+  width: 30%;
 }
 
 .title {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 30%;
 }
+
+.title > h1 {
+  margin-left: 10px
+}
+
 
 p {
   font-weight: bold;
@@ -35,8 +43,44 @@ p {
 .login {
   display:flex;
   flex-direction: column;
+  width: 80%;
+  height: 70%;
 }
 
-.button {
-  margin: 1rem;
+.login > h2 {
+  margin-bottom: 10px;
+}
+
+.login > p {
+  margin-bottom: 50px;
+}
+
+.login > div {
+  margin-bottom: 20px;
+}
+
+.login div:nth-of-type(2) {
+  margin-bottom: 70px
+}
+
+#login-btn {
+background-color: #1976d2;
+padding: 10px 116px;
+align-self: center;
+
+  &:hover {
+    transition: all .5s ease;
+
+    background-color: white;
+    border: 1px solid #1976d2;
+    color: #1976d2;
+
+
+  }
+}
+
+#schoolIcon {
+  height: 50px;
+  width: auto;
+  color: #1976d2;
 }
