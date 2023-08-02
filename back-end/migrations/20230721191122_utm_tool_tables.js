@@ -79,8 +79,17 @@ exports.up = function(knex) {
       table.binary('file_content').notNullable;
       table.string('file_type');
       table.integer('user_id').unsigned();
-      table.foreign('user_id').references('users.id').onDelete('CASCADE');;
-    });
+      table.foreign('user_id').references('users.id').onDelete('CASCADE');
+    })
+    .createTable('tickets', table => {
+      table.increments('id').primary();
+      table.string('description');
+      table.integer('user_id').unsigned();
+      table.foreign('user_id').references('users.id').onDelete('CASCADE');
+      table.integer('training_id').unsigned();
+      table.foreign('training_id').references('trainings.id').onDelete('CASCADE')
+      table.bool("ticketclosed").notNullable();
+    })
 };
 
 /**
@@ -89,6 +98,7 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
   return knex.schema
+  .dropTableIfExists('tickets')
   .dropTableIfExists('files')
   .dropTableIfExists('training_status')
   .dropTableIfExists('duty_trainings')

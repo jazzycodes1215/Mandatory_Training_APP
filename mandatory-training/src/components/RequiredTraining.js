@@ -52,7 +52,7 @@ export default function RequiredTraining() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/user/status/${id}`);
+            const response = await fetch(`${fetchURL}/user/status/${id}`);
             const data = await response.json();
             setTrainingStatus(data);
         } catch (error) {
@@ -110,7 +110,7 @@ export default function RequiredTraining() {
             {
                 return;
             }
-            const response = await fetch(`http://localhost:4000/user/subordinates/${userID}`);
+            const response = await fetch(`${fetchURL}/user/subordinates/${userID}`);
             const data = await response.json();
             setSubordinates(data);
         } catch (error)

@@ -1121,6 +1121,59 @@ app.get('/files/:userID', async (req, res) => {
   }
 })
 
+//Endpoints for submitting a bug to admins
+
+app.get('/tickets', async (req, res) => {
+  try {
+    //screw it, RAW
+    const tickets = await knex.raw('select tickets.id, email, description, tickets.training_id, ticketclosed from tickets JOIN users ON users.id = tickets.user_id')
+    console.log(tickets);
+    if(tickets.rowCount) {
+      res.status(200).json(tickets.rows);
+    }
+  } catch (error) {
+    console.log('Error getting tickets', error);
+    res.status(404).json({error: 'No tickets found or there was a problem in the database'})
+  }
+})
+
+app.post('/tickets', async (req, res) => {
+  const {trainingId, description, userId} = req.body;
+  try {
+    //raw is so much easier
+    const status = await knex.raw(`INSERT INTO tickets (user_id, description, training_id, ticketclosed) VALUES (?, ?, ?, false)`, [userId, description, trainingId])
+    if(status.rowCount)
+    {
+      res.status(200).json("Success")
+    }
+    else
+    {
+      res.status(400).json("Not success!");
+    }
+  } catch (error) {
+    console.error('Error getting tickets', error);
+    res.status(400).json({error: 'Unable to submit ticket'})
+  }
+})
+
+app.patch('/tickets', async (req, res) => {
+  const {ticketId} = req.body;
+  console.log(ticketId)
+  try {
+    const status = await knex.raw(`UPDATE tickets SET ticketclosed = true WHERE id = ?`, [ticketId])
+    if(status.rowCount)
+    {
+      res.status(200).json("Updated ticket succesfully")
+    }
+    else
+    {
+      res.status(400).json("Unable to update ticket");
+    }
+  } catch (error) {
+    console.log("Error", error);
+    res.status(400).json({error: "Unable to close ticket"})
+  }
+})
 
 
 app.listen(port, () => {
