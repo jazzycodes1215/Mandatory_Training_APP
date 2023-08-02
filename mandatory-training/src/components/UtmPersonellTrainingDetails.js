@@ -8,12 +8,7 @@ export default function UtmPersonellTrainingDetails() {
 
   return (
     <div>
-<<<<<<< HEAD
       <h2>Training Details for User ID: {userId}</h2>
-=======
-     
-      <h2>Training Details for User ID: {userID}</h2>
->>>>>>> main
       <h2>Training Details for Training ID: {trainingId}</h2>
     </div>
   );
