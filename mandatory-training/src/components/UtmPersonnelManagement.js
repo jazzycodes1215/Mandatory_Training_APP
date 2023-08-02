@@ -28,7 +28,7 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
  
 
 
@@ -72,38 +72,41 @@ export default function UtmPersonnelManagement() {
   };
 
   const handleTrainingClick = (userIndex, innerIndex) => {
-    console.log("handleTrainingClick called");
     if (
       myUnit[userIndex] &&
       myUnit[userIndex].length > 0 &&
       myUnit[userIndex][innerIndex]
     ) {
       const clickedUser = myUnit[userIndex];
-      const userId = clickedUser[innerIndex].user_id;
+      console.log("Clicked User:", clickedUser);
+      const userId = clickedUser[innerIndex].id;
       const trainingId = clickedUser[innerIndex].training_id;
-      if (userID) {
-        navigate(`/unit-training-manager/${userID}/${trainingId}`);
+  
+      console.log("Clicked User ID:", userId);
+      console.log("Training ID:", trainingId);
+  
+      if (userId) {
+        try {
+          console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
+          navigate(`/unit-training-manager/${userId}/${trainingId}`);
+        } catch (error) {
+          console.error("Error during navigation:", error);
+        }
       } else {
         console.error("User ID is undefined.");
       }
     }
   };
 
-<<<<<<< HEAD
   const handleCloseClick = () => {
     setSelectedUser(null);
    };
 
   
-=======
-
->>>>>>> main
-
-   console.log("userID in UtmPersonnelManagement:", userID);
   return (
     <div>
       <Routes>
-        <Route path="/unit-training-manager/:userID/:trainingId" element={<UtmPersonellTrainingDetails userID={userID} />} />
+        <Route path="/unit-training-manager/:userId/:trainingId" element={<UtmPersonellTrainingDetails  />} />
       </Routes>
     <div className="personnel-management-container">
       {loading ? (
@@ -117,7 +120,12 @@ export default function UtmPersonnelManagement() {
               className={`personnel-container ${
                 personnel[0].due ? "due" : "not-due"
               } ${selectedUser === personnel ? "selected-user" : ""}`}
-              onClick={() => handleUserClick(index)}
+              onClick={(event) => {
+               
+                if (!event.target.classList.contains("training-card")) {
+                  handleUserClick(index);
+                }
+              }}
             >
               
               {personnel && personnel.length > 0 ? (
@@ -196,85 +204,4 @@ export default function UtmPersonnelManagement() {
   //       );
   //     })
   //     .catch((error) => console.error('Error deleting training:', error));
-<<<<<<< HEAD
   // };
-=======
-  // };
-
-
-  return (
-    <div className="personnel-management-container">
-      {loading ? (
-        <div>Loading...</div>
-      ) : Array.isArray(myUnit) ? (
-        <div>
-          {myUnit.map((personnel, index) => (
-            <div
-              key={index}
-              className={`personnel-container ${
-                personnel[0].due ? "due" : "not-due"
-              } ${selectedUser === personnel ? "selected-user" : ""}`}
-              onClick={() => handleUserClick(index)}
-            >
-              {personnel && personnel.length > 0 ? (
-                <p>
-                  {personnel[0].rank_name}, {personnel[0].first_name}{" "}
-                  {personnel[0].last_name}
-                </p>
-              ) : (
-                <p>No personnel data available</p>
-              )}
-              {selectedUser === personnel && personnel && personnel.length > 0 && (
-                <div className="training-grid">
-                  {personnel.map((training, innerIndex) => (
-                    <div
-                      key={innerIndex}
-                      className={`training-card ${
-                        training.due ? "due" : "not-due"
-                      }`}
-                    >
-                      <p>Training Name: {training.training_name}</p>
-                      <p>
-                        Completion Date:{" "}
-                        {new Date(training.most_recent_completion_date).toDateString()}
-                      </p>
-                      <p>
-                        Due Date:{" "}
-                        {new Date(new Date(training.most_recent_completion_date).setFullYear(
-                            new Date(training.most_recent_completion_date).getFullYear() + 1)).toDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : error ? (
-        <div>Error: {error.message}</div>
-      ) : (
-        <div>Error: Data format is incorrect</div>
-      )}
-    </div>
-  );
-}
-
-
-
-
-
-
-//   return (
-//     <div>
-
-//       <div>
-//       <h2>Manage Personnel Section</h2>
-//       {/* Add a fetch to grab all personnel of the UTM's unit */}
-//       </div>
-//       <div>
-//         {/* Add the sub-menu content for the Manage Personnel section? */}
-//       </div>
-//     </div>
-//   )
-// }
->>>>>>> main
