@@ -37,7 +37,6 @@ export default function Admin() {
             }
             let response = await fetch(`${fetchURL}/tickets/`)
             let data = await response.json();
-            console.log(data);
             setTickets(data);
         }
     }
@@ -123,7 +122,7 @@ export default function Admin() {
         if(userToDelete > -1)
         {
             const method = {
-                header: {
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 method: 'DELETE'
@@ -140,6 +139,24 @@ export default function Admin() {
                 console.log("Unable to find user");
                 setUserToDelete(null);
             }
+        }
+    }
+
+    const handleTicket = async () => {
+        if(userToDelete > -1)
+        {
+            const method = {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'PATCH',
+                body: JSON.stringify({ticketId: userToDelete})
+            }
+            let response = await fetch(`${fetchURL}/tickets`, method)
+
+            setUserToDelete(null);
+            fetchTickets();
+
         }
     }
 
@@ -220,8 +237,7 @@ export default function Admin() {
                                     {modState == 'promUser' ? <ButtonTraining onClick={handleProm}>Promote User</ButtonTraining>
                                     :
                                     <>
-                                    <ButtonTraining>Close Ticket</ButtonTraining>
-                                    <ButtonTraining>Delete Ticket</ButtonTraining>
+                                    <ButtonTraining onClick={()=>handleTicket()}>Close Ticket</ButtonTraining>
                                     </>
                                     }
 

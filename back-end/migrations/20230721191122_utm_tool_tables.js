@@ -88,6 +88,7 @@ exports.up = function(knex) {
       table.foreign('user_id').references('users.id').onDelete('CASCADE');
       table.integer('training_id').unsigned();
       table.foreign('training_id').references('trainings.id').onDelete('CASCADE')
+      table.bool("ticketclosed").notNullable();
     })
 };
 

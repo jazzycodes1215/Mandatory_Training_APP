@@ -5,7 +5,10 @@ import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, Accor
   import InfoIcon from '@mui/icons-material/Info';
 export default function AdminTickets({ticketList, setFunc, getValue}) {
 
-  console.log(ticketList);
+  if(!ticketList[0])
+  {
+    return;
+  }
   let tickets = ticketList?.map((element, index)=>{
     return (
         <ListItem
@@ -13,9 +16,7 @@ export default function AdminTickets({ticketList, setFunc, getValue}) {
             disableGutters
             style={{'marginBottom': '20px', padding: 0}}
             secondaryAction={<Link to={`/training-UTM/${element.training_id}`}>
-            <IconButton aria-label="info">
-            <InfoIcon />
-            </IconButton>
+            <p>{element.ticketclosed}</p>
         </Link>}
     >
     <ListItemButton role={undefined} onClick={() => setFunc(element.id)} dense>
@@ -32,10 +33,14 @@ export default function AdminTickets({ticketList, setFunc, getValue}) {
     </ListItemButton>
     <ListItemText
     style={{ width: "90%" }}
-    primary={`${element.email} ${element.description}`}
+    primary={`Issue: ${element.description}`}
+    secondary={`User: ${element.email} - Ticket Status: ${element.ticketclosed ? "Closed" : "Open"}`}
     />
+    <Link to={`/training-UTM/${element.training_id}`}>
+        <IconButton sx={{marginRight: '5px'}}edge="end" aria-label="info">
+          <InfoIcon />
+        </IconButton>
+      </Link>
     </ListItem>)})
-
-    console.log(tickets);
   return tickets;
 }

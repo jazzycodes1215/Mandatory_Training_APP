@@ -28,13 +28,8 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
   const navigate = useNavigate();
- 
-=======
-  const navigate = useNavigate()
 
->>>>>>> main
 
 
   console.log('unit',unitID)
@@ -86,10 +81,10 @@ export default function UtmPersonnelManagement() {
       console.log("Clicked User:", clickedUser);
       const userId = clickedUser[innerIndex].id;
       const trainingId = clickedUser[innerIndex].training_id;
-  
+
       console.log("Clicked User ID:", userId);
       console.log("Training ID:", trainingId);
-  
+
       if (userId) {
         try {
           console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
@@ -107,13 +102,7 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
-<<<<<<< HEAD
-  
-=======
 
-
-   console.log("userID in UtmPersonnelManagement:", userID);
->>>>>>> main
   return (
     <div>
       <Routes>
@@ -135,7 +124,7 @@ export default function UtmPersonnelManagement() {
                 personnel[0].due ? "due" : "not-due"
               } ${selectedUser === personnel ? "selected-user" : ""}`}
               onClick={(event) => {
-               
+
                 if (!event.target.classList.contains("training-card")) {
                   handleUserClick(index);
                 }

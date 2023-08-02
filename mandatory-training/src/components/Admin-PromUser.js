@@ -36,6 +36,7 @@ export default function AdminUserPromote({userList, setFunc, setFunc2, getValue,
                   key={index}
                   disableGutters
                   style={{'marginBottom': '20px', padding: 0}}
+                  align-items={'center'}
                   secondaryAction={
                       <>
                       <InputLabel sx={{'fontSize': '15px', 'marginTop': '2.5vh'}} id="label">Role</InputLabel>
