@@ -28,7 +28,7 @@ const FileUpload = () => {
 
       try {
         // Send the file to the backend using fetch
-        const response = await fetch('http://localhost:4000/upload', {
+        const response = await fetch(`${fetchURL}/upload`, {
           method: 'POST',
           body: formData,
         });

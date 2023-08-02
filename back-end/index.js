@@ -1121,6 +1121,21 @@ app.get('/files/:userID', async (req, res) => {
   }
 })
 
+//Endpoints for submitting a bug to admins
+
+app.get('/tickets', async (req, res) => {
+  try {
+    //screw it, RAW
+    const tickets = await knex.raw('select email, description, tickets.training_id from tickets JOIN users ON users.id = tickets.user_id')
+    console.log(tickets);
+    if(tickets.rowCount) {
+      res.status(200).json(tickets.rows);
+    }
+  } catch (error) {
+    console.log('Error getting tickets', error);
+    res.status(404).json({error: 'No tickets found or there was a problem in the database'})
+  }
+})
 
 
 app.listen(port, () => {

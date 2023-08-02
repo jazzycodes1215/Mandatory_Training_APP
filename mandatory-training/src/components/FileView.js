@@ -5,7 +5,7 @@ const FileView = ({ fileID, fileName }) => {
 
   const handleDownloadFile = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/upload/${fileID}`);
+      const response = await fetch(`${fetchURL}/upload/${fileID}`);
       if (!response.ok) {
         throw new Error('File not found');
       }

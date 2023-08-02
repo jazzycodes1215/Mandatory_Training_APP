@@ -149,7 +149,7 @@ export default function TrainingDisplay() {
       </LeftDiv>
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
-        <ButtonTraining onClick={()=>navigate(-1)}>Go To Training</ButtonTraining>
+        <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
         <ButtonTraining onClick={()=>navigate(-1)}>Submit Certificate</ButtonTraining>
         {subordinateData ?
         <div>

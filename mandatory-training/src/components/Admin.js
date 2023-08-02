@@ -11,6 +11,9 @@ import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import AdminUserDelete from './Admin-DelUser'
+import AdminUserPromote from './Admin-PromUser'
+import AdminTickets from './Admin-Tickets'
 
 export default function Admin() {
     const {validatedUserType, validToken, unitID} = useUserCheck();
@@ -22,19 +25,19 @@ export default function Admin() {
     const [roleToSet, setRoleToSet] = useState({});
     const navigate = useNavigate();
 
-    const enableTickets = false;
-    const fetchTickes = async () =>
+    const enableTickets = true;
+    const fetchTickets = async () =>
     {
         if(enableTickets)
         {
             const method = {
                 header: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(validToken)
+                    "authorization": JSON.stringify(validToken)
+                }
             }
-            let response = await fetch(`${fetchURL}/tickets/`, method)
-            let data = response.json();
+            let response = await fetch(`${fetchURL}/tickets/`)
+            let data = await response.json();
+            console.log(data);
             setTickets(data);
         }
     }
@@ -46,6 +49,7 @@ export default function Admin() {
     }
 
     const HandleDeleteUser = async () => {
+
         if(modState === 'delUser') {
             setModState(null);
         }
@@ -92,20 +96,20 @@ export default function Admin() {
     }
 
     const handleProm = async () => {
-        if(!userToDelete || roleToSet)
+
+        if(!userToDelete || !roleToSet)
         {
             return;
         }
-
         const method = {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({role_id: roleToSet[userToDelete]})}
-        console.log(method);
         const response = await fetch(`${fetchURL}/users/${userToDelete}`, method)
         const data = await response.json();
+        console.log(data);
         if(response.ok)
         {
             setUserToDelete(null);
@@ -138,6 +142,10 @@ export default function Admin() {
             }
         }
     }
+
+    useEffect(()=> {
+        fetchTickets();
+    }, [modState])
 
     return (
         <>
@@ -186,69 +194,18 @@ export default function Admin() {
                                 background: '#555',
                             },
                             }}>
-                            {modState === 'delUser' ? users?.map((element, index)=>{
-
-                                return (
-                                    <ListItem
-                                        key={index}
-                                        disableGutters
-                                        style={{'marginBottom': '20px', padding: 0}}
-                                >
-                                <ListItemButton role={undefined} onClick={() => handleToggle(element.id)} dense>
-                                    <ListItemIcon style={{width: '50px'}}>
-                                        <Checkbox
-                                        edge="start"
-                                        checked={element.id === userToDelete ? true : false}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{ 'aria-labelledby': element.id }}
-                                        style={{width: '20px'}}
-                                        />
-                                    </ListItemIcon>
-                                </ListItemButton>
-                                <ListItemText
-                                style={{ width: "90%" }}
-                                primary={`${element.last_name} ${element.first_name}`}
-                                secondary={UserRole(element.role_id)}
-                                />
-                                </ListItem>
-                                )
-                            }) : (modState === 'promUser' ? users?.map((element, index)=>{
-                                return (
-                                    <ListItem
-                                        key={index}
-                                        disableGutters
-                                        style={{'marginBottom': '20px', padding: 0}}
-                                        secondaryAction={
-                                            <>
-                                            <InputLabel sx={{'fontSize': '15px', 'marginTop': '2.5vh'}} id="label">Role</InputLabel>
-                                            <Select sx={{width: '15vw'}} labelId="label" onChange={(e)=>{handleSelect(e, element.id)}}
-                                            id="select" value={roleToSet[element.id] ? roleToSet[element.id] : element.role_id}>
-                                                <MenuItem value="1">Non-verified User</MenuItem>
-                                                <MenuItem value="2">User</MenuItem>
-                                                <MenuItem value="3">Unit Training Manager</MenuItem>
-                                                <MenuItem value="4">Admin</MenuItem>
-                                            </Select>
-                                            </>
-                                        }>
-                                <ListItemButton role={undefined} onClick={() => handleToggle(element.id)} dense>
-                                    <ListItemIcon style={{width: '50px'}}>
-                                        <Checkbox
-                                        edge="start"
-                                        checked={element.id === userToDelete ? true : false}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{ 'aria-labelledby': element.id }}
-                                        style={{width: '20px'}}/>
-                                    </ListItemIcon>
-                                </ListItemButton>
-                                <ListItemText
-                                style={{ width: "90%" }}
-                                primary={`${element.last_name} ${element.first_name}`}
-                                secondary={UserRole(element.role_id)}/>
-                                </ListItem>
-                                )
-                            }) : null)}
+                            {modState === 'delUser' ? <AdminUserDelete userList={users} setFunc={setUserToDelete} getValue={userToDelete} /> :
+                            (modState === 'promUser' ? <AdminUserPromote
+                            userList={users}
+                            getValue={userToDelete}
+                            setFunc={setRoleToSet}
+                            setFunc2={setUserToDelete}
+                            getValue2={roleToSet}
+                            /> :
+                            <AdminTickets
+                            ticketList={tickets}
+                            getValue={userToDelete}
+                            setFunc={setUserToDelete}/>)}
                         </List>
                     </ListContainer>
                 </AccordionDetails>
