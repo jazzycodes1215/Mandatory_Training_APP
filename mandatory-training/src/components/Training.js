@@ -155,13 +155,10 @@ export default function Training() {
 
 export const TrainingCard = styled.div`
 display: grid;
-grid-template-rows: .5fr 2fr .5fr;
+grid-template-rows: 2fr .5fr;
 border: 1px solid black;
 width: 20%;
 height: 50%;
-margin-bottom: 20px;
-&:hover {
-    cursor:pointer;
 `
 export const TrainingCardTop = styled.div`
 grid-column: 1;
@@ -170,7 +167,7 @@ grid-row: 1 / 2;
 `
 export const TrainingCardMid = styled.div`
 grid-column: 1;
-grid-row: 2 / 3;
+grid-row: 1 / 2;
 display: flex;
 flex-direction: column;
 align-items: flex-start;
@@ -192,5 +189,5 @@ width: 100%;
 height: 100%;
 gap: 20px;
 overflow-y: auto;
-padding-top: 20px;
+padding: 20px 0 70px 0;
 `

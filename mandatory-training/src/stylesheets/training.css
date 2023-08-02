@@ -6,7 +6,7 @@
 }
 
 .mid > h3 {
-  padding-right: 40px;
+  padding-right: 10px;
 }
 
 .type-btns {
@@ -47,7 +47,9 @@
 }
 
 .mid > p {
-    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 10px;
 }
 
 .editTraining {
