@@ -6,6 +6,7 @@
   import UtmPersonnelManagement from './UtmPersonnelManagement';
   import UtmNotifications from './UtmNotifications';
   import { Training } from '.';
+  import '../stylesheets/UtmNotifications.css'
 
   export default function UTM() {
     const initialSelectedTab = localStorage.getItem('selectedTab') || 'notifications';
@@ -57,12 +58,9 @@
       cursor: pointer;
 
       &:hover {
+         transition: all .5s ease;
           background-color: white;
           color: #007BFF;
-      }
-
-      &:focus {
-          outline: none;
-          border: 2px solid #0056b3; // Darker blue border
+          border: 1px #007BFF solid;
       }
   `;
