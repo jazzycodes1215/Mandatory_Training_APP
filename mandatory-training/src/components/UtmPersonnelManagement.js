@@ -28,8 +28,13 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
+  const navigate = useNavigate();
+ 
+=======
   const navigate = useNavigate()
 
+>>>>>>> main
 
 
   console.log('unit',unitID)
@@ -72,17 +77,26 @@ export default function UtmPersonnelManagement() {
   };
 
   const handleTrainingClick = (userIndex, innerIndex) => {
-    console.log("handleTrainingClick called");
     if (
       myUnit[userIndex] &&
       myUnit[userIndex].length > 0 &&
       myUnit[userIndex][innerIndex]
     ) {
       const clickedUser = myUnit[userIndex];
-      const userId = clickedUser[innerIndex].user_id;
+      console.log("Clicked User:", clickedUser);
+      const userId = clickedUser[innerIndex].id;
       const trainingId = clickedUser[innerIndex].training_id;
-      if (userID) {
-        navigate(`/unit-training-manager/${userID}/${trainingId}`);
+  
+      console.log("Clicked User ID:", userId);
+      console.log("Training ID:", trainingId);
+  
+      if (userId) {
+        try {
+          console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
+          navigate(`/unit-training-manager/${userId}/${trainingId}`);
+        } catch (error) {
+          console.error("Error during navigation:", error);
+        }
       } else {
         console.error("User ID is undefined.");
       }
@@ -93,13 +107,17 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
+<<<<<<< HEAD
+  
+=======
 
 
    console.log("userID in UtmPersonnelManagement:", userID);
+>>>>>>> main
   return (
     <div>
       <Routes>
-        <Route path="/unit-training-manager/:userID/:trainingId" element={<UtmPersonellTrainingDetails userID={userID} />} />
+        <Route path="/unit-training-manager/:userId/:trainingId" element={<UtmPersonellTrainingDetails  />} />
       </Routes>
     <div className="personnel-management-container">
       {loading ? (
@@ -116,7 +134,12 @@ export default function UtmPersonnelManagement() {
               className={`personnel-container ${
                 personnel[0].due ? "due" : "not-due"
               } ${selectedUser === personnel ? "selected-user" : ""}`}
-              onClick={() => handleUserClick(index)}
+              onClick={(event) => {
+               
+                if (!event.target.classList.contains("training-card")) {
+                  handleUserClick(index);
+                }
+              }}
             >
 
               {personnel && personnel.length > 0 ? (
