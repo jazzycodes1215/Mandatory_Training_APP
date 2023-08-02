@@ -44,3 +44,11 @@ button {
         color: #1976d2;
     }
 }
+
+.errorLogin {
+    color: red;
+}
+
+#login-btn {
+    margin-bottom: 20px;
+}

@@ -80,7 +80,7 @@ export default function Login() {
                     {validToken ? navigate("/") : <></>}
                     <section className="title"><SchoolIcon sx={{ color: '#0F3D68' }} id='schoolIcon'/><h1>UTM Tool</h1></section>
                     <section className="login">
-                        {error ? <h2>{error}</h2> : <></>}
+                        
                         <h2>Welcome to the UTM Tool</h2>
                         <p>Please sign in to your account to continue</p>
                         <FormControl sx={{ml:2, mr:2, my:1}} variant="outlined">
@@ -118,6 +118,7 @@ export default function Login() {
                             />
                         </FormControl>
                         <Button id='login-btn' variant="contained" sx={{backgroundColor: '#0F3D68'}} onClick={HandleSubmit}>Login</Button>
+                        {error ? <p className='errorLogin'>{`(${error})`}</p> : <></>}
                     </section>
                 </div>
             </section>

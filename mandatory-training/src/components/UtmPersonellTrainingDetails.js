@@ -9,6 +9,7 @@ export default function UtmPersonellTrainingDetails({ userID }) {
 
   return (
     <div>
+     
       <h2>Training Details for User ID: {userID}</h2>
       <h2>Training Details for Training ID: {trainingId}</h2>
     </div>
