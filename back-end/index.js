@@ -315,13 +315,14 @@ app.post('/registration', async (req, res) => {
 app.patch('/registration/:id', async (req, res) => {
   console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id, role_id} = req.body;
-  const hashedPass = bcrypt.hashSync(password, 10)
+  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id} = req.body;
+  const hashedPass = bcrypt.hashSync(newPassword, 10)
   const userAccountUpdate = {
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
+      password: hashedPass,
       supervisor_id: supervisor_id,
       role_id: role_id
   }
