@@ -38,7 +38,7 @@ const LogoContainer = styled.div`
 const Logo = styled.img`
   width: auto;
   height: auto;
-  animation: spin .5s linear infinite;
+  animation: spin 5s linear infinite;
 `;
 
 const Text = styled.p`
