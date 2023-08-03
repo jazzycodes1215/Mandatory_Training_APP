@@ -21,7 +21,7 @@ const FileList = ({ userID, onFileSelect }) => {
     };
 
     fetchFiles();
-  }, [userID]);
+  }, [userID, onFileSelect]);
 
   const handleFileSelect = (file) => {
     setSelectedFile(file);

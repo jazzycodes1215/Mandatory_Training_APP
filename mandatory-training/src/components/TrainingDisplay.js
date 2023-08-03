@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 import SubmitBug from './SubmitBug'
 import FileUpload from './FileUpload'
+import FadeAwayMessage from './FadeAwayMessage'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,6 +23,7 @@ export default function TrainingDisplay() {
   const [subordinateData, setSubordinateData] = useState([])
   const [overdue, setOverdue] = useState([]);
   const [overduePercentage, setOverduePercentage] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const fetchTraining = async () => {
@@ -87,14 +89,28 @@ export default function TrainingDisplay() {
     fetchTraining();
     fetchSubordinates();
   }, [training])
+
+  useEffect(()=>{
+    let timer;
+    if (errorMessage) {
+      timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer); // This will clear the timer when component unmount or on re-render
+  }, [errorMessage])
   return (
     <>
       {displaySubmit ? <SubmitBug trainingId={training} setDisplay={setDisplaySubmit} userId={userID}/>: null}
       {displayFileUpload ?
       <SubmitOverlay>
         <Form>
-          <CloseButton onClick={()=>setDisplayFileUpload(false)}>X</CloseButton>
-          <FileUpload/>
+          <div>
+            <CloseButton onClick={()=>setDisplayFileUpload(false)}>X</CloseButton>
+            <p>{errorMessage ? <FadeAwayMessage message={errorMessage} duration={10000}/> : null}</p>
+          </div>
+          <FileUpload setErrorMessageCB={setErrorMessage}/>
         </Form>
       </SubmitOverlay> : null}
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
@@ -128,7 +144,7 @@ export default function TrainingDisplay() {
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
-                  {`Time Requirement: ${trainingData.interval} days`}
+                  {`Time Requirement: ${trainingData.interval ? `${trainingData.interval} ${trainingData.interval ===1 ? 'Day' : 'Days'}` : "One Time"}`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
@@ -164,7 +180,9 @@ export default function TrainingDisplay() {
         <ButtonTraining onClick={()=>setDisplayFileUpload(!displayFileUpload)}>Submit Certificate</ButtonTraining>
         {subordinateData ?
         <div>
+           <h3>Subordinate Completion Status</h3>
           <FlexDiv>
+
             <Box>
               Overdue: {overduePercentage * 100} %
             </Box>
@@ -177,7 +195,7 @@ export default function TrainingDisplay() {
           </Box>
           <ButtonTraining onClick={()=>setDisplaySubmit(!displaySubmit)}>Submit Bug</ButtonTraining>
         </div>
-        : <></>}
+        : fetchTraining()}
       </RightDiv>
       </FlexDiv>
       : null}
@@ -271,6 +289,7 @@ const ButtonTraining = styled.button`
     font-size: 1em;
     margin: 1em;
     padding: 0.25em 1em;
+    margin-top: 4vh;
     border: 2px solid #007BFF;
     border-radius: 3px;
     cursor: pointer;

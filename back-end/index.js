@@ -473,7 +473,7 @@ app.get('/requiredTraining/', async (req, res) => {
 
   app.get('/requiredTraining/:id', async (req, res) => {
     const trainingId = req.params.id;
-    try { 
+    try {
       const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
       .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
@@ -487,7 +487,27 @@ app.get('/requiredTraining/', async (req, res) => {
       }
   } catch (error) {
     res.status(500).json({ message: 'Error adding training data', error });
-  }})  
+  }})
+
+app.get('/requiredTraining/user/:id', async (req, res) => {
+  const {id} = req.params;
+  try {
+    const trainings = await knex('users')
+    .join('training_status', 'users.id', 'training_status.user_id')
+    .join('trainings', 'trainings.id', 'training_status.training_id')
+    .where('training_status.user_id', id)
+    .distinctOn('trainings.name')
+    .select('trainings.id', 'trainings.name', 'submission_date', 'completion_date', 'approval_date', 'interval', 'source', 'first_name', 'last_name')
+    if(trainings) {
+      res.status(200).json(trainings);
+    }
+    else {
+      res.status(404).json({message: 'Trainings not found'});
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
 
   app.get('/training/', async (req, res) => {
     try {
@@ -558,21 +578,22 @@ app.get('/requiredTraining/', async (req, res) => {
     try {
       const training = await knex('trainings')
         .join('type', 'trainings.type_id', 'type.id')
-        .leftJoin('duty_trainings', 'trainings.id', 'duty_trainings.training_id') // Left join to include duties
-        .leftJoin('duties', 'duty_training.duty_id', 'duties.id') // Left join to include duty details
+        .leftJoin('duty_trainings as dt', 'trainings.id', 'dt.training_id') // Left join to include duties
+        .leftJoin('duties', 'dt.duty_id', 'duties.id') // Left join to include duty details
         .select(
           'trainings.id',
           'trainings.name',
           'trainings.interval',
           'trainings.source',
           'type.name as type_name',
-          'type.id as type_id', 
-          knex.raw('GROUP_CONCAT(duties.name) as duties') // Group duty names into a comma-separated string
+          'type.id as type_id',
         )
+        .groupBy('duties.title', 'type.name', 'type.id')
         .where('trainings.id', trainingId)
         .groupBy('trainings.id') // Group by training ID to avoid duplicates
-        .first();
-  
+        .first()
+        .catch(e=>console.log(e))
+
       if (training) {
         // Convert the comma-separated duties string to an array
         if (training.duties) {
@@ -580,7 +601,7 @@ app.get('/requiredTraining/', async (req, res) => {
         } else {
           training.duties = []; // If no duties found, set duties to an empty array
         }
-  
+
         res.json(training);
       } else {
         res.status(404).json({ message: 'Training not found' });
@@ -593,7 +614,7 @@ app.get('/requiredTraining/', async (req, res) => {
   app.patch('/training/:id', async (req, res) => {
     const { id } = req.params;
     const { name, interval, source, type_id } = req.body;
-  
+
     try {
       // Build the update object with the fields to be updated
       const updateObject = {};
@@ -601,12 +622,12 @@ app.get('/requiredTraining/', async (req, res) => {
       if (interval) updateObject.interval = interval;
       if (source) updateObject.source = source;
       if (type_id) updateObject.type_id = type_id;
-  
+
       // Perform the update query using the Knex query builder
       const updatedCount = await knex('trainings')
         .where('id', id)
         .update(updateObject);
-  
+
       if (updatedCount > 0) {
         // If at least one row was updated, return a success response
         res.status(200).json({ message: 'Training updated successfully' });
@@ -620,21 +641,48 @@ app.get('/requiredTraining/', async (req, res) => {
     }
   });
 
-  //Endpoint for adding new trainings
+  // Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
     const newTraining = req.body;
     try {
-      const insertTrainings = await knex('trainings')
-        .insert(newTraining)
-        .then(() => {
-          res.status(200).json({message: successful});
-        })
+      const [trainingId] = await knex('trainings').insert(newTraining, 'id'); // Use 'id' to get the newly created training ID
+      res.status(200).json({ message: 'Successfully added training data', trainingId });
     } catch (error) {
       res.status(500).json({ message: 'Error adding training data', error });
     }
-    });
+  });
+  
 
-      //Endpoint updating trainings list
+// Endpoint for adding a new duty-training
+app.post('/dutyTraining/:trainingId', async (req, res) => {
+  const trainingId = req.params.trainingId;
+  const { dutyIds } = req.body;
+  if (!dutyIds || !Array.isArray(dutyIds) || dutyIds.length === 0) {
+    return res.status(400).json({ message: 'Invalid duties data provided' });
+  }
+
+  try {
+    const insertPromises = dutyIds.map((dutyId) => {
+      return knex('duty_trainings').insert({ duty_id: dutyId, training_id: trainingId });
+    });
+    await Promise.all(insertPromises);
+    res.json({ message: 'Duties updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding duty/training relations', error });
+  }
+});
+
+  // Endpoint to get all entries from the duty_trainings table
+  app.get('/dutyTrainings', async (req, res) => {
+    try {
+      const dutyTrainings = await knex('duty_trainings').select('*');
+      res.status(200).json(dutyTrainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching duty_trainings data', error });
+    }
+  });
+  
+     //Endpoint updating trainings list
   app.patch('/requiredTraining/:id', async (req, res) => {
     const trainingId = req.params.id;
     const updatedTraining = req.body
@@ -671,7 +719,7 @@ app.get('/requiredTraining/', async (req, res) => {
 
 
 //GET Request for assigning training to a specific duty
-app.get('/requiredTraining/dutyTrainings:id', async (req, res) => {
+app.get('/requiredTraining/dutyTrainings/:id', async (req, res) => {
   const dutyId = req.params.id;
   //
   try {
