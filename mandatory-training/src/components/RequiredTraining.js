@@ -65,14 +65,9 @@ export default function RequiredTraining() {
             {
                 return;
             }
-            const response = await fetch(`${fetchURL}/requiredtraining/${userID}`);
+            const response = await fetch(`${fetchURL}/requiredTraining/user/${userID}`);
             const data = await response.json();
-            if(!Array.isArray(response)) {
-                setRequiredTraining([data]);
-            }
-            else {
-                setRequiredTraining(data);
-            }
+            setRequiredTraining(data);
 
         } catch (error) {
             console.error('Error fetching your required training', error);
@@ -245,12 +240,15 @@ export default function RequiredTraining() {
                                                 completed = completionDate.toISOString().split('T')[0];
                                                 const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
                                                 const newDueDate = new Date(completionDate.getTime() + intervalInMilliseconds);
-                                                dueDate = newDueDate.toISOString().split('T')[0];
+                                                dueDate = newDueDate.toISOString().split('T');
                                             } else {
                                                 const today = new Date();
+                                                if(!training.interval) {
+                                                    training.interval = 0;
+                                                }
                                                 const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
                                                 const newDueDate = new Date(today.getTime() + intervalInMilliseconds);
-                                                dueDate = newDueDate.toISOString().split('T')[0];
+                                                dueDate = newDueDate.toISOString().split('T');
                                                 completed = 'Not completed'
                                             }
                                             return (
@@ -266,7 +264,9 @@ export default function RequiredTraining() {
                                                     </Link>
                                                 }
                                                 >
+                                                    {console.log(training)}
                                                 <ListItemText
+
                                                 primary={training.name}
                                                 secondary={
                                                     `Last Completed: ${completed}, Training Interval: ${training.interval? `${training.interval} days` : 'N/A'}, Due: ${dueDate}`
