@@ -276,7 +276,7 @@ app.post('/createAccount', async (req, res) => {
       delete user/*.password*/;
       return user;
     })
-      res.status(200).json({message: "Account creation Success", addedUser});
+      res.status(201).json({message: "Account creation Success", addedUser});
   } catch  (error) {
     console.error('Registration error:', error)
     res.status(500).json({ message: 'Error: account creation failed' });
