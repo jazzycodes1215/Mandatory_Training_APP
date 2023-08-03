@@ -4,6 +4,7 @@ import { fetchURL } from '../App'
 import '../stylesheets/UtmPersonnelManagement.css'
 import { useNavigate, Route, Routes } from "react-router-dom";
 import UtmPersonellTrainingDetails from "./UtmPersonellTrainingDetails.js";
+import FileList from './FileList'
 
 function calculateDueDate(completionDate, interval) {
   if (!completionDate) {
@@ -28,7 +29,11 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   const navigate = useNavigate()
+=======
+  const navigate = useNavigate();
+>>>>>>> main
 
 
 
@@ -81,10 +86,10 @@ export default function UtmPersonnelManagement() {
       console.log("Clicked User:", clickedUser);
       const userId = clickedUser[innerIndex].id;
       const trainingId = clickedUser[innerIndex].training_id;
-  
+
       console.log("Clicked User ID:", userId);
       console.log("Training ID:", trainingId);
-  
+
       if (userId) {
         try {
           const userInfo = clickedUser[innerIndex];
@@ -103,9 +108,12 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
+<<<<<<< HEAD
 
 
  
+=======
+>>>>>>> main
   return (
     <div className="route">
       {/* <Routes>
@@ -127,7 +135,7 @@ export default function UtmPersonnelManagement() {
                 personnel[0].due ? "due" : "not-due"
               } ${selectedUser === personnel ? "selected-user" : ""}`}
               onClick={(event) => {
-               
+
                 if (!event.target.classList.contains("training-card")) {
                   handleUserClick(index);
                 }
@@ -139,6 +147,7 @@ export default function UtmPersonnelManagement() {
                   {/* <button onClick={() => handleCloseClick(index)}>close</button> */}
                   {personnel[0].rank_name}, {personnel[0].first_name}{" "}
                   {personnel[0].last_name}
+
                 </p>
               ) : (
                 <p>No personnel data available</p>
@@ -189,7 +198,7 @@ export default function UtmPersonnelManagement() {
   // };
 
   // const handleDeleteTraining = (userID, trainingIndex) => {
-  //   fetch(`http://localhost:4000/user/status/${userID}`, {
+  //   fetch(`${fetchURL}/user/status/${userID}`, {
   //     method: 'DELETE',
   //   })
   //     .then((res) => res.json())

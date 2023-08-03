@@ -315,28 +315,32 @@ app.post('/registration', async (req, res) => {
 app.patch('/registration/:id', async (req, res) => {
   console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, supervisor_id, role_id} = req.body;
-  const hashedPass = bcrypt.hashSync(password, 10)
+  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id} = req.body;
+  const hashedPass = bcrypt.hashSync(newPassword, 10)
   const userAccountUpdate = {
       first_name: first_name,
       last_name: last_name,
       rank_id: rank_id,
       email: email,
+      password: hashedPass,
       supervisor_id: supervisor_id,
       role_id: role_id
   }
 
   try {
-    const user = await knex('users')
-    .where('id', userId)
-    .update(userAccountUpdate)
-    .returning('*')
-    .catch(e=>console.log(e));
+    const userPass = await knex('users').select('password').where('id', userId)
 
-    if(user) {
-      const passwordCheck = bcrypt.compareSync(password, user[0].password);
+    if(userPass[0]?.password) {
+      const passwordCheck = bcrypt.compareSync(password, userPass[0].password);
       console.log(passwordCheck);
       if (passwordCheck) {
+        const user = await knex('users')
+        .where('id', userId)
+        .update(userAccountUpdate)
+        .returning('*')
+        .catch(e=>console.log(e));
+
+
         const token = await jwt.sign({ id: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), userType: user.role_id, unit: user.unit_id}, secretKey, { algorithm: 'RS256' }, function(err, token) {
 
           if(err)
@@ -455,17 +459,35 @@ app.post('/login', async (req, res) => {
 
 //////////////////////////////////////////////////TRAINING REGISTRATION///////////////////////////////////////////////////////////////////////////
 //GET Request for getting all the training data
-app.get('/requiredTraining', async (req, res) => {
+app.get('/requiredTraining/', async (req, res) => {
   //
   try {
     const trainings = await knex('trainings')
       .join('type', 'trainings.type_id', 'type.id')
       .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .then(data => res.status(200).json(data));
+      .then(data => res.status(200).json(data))
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving training data', error });
   }
   });
+
+  app.get('/requiredTraining/:id', async (req, res) => {
+    const trainingId = req.params.id;
+    try { 
+      const trainings = await knex('trainings')
+      .join('type', 'trainings.type_id', 'type.id')
+      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+      .where('trainings.id', trainingId)
+      .first()
+
+      if (trainings) {
+        res.json(trainings);
+      } else {
+        res.status(404).json({ message: 'Unit not found' });
+      }
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding training data', error });
+  }})  
 
 app.get('/requiredTraining/primaryTraining', async (req, res) => {
 
@@ -480,54 +502,35 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
   }
   });
 
-app.get('/requiredTraining/auxTraining', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Auxiliary Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-  });
-
-app.get('/requiredTraining/PME', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'rofessional Military Education')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-
-  });
-app.get('/requiredTraining/ADT', async (req, res) => {
-
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Additional Duty Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
-  });
 
   app.get('/training/:id', async (req, res) => {
     const trainingId = req.params.id;
     try {
       const training = await knex('trainings')
         .join('type', 'trainings.type_id', 'type.id')
-        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .leftJoin('duty_trainings', 'trainings.id', 'duty_trainings.training_id') // Left join to include duties
+        .leftJoin('duties', 'duty_training.duty_id', 'duties.id') // Left join to include duty details
+        .select(
+          'trainings.id',
+          'trainings.name',
+          'trainings.interval',
+          'trainings.source',
+          'type.name as type_name',
+          'type.id as type_id', 
+          knex.raw('GROUP_CONCAT(duties.name) as duties') // Group duty names into a comma-separated string
+        )
         .where('trainings.id', trainingId)
-        .first()
+        .groupBy('trainings.id') // Group by training ID to avoid duplicates
+        .first();
+  
       if (training) {
+        // Convert the comma-separated duties string to an array
+        if (training.duties) {
+          training.duties = training.duties.split(',');
+        } else {
+          training.duties = []; // If no duties found, set duties to an empty array
+        }
+  
         res.json(training);
       } else {
         res.status(404).json({ message: 'Training not found' });
@@ -537,27 +540,35 @@ app.get('/requiredTraining/ADT', async (req, res) => {
     }
   });
 
-
-app.get('/requiredTraining/:id', async (req, res) => {
-  const {id} = req.params;
-  try {
-    //I tried not to use knex.raw I swear.
-    const trainings = await knex.raw(`SELECT trainings.id, name, interval FROM trainings
-    JOIN duty_trainings ON trainings.id = duty_trainings.training_id JOIN user_duties ON duty_trainings.duty_id = user_duties.id
-    WHERE user_duties.user_id = ?`, [id])
-    if(trainings?.rows)
-    {
-      res.status(201).json(trainings?.rows)
+  app.patch('/training/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, interval, source, type_id } = req.body;
+  
+    try {
+      // Build the update object with the fields to be updated
+      const updateObject = {};
+      if (name) updateObject.name = name;
+      if (interval) updateObject.interval = interval;
+      if (source) updateObject.source = source;
+      if (type_id) updateObject.type_id = type_id;
+  
+      // Perform the update query using the Knex query builder
+      const updatedCount = await knex('trainings')
+        .where('id', id)
+        .update(updateObject);
+  
+      if (updatedCount > 0) {
+        // If at least one row was updated, return a success response
+        res.status(200).json({ message: 'Training updated successfully' });
+      } else {
+        // If no rows were updated (no matching training found), return a not found response
+        res.status(404).json({ error: 'Training not found' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    else
-    {
-      res.status(404);
-    }
-
-  } catch (error) {
-    console.log(error)
-  }
-})
+  });
 
   //Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
@@ -667,6 +678,27 @@ app.get('/units', async (req, res) => {
   }
 });
 
+//Endpoint for getting all users in a unit
+app.get('/units/users/:unitId', async (req, res) => {
+  const {unitId} = req.params;
+
+  try {
+    console.log(unitId);
+    const users = await knex('users')
+    .select('*')
+    .where('users.unit_id', unitId)
+    if(users) {
+      res.json(users);
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({
+      message: 'Error creating unit', error
+  })
+}})
+
 // endpoint for adding in a new unit
 app.post('/units', async (req, res) => {
   const newUnit = req.body; // Assuming the request body contains the necessary user data
@@ -677,7 +709,7 @@ app.post('/units', async (req, res) => {
       res.status(200).json({message: successful});
     })
   } catch (error) {
-    res.status(500).json({
+      res.status(500).json({
       message: 'Error creating unit', error
     });
   }
@@ -1122,6 +1154,59 @@ app.get('/files/:userID', async (req, res) => {
   }
 })
 
+//Endpoints for submitting a bug to admins
+
+app.get('/tickets', async (req, res) => {
+  try {
+    //screw it, RAW
+    const tickets = await knex.raw('select tickets.id, email, description, tickets.training_id, ticketclosed from tickets JOIN users ON users.id = tickets.user_id')
+    console.log(tickets);
+    if(tickets.rowCount) {
+      res.status(200).json(tickets.rows);
+    }
+  } catch (error) {
+    console.log('Error getting tickets', error);
+    res.status(404).json({error: 'No tickets found or there was a problem in the database'})
+  }
+})
+
+app.post('/tickets', async (req, res) => {
+  const {trainingId, description, userId} = req.body;
+  try {
+    //raw is so much easier
+    const status = await knex.raw(`INSERT INTO tickets (user_id, description, training_id, ticketclosed) VALUES (?, ?, ?, false)`, [userId, description, trainingId])
+    if(status.rowCount)
+    {
+      res.status(200).json("Success")
+    }
+    else
+    {
+      res.status(400).json("Not success!");
+    }
+  } catch (error) {
+    console.error('Error getting tickets', error);
+    res.status(400).json({error: 'Unable to submit ticket'})
+  }
+})
+
+app.patch('/tickets', async (req, res) => {
+  const {ticketId} = req.body;
+  console.log(ticketId)
+  try {
+    const status = await knex.raw(`UPDATE tickets SET ticketclosed = true WHERE id = ?`, [ticketId])
+    if(status.rowCount)
+    {
+      res.status(200).json("Updated ticket succesfully")
+    }
+    else
+    {
+      res.status(400).json("Unable to update ticket");
+    }
+  } catch (error) {
+    console.log("Error", error);
+    res.status(400).json({error: "Unable to close ticket"})
+  }
+})
 
 
 

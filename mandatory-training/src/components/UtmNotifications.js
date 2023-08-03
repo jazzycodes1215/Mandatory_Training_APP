@@ -15,7 +15,6 @@ export default function UtmNotifications() {
     .then((data) => setNotifications(data))
     .catch((error) => console.error('Error fetching notifications:', error));
   }, [])
-    console.log(notifications)
 
   const handleDeleteNotification = (id) => {
     fetch(`${fetchURL}/notifications/${id}`, {

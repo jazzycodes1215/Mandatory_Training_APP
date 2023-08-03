@@ -22,6 +22,11 @@ p {
     font-size: 10px;
 }
 
+.black {
+    color: black;
+}
+
+
 .header {
     background-color: #3478b2;
 }
@@ -52,3 +57,52 @@ button {
 #login-btn {
     margin-bottom: 20px;
 }
+
+
+.subheading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    text-transform: uppercase;
+}
+
+.subheading > h1 {
+    padding-top: 40px;
+}
+
+#dash-btn {
+    padding: 3px 0 0 30px;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    text-decoration: none; 
+    transition: all .3s ease-in;
+    letter-spacing: 1.2px;
+
+    &:hover {
+        color: black;
+        letter-spacing: 3px;
+    }
+
+    &:active {
+        background-color: #1976d2;
+    }
+}
+
+.logo {
+    letter-spacing: 0;
+}
+
+#head {
+    padding:0;
+    margin:0;
+}
+
+#head1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+

@@ -39,6 +39,7 @@ export default function UtmPersonellTrainingDetails() {
 
   return (
     <div>
+<<<<<<< HEAD
       {userInfo && (
         <div>
           <h1>{userInfo.first_name} {userInfo.last_name}: {userInfo.training_name} Training Certificate</h1>
@@ -56,6 +57,10 @@ export default function UtmPersonellTrainingDetails() {
           )}
         </div>
       )}
+=======
+      <h2>Training Details for User ID: {userId}</h2>
+      <h2>Training Details for Training ID: {trainingId}</h2>
+>>>>>>> main
     </div>
   );
 }

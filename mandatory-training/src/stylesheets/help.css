@@ -8,28 +8,35 @@
   height: 100%;
   display: flex;
   justify-content: space-around;
+  align-items: flex-start;
   flex-direction: row;
   flex-wrap: nowrap;
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: #0C3244;
-  background-color: #CAE3F7;
+  overflow-y: hidden;
+  background-color: white;
 }
 
 .right-side {
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: end;
-  height: 100%;
+  height: 95%;
   margin: 1rem;
-  width: 40%;
+  width: 42%;
+  right: 590px;
+  z-index: 0;
 }
 
 .left-side {
   border: solid black;
   width: 40%;
+  height: 90%;
   margin: 2rem 1rem 0.5rem 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  z-index: 1;
 }
 
 .links {
@@ -47,6 +54,43 @@
 }
 
 h2 {
+  padding-top: 2em;
   display: flex;
   justify-content: center;
+}
+
+.left-side > p {
+  padding-top: 3em;
+  font-size: 20px;
+
+  font-weight: 400;
+  line-height: 2em;
+}
+
+
+.logo-container {
+  position: relative;
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  animation: spin 6s linear infinite; /* Adjust the animation duration and timing function as needed */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Replace react-logo.png with the path to your React logo image */
+.react-logo {
+  opacity: .2;
+  width: 2000px; /* Adjust the width and height as needed */
+  height: auto;
 }
