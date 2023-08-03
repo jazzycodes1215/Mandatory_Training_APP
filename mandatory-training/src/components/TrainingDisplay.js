@@ -188,11 +188,11 @@ export default function TrainingDisplay() {
         <div>
            <h3>Subordinate Completion Status</h3>
             <Box>
-              Overdue: {(1 - overduePercentage) * 100} %
+              Overdue: {Number.parseFloat((1 - overduePercentage) * 100).toFixed(2)} %
             </Box>
             <Box>
 
-              Completion: {overduePercentage * 100} %
+              Completion: {Number.parseFloat(overduePercentage * 100).toFixed(2)} %
             </Box>
             <Box>
               {overdue ? overdue?.map(element=><p>{element}</p>) : null}
