@@ -41,7 +41,7 @@ export default function Training() {
     display: grid;
     margin-top: 30px;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 80vh;
+    grid-template-rows: 60vh;
   `;
 
 
