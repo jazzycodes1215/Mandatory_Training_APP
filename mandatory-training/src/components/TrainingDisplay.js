@@ -25,6 +25,7 @@ export default function TrainingDisplay() {
   const [overduePercentage, setOverduePercentage] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const [submissionFeedback, setSubmissionFeedback] = useState({ success: false, message: '' });
 
   const fetchTraining = async () => {
     const response = await fetch(`${fetchURL}/training/${training}`)
@@ -74,17 +75,13 @@ export default function TrainingDisplay() {
             {
               addUser = true;
             }
-
             subordinate.push(element)
           }
-
         })
-
         if(addUser)
         {
           overdueSubordinates.push(`${element[0].first_name} ${element[0].last_name}`)
         }
-
       })
     setOverduePercentage(trainingStats[training]/trainingStats['totalSubordinates'])
     setOverdue(overdueSubordinates)
@@ -106,6 +103,52 @@ export default function TrainingDisplay() {
 
     return () => clearTimeout(timer); // This will clear the timer when component unmount or on re-render
   }, [errorMessage])
+
+
+
+  const handleSubmitTraining = async () => {
+    try {
+      // Fetch the submitting user's name
+      const userResponse = await fetch(`${fetchURL}/users/${userID}`);
+      const userData = await userResponse.json();
+      const { first_name, last_name } = userData;
+  console.log(userData)
+      // Prepare the comment with user's first name and last name
+      const comment = `${trainingData.name} Completed by: ${first_name} ${last_name}`;
+  
+      // Send the POST request with the updated comment
+      const response = await fetch(`${fetchURL}/notifications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userID,
+          training_id: trainingData.id,
+          submission_date: new Date().toISOString(),
+          comment,
+          read_status: false,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      setSubmissionFeedback({ success: true, message: 'Training submitted successfully' });
+    } catch (error) {
+      console.error('Error submitting training:', error);
+      setSubmissionFeedback({ success: false, message: 'Error submitting training. Please try again.' });
+    }
+  };
+
+
+console.log(userID)
+ console.log('trainingData',trainingData)
   return (
     <>
       {displaySubmit ? <SubmitBug trainingId={training} setDisplay={setDisplaySubmit} userId={userID}/>: null}
@@ -184,6 +227,14 @@ export default function TrainingDisplay() {
       <RightDiv>
         <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
         <ButtonTraining onClick={()=>setDisplayFileUpload(!displayFileUpload)}>Submit Certificate</ButtonTraining>
+        <ButtonTraining onClick={handleSubmitTraining}>Submit Training</ButtonTraining>
+        <div>
+  {submissionFeedback.message && (
+    <FeedbackMessage success={submissionFeedback.success}>
+      {submissionFeedback.message}
+    </FeedbackMessage>
+  )}
+</div>
         {subordinateData ?
         <div>
            <h3>Subordinate Completion Status</h3>
@@ -208,6 +259,10 @@ export default function TrainingDisplay() {
   )
 }
 
+const FeedbackMessage = styled.p`
+  color: ${({ success }) => (success ? 'green' : 'red')};
+  font-weight: bold;
+`;
 
 const InputLabel = styled.p`
 align-self: flex-start`
