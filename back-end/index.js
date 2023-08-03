@@ -826,6 +826,26 @@ app.get('/notifications', async (req, res) => {
   }
 });
 
+app.post('/notifications', async (req, res) => {
+  try {
+    const { user_id, comment, read_status, submission_date, completion_date, approval_date } = req.body;
+
+    // Insert the new notification into the database
+    const newNotification = await knex('training_status').insert({
+      user_id,
+      comment,
+      read_status,
+      submission_date,
+      completion_date,
+      approval_date,
+    });
+
+    res.status(201).json({ message: 'Notification sent successfully', notificationId: newNotification[0] });
+  } catch (error) {
+    res.status(500).json({ message: 'Error sending notification', error });
+  }
+});
+
 //Endpoint for Fetching Notifications for a Specific User:
 app.get('/notifications/:user_id', async (req, res) => {
   try {

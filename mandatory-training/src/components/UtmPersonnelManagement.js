@@ -29,11 +29,7 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
-  const navigate = useNavigate()
-=======
   const navigate = useNavigate();
->>>>>>> main
 
 
 
@@ -76,44 +72,38 @@ export default function UtmPersonnelManagement() {
       setSelectedUser(myUnit[userIndex]);
   };
 
-  const handleTrainingClick = (userIndex, innerIndex) => {
-    if (
-      myUnit[userIndex] &&
-      myUnit[userIndex].length > 0 &&
-      myUnit[userIndex][innerIndex]
-    ) {
-      const clickedUser = myUnit[userIndex];
-      console.log("Clicked User:", clickedUser);
-      const userId = clickedUser[innerIndex].id;
-      const trainingId = clickedUser[innerIndex].training_id;
+  // const handleTrainingClick = (userIndex, innerIndex) => {
+  //   if (
+  //     myUnit[userIndex] &&
+  //     myUnit[userIndex].length > 0 &&
+  //     myUnit[userIndex][innerIndex]
+  //   ) {
+  //     const clickedUser = myUnit[userIndex];
+  //     console.log("Clicked User:", clickedUser);
+  //     const userId = clickedUser[innerIndex].id;
+  //     const trainingId = clickedUser[innerIndex].training_id;
 
-      console.log("Clicked User ID:", userId);
-      console.log("Training ID:", trainingId);
+  //     console.log("Clicked User ID:", userId);
+  //     console.log("Training ID:", trainingId);
 
-      if (userId) {
-        try {
-          const userInfo = clickedUser[innerIndex];
-          console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
-          navigate(`/unit-training-manager/${userId}/${trainingId}`, { state: userInfo });
-        } catch (error) {
-          console.error("Error during navigation:", error);
-        }
-      } else {
-        console.error("User ID is undefined.");
-      }
-    }
-  };
+  //     if (userId) {
+  //       try {
+  //         const userInfo = clickedUser[innerIndex];
+  //         console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
+  //         navigate(`/unit-training-manager/${userId}/${trainingId}`, { state: userInfo });
+  //       } catch (error) {
+  //         console.error("Error during navigation:", error);
+  //       }
+  //     } else {
+  //       console.error("User ID is undefined.");
+  //     }
+  //   }
+  // };
 
   const handleCloseClick = () => {
     setSelectedUser(null);
    };
 
-<<<<<<< HEAD
-
-
- 
-=======
->>>>>>> main
   return (
     <div className="route">
       {/* <Routes>
@@ -160,7 +150,7 @@ export default function UtmPersonnelManagement() {
                       className={`training-card ${
                         training.due ? "due" : "not-due"
                       }`}
-                      onClick={() => handleTrainingClick(index, innerIndex)}
+                      // onClick={() => handleTrainingClick(index, innerIndex)}
                     >
                       <p>Training Name: {training.training_name}</p>
                       <p>
