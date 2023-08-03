@@ -33,19 +33,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30%;
+  height: 20%;
+  padding-top: 40px;
 }
 
 .title > h1 {
-  margin-left: 10px
+  margin-left: 10px;
+  
 }
 
-
-p {
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-}
 
 .login {
   display:flex;
@@ -60,6 +56,9 @@ p {
 
 .login > p {
   margin-bottom: 50px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
 }
 
 .login > div {
