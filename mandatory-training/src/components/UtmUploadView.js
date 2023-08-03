@@ -55,8 +55,9 @@ const ItemWrapper = styled.div`
   margin: 20px;
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   text-align: center;
+  margin: 40px 0;
 `;
 
 const ScrollableBox = styled.div`
