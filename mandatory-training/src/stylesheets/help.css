@@ -53,7 +53,7 @@
   height: 45%;
 }
 
-h2 {
+.left-side > h2 {
   padding-top: 2em;
   display: flex;
   justify-content: center;
