@@ -325,16 +325,15 @@ align-items: flex-start;
 height: 50%;`
 
 const ButtonTraining = styled.button`
-    background-color: MidnightBlue;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    margin-top: 4vh;
-    border: 2px solid #007BFF;
-    border-radius: 3px;
-    cursor: pointer;
-
+background-color: black;
+color: white;
+font-size: .75em;
+padding: 0.7em 4em;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: all .3s ease;
+margin-bottom: 30px;
     &:hover {
         background-color: white;
         color: #007BFF;
