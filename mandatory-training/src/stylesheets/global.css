@@ -122,3 +122,7 @@ button {
         background-color: #1976d2;
     }
 }
+
+#toolbar {
+    padding: 20px 0;
+}
