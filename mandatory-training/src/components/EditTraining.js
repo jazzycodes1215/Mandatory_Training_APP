@@ -4,15 +4,16 @@ import { useCallback } from "react";
 import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { fetchURL } from "../App";
-import { LeftDiv, ListHeader, ListTitle, SubDiv } from "./TrainingDisplay UTM-ADMIN";
+import { LeftDiv, ListHeader, ListTitle, SubDiv, gridStyle, boxStyle } from "./TrainingDisplay UTM-ADMIN";
 import { Box, Grid, Divider  } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import mySvg from '../Icons/16px/Check 2.svg'
 import '../stylesheets/training.css'
 import ContentEditable from "react-contenteditable";
+import styled from "styled-components";
 
 
-export default function EditView(props) {
+export default function EditView({editmode, setEditmode}) {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState([])
   const [name, setName] = useState('')
@@ -29,6 +30,7 @@ export default function EditView(props) {
 
   const handleUpdates = () => {
     handleUpdateTraining();
+    setEditmode(!editmode);
   }
 
   
@@ -123,38 +125,15 @@ return (
 <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
-          <ListHeader><ContentEditable className="name changeMe" innerRef={nameUpdate} tagName='p' html={trainingData.name}></ContentEditable>
-
-          <button onClick={()=>(handleUpdates())}>
-            <p>Save</p>
-            <img src={mySvg} alt="(cog wheel)"></img>
-            </button>
-
-            </ListHeader>
+          <ListHeader>
+            <ContentEditable className="name changeMe" innerRef={nameUpdate} tagName='p' html={trainingData.name}></ContentEditable>
+          </ListHeader>
         </ListTitle>
         <SubDiv>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: 'fit-content',
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              borderRadius: 1,
-              bgcolor: 'background.paper',
-              color: 'text.secondary',
-              '& svg': {
-                m: 1.5,
-              },
-              '& hr': {
-                mx: 2,
-              },
-            }}
-          >
-                <Grid sx={{
-                  paddingLeft: 2
-                }}>
+          <Box sx={boxStyle}>
+                <Grid sx={gridStyle}>
                   <h5>Type:</h5>
-                  <select
+                  <Select
                     value={updatedType !== null ? updatedType : trainingData.type_id}
                     onChange={(e) => setUpdatedType(parseInt(e.target.value))}
                   >
@@ -162,40 +141,33 @@ return (
                   <option value="2">Auxilary Training</option>
                   <option value="3">Professional Military Education</option>
                   <option value="4">Additional Training </option>
-                </select>
+                </Select>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
-                <Grid>
-                  <h5>Interval:</h5>
-                 <ContentEditable className="changeMe" innerRef={intervalUpdate} tagName='p' html={`${trainingData.interval}`}></ContentEditable><p>days</p>
+                <Grid sx={gridStyle}>
+                  <h5>Interval (days):</h5>
+                 <ContentEditable className="changeMe" innerRef={intervalUpdate} html={`${trainingData.interval}`}></ContentEditable>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
-                <Grid>
+                <Grid sx={gridStyle}>
                   <h5>Source:</h5>
-                <ContentEditable className="changeMe" innerRef={sourceUpdate} tagName='p' html={trainingData.source}></ContentEditable>
+                <ContentEditable className="changeMe" innerRef={sourceUpdate} html={trainingData.source}></ContentEditable>
                 </Grid>
               </Box>
           </SubDiv>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '95%',
-            height: '80%',
-            border: (theme) => `3px solid ${theme.palette.divider}`,
-            borderRadius: 1,
-            bgcolor: 'background.paper',
-            color: 'text.secondary',
-            marginTop: '1vh',
-            marginLeft: '1vw',
-            '& svg': {
-              m: 1.5,
-            },
-            '& hr': {
-              mx: 0.5,
-            },
-          }}>
-        </Box>
+          <ButtonContainer>
+            <button onClick={()=>(handleUpdates())}> Save Changes </button>
+          </ButtonContainer>
       </LeftDiv>
       </>
 )}
+
+const ButtonContainer = styled.div`
+display: flex;
+justify-content: center;
+`
+const Select = styled.select`
+font-size: x-large;
+border: none;
+color: #007BFF;
+`
