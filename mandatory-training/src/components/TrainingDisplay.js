@@ -34,35 +34,41 @@ export default function TrainingDisplay() {
   }
 
   const fetchSubordinates = async () => {
+
     if(!unitID)
     {
+      console.log(unitID);
       return;
     }
+
     const response = await fetch(`${fetchURL}/unit/status/${unitID}`)
     const data = await response.json();
+
     let subordinate = [];
     let overdueSubordinates = [];
     let trainingStats = {totalSubordinates: 0};
+    trainingStats['totalSubordinates'] = data.length-1;
     data?.forEach(element=>{
         let addUser = false;
-        trainingStats['totalSubordinates'] += 1;
+
         element.forEach((element)=>{
           if(element.supervisor_id === userID)
           {
+
             let dueDate;
-            if(!trainingStats[element.id])
+            if(!trainingStats[training])
             {
-              trainingStats[element.id] = 0;
+              trainingStats[training] = 0;
             }
-            if(element.completetion_date)
+            if(element.most_recent_completion_date)
             {
-              dueDate = Date.parse(element.completetion_date) + (element.interval * 24 * 60 * 60 * 1000);
+              dueDate = Date.parse(element.most_recent_completion_date) + (element.interval * 24 * 60 * 60 * 1000);
               if(dueDate < Date.now())
               {
                 addUser = true;
               }
               else {
-                trainingStats[element.id] += 1;
+                trainingStats[training] += 1;
               }
             }
             else
@@ -85,7 +91,7 @@ export default function TrainingDisplay() {
   {
     fetchTraining();
     fetchSubordinates();
-  }, [training])
+  }, [training, unitID])
 
   useEffect(()=>{
     let timer;
@@ -217,7 +223,7 @@ console.log(userID)
 
         </Box>
       </LeftDiv>
-      <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
+      <Divider sx={{height: '75vh'}} orientation="vertical" flexItem />
       <RightDiv>
         <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
         <ButtonTraining onClick={()=>setDisplayFileUpload(!displayFileUpload)}>Submit Certificate</ButtonTraining>
@@ -232,18 +238,16 @@ console.log(userID)
         {subordinateData ?
         <div>
            <h3>Subordinate Completion Status</h3>
-          <FlexDiv>
+            <Box>
+              Overdue: {Number.parseFloat((1 - overduePercentage) * 100).toFixed(2)} %
+            </Box>
+            <Box>
 
-            <Box>
-              Overdue: {overduePercentage * 100} %
+              Completion: {Number.parseFloat(overduePercentage * 100).toFixed(2)} %
             </Box>
             <Box>
-              Completion: {(1 - overduePercentage) * 100} %
+              {overdue ? overdue?.map(element=><p>{element}</p>) : null}
             </Box>
-          </FlexDiv>
-          <Box>
-            {overdue ? overdue?.map(element=>element) : null}
-          </Box>
           <ButtonTraining onClick={()=>setDisplaySubmit(!displaySubmit)}>Submit Bug</ButtonTraining>
         </div>
         : fetchTraining()}

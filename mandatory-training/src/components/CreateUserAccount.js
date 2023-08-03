@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
 import { AppContext, fetchURL } from '../App'
@@ -16,6 +16,8 @@ export default function CreateUserAccount() {
     const [rank, setRank] = useState('');
     const [error, setError] = useState(null);
     const {validatedUserType, validToken} = useUserCheck();
+    const navigate = useNavigate();
+
     const HandleSelect = (e) =>
     {
         console.log(e.target.value);
@@ -24,12 +26,12 @@ export default function CreateUserAccount() {
     {
         //Role supervisor and unit default to 0 for now
         let userData = {first_name: first ? first : null, last_name: last ? last : null, email: email ? email : null, password: pwd,
-            dodID: id, rank_id: rank ? rank : null, role_id: null, supervisor_id: null, unit_id: null}
-
+            dodID: id, rank_id: rank ? rank : 1, role_id: null, supervisor_id: null, unit_id: null}
+        console.log(userData);
         let header = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(userData)};
         //Maybe don't go to the login login... API
@@ -37,13 +39,13 @@ export default function CreateUserAccount() {
         let status = response.status;
         let data = await response.json();
         console.log(data);
-        if(status === 201)
-        {
-          //setUserType(data.userType);
-          //setToken(data.token)
+        if(status === 201) {
+            alert('Account created successfully! Please log in with your new account.');
+            navigate('/administrator');
         }
         else
         {
+            alert('Account creation failed!');
             setError(data.message)
         }
     }
@@ -57,7 +59,6 @@ export default function CreateUserAccount() {
                 {error ? <h2>{error}</h2> : <></>}
                 <h2>Welcome to UTM Tool</h2>
                 <p>Please Create an Account</p>
-                <div className="form">
                     <label>First Name</label><input onChange={(e)=>setFirst(e.target.value)} type="textbox"></input>
                     <label>Last Name</label><input onChange={(e)=>setLast(e.target.value)} type="textbox"></input>
                     <label>Rank</label>
@@ -74,7 +75,6 @@ export default function CreateUserAccount() {
                     <label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input>
                     <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>
                     <button onClick={HandleSubmit}className="button">Create Account</button>
-                </div>
             </section>
         </div>
     </section>

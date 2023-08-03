@@ -13,6 +13,8 @@
 }
   
   .notification-item {
+
+    width: 55%;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     margin-bottom: 15px;
@@ -23,14 +25,17 @@
   
   .notification-comment {
     font-weight: bold;
+    font-size: 20px;
   }
   
   .notification-training {
     color: #333;
+    font-size: 15px;
   }
   
   .notification-date {
     font-style: italic;
+    font-size: 15px;
   }
   
   .notification-read {
@@ -42,13 +47,12 @@
 .mark-as-unread-button,
 .mark-all-read-button,
 .mark-all-unread-button {
-  background-color: #3498db;
+  background-color: black;
   color: #fff;
   border: none;
   padding: 10px 15px;
   margin-right: 10px;
   cursor: pointer;
-  border-radius: 5px;
   transition: background-color 0.2s, transform 0.2s;
 }
 
@@ -77,4 +81,8 @@
 .subheading > h1 {
     padding-top: 40px;
     margin-bottom: 40px;
+}
+
+.notification-buttons {
+  margin-bottom: 40px;
 }

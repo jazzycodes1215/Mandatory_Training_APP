@@ -177,7 +177,7 @@ export default function Account() {
         return fetch(`${fetchURL}/duties/${userID}`,{
             method:"PUT",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({duty_ids: selectedDuties}), 
+            body: JSON.stringify({duty_ids: selectedDuties}),
         })
         .then(res => {
             if (res.ok) {
@@ -199,7 +199,7 @@ export default function Account() {
         return fetch(`${fetchURL}/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
+            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, newPassword: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
         })
             .then(res => {
                 if (res.ok) {
@@ -220,7 +220,7 @@ export default function Account() {
         <Row>
             <Column>
                 <Label for="inputEmail">Email:</Label>
-                <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setEmail(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
             </Column>
             <Column>
                 <Label for="inputPassword">Enter Current Password to Confirm Changes:</Label>

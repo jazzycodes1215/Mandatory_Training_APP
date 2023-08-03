@@ -34,13 +34,14 @@ export default function UtmUnitReadiness() {
     fetchUnitReadinessData();
   }, [unitID]);
 
-  return (
-    <div className="readiness-container">
-      <div>
-      <div className='subheading'>
+  return (<>
+    <div className='subheading'>
         <h1>Unit Readiness</h1>
         <UtmUnitReport unitReadinessData={unitReadinessData} />
      </div>
+    <div className="readiness-container">
+      <div>
+      
         {unitReadinessData ? (
           <>
             <UtmReadinessTable unitReadinessData={unitReadinessData} />
@@ -52,5 +53,5 @@ export default function UtmUnitReadiness() {
         )}
       </div>
     </div>
-  );
+  </>);
 }

@@ -252,20 +252,20 @@ app.delete('/users/:id', async (req, res) => {
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 //endpoint that allows UTM/admin to create an account
 app.post('/createAccount', async (req, res) => {
-  const {/*first_name, last_name, rank_id, email, */dodID, role_id,/* supervisor_id, */unit_id, password} = req.body
+  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id, password} = req.body
   const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
-      // id: id,
-      //first_name: first_name,
-      //last_name: last_name,
-      //rank_id: Number(rank_id),
-      //email: email,
+      //id: id,
+      first_name: first_name,
+      last_name: last_name,
+      rank_id: Number(rank_id),
+      email: email,
       password: hashedPass,
       dodID: Number(dodID),
-      role_id: role_id,
+      role_id: 1,
       //supervisor_id: Number(supervisor_id),
-      unit_id: unit_id
+      //unit_id: unit_id
     }
     console.log(newUser)
     let addedUser = await knex('users')
@@ -276,10 +276,10 @@ app.post('/createAccount', async (req, res) => {
       delete user/*.password*/;
       return user;
     })
-      res.status(200).json({message: "Account creation Success", addedUser});
+      res.status(201).json({message: "Account creation Success", addedUser});
   } catch  (error) {
-    // console.error('Registration error:', error)
-          res.status(500).json({ message: 'Error: account creation failed' });
+    console.error('Registration error:', error)
+    res.status(500).json({ message: 'Error: account creation failed' });
   }
 })
 
@@ -651,7 +651,7 @@ app.get('/requiredTraining/user/:id', async (req, res) => {
       res.status(500).json({ message: 'Error adding training data', error });
     }
   });
-  
+
 
 // Endpoint for adding a new duty-training
 app.post('/dutyTraining/:trainingId', async (req, res) => {
@@ -681,7 +681,7 @@ app.post('/dutyTraining/:trainingId', async (req, res) => {
       res.status(500).json({ message: 'Error fetching duty_trainings data', error });
     }
   });
-  
+
      //Endpoint updating trainings list
   app.patch('/requiredTraining/:id', async (req, res) => {
     const trainingId = req.params.id;
@@ -1009,25 +1009,28 @@ app.get('/user/status/:userId', async (req, res) => {
   try {
     const trainings = await knex('users')
       .select(
-        'users.rank_id',
+        'users.id',
         'users.last_name',
         'users.first_name',
-        'users.supervisor_id',
+        'ranks.name as rank_name',
+        'trainings.id as training_id',
         'trainings.name as training_name',
         'trainings.interval',
-        'trainings.source',
-        'training_status.completion_date',
-        'training_status.submission_date'
+        'users.supervisor_id',
+        knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
       )
       .where('users.id', userId)
+      .join('ranks', 'users.rank_id', 'ranks.id')
       .join('user_duties', 'users.id', 'user_duties.user_id')
       .join('duty_trainings', 'user_duties.duty_id', 'duty_trainings.duty_id')
       .join('trainings', 'duty_trainings.training_id', 'trainings.id')
       .leftJoin('training_status', (join) => {
-        join
-          .on('users.id', 'training_status.user_id')
-          .andOn('trainings.id', 'training_status.training_id');
-      });
+        join.on('users.id', 'training_status.user_id').andOn('trainings.id', 'training_status.training_id');
+        join.on('training_status.completion_date', '=', function () {
+          this.select(knex.raw('MAX(completion_date)')).from('training_status').whereRaw('user_id = users.id AND training_id = trainings.id');
+        });
+      })
+      .groupBy('users.id', 'users.last_name', 'users.first_name', 'ranks.name', 'trainings.id', 'trainings.name', 'trainings.interval');
 
     const userTrainings = trainings.reduce((acc, training) => {
       const trainingName = training.training_name;
@@ -1065,6 +1068,7 @@ app.get('/unit/status/:unitId', async (req, res) => {
         'trainings.id as training_id',
         'trainings.name as training_name',
         'trainings.interval',
+        'users.supervisor_id',
         knex.raw('MAX(training_status.completion_date) AS most_recent_completion_date')
       )
       .where('users.unit_id', unitId)

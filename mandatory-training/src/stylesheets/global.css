@@ -7,11 +7,11 @@
 h1 {
     font-family: 'Source Serif Pro';
     font-size: 50px;
-    color: #1976d2;
+    color: #007BFF;
 }
 
 h2 {
-color: #1976d2;
+color: #007BFF;
 }
 
 h3 {
@@ -33,14 +33,9 @@ p {
 }
 
 button {
-    background-color: rgba(0, 0, 0, 0.505);
-    color: white;
-    font-size: 1em;
-    margin: 1em 0;
-    border: 2px solid #1976d2;
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: left;
+    background-color: #007BFF;
+    padding: 10px 116px;
+}
 
     &:hover {
         transition: all .5s ease;
@@ -49,7 +44,7 @@ button {
         border: 1px solid #1976d2;
         color: #1976d2;
     }
-}
+
 
 .errorLogin {
     color: red;
@@ -102,6 +97,7 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background-color: #007BFF;
 }
 
 #dash-btn {
@@ -121,4 +117,8 @@ button {
     &:active {
         background-color: #1976d2;
     }
+}
+
+#toolbar {
+    padding: 20px 0;
 }
