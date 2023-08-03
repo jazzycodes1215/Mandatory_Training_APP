@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/training.css'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -194,6 +195,11 @@ export default function RequiredTraining() {
             {validToken ?
             (
                 <RequiredTrainingWrapper>
+
+                    <div id='reqSub' className='subheading'>
+                        <h1>Access Required Training</h1>
+                    </div>
+
                     <TrainingContainer>
                         <Accordion expanded={expanded==='accordion1'} onClick={()=>handleExpand('accordion1')}>
                             <AccordionSummary
@@ -296,6 +302,7 @@ export default function RequiredTraining() {
                         </Accordion>
                         {/* } */}
                     </TrainingContainer>
+
                 </RequiredTrainingWrapper>
             )
             :
@@ -311,18 +318,20 @@ font-size: 1vw;
 margin-top: 3em`
 
 const TrainingContainer = styled.div`
-display:flex;
+display: flex;
 flex-direction: column;
 margin-top: 5em;
 height: 100%;`
 
 const RequiredTrainingWrapper = styled.div`
 display: flex;
+flex-direction: column;
 justify-content: center;
 align-items: center;
 width: 100%;
 height: 100%;
 `;
+
 const ListContainer = styled.div`
 flex-grow: 1;
 height:50vh;

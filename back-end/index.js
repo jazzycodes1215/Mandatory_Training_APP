@@ -509,17 +509,67 @@ app.get('/requiredTraining/user/:id', async (req, res) => {
   }
 })
 
-app.get('/requiredTraining/primaryTraining', async (req, res) => {
+  app.get('/training/', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .then(data => res.status(200).json(data))
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
 
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Primary Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
+  app.get('/training/primaryTraining', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Primary Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/auxTraining', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Auxilary Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/PME', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Professional Military Education');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/ADT', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Additional Duty Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
   });
 
 
@@ -591,21 +641,48 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
     }
   });
 
-  //Endpoint for adding new trainings
+  // Endpoint for adding new trainings
   app.post('/requiredTraining', async (req, res) => {
     const newTraining = req.body;
     try {
-      const insertTrainings = await knex('trainings')
-        .insert(newTraining)
-        .then(() => {
-          res.status(200).json({message: successful});
-        })
+      const [trainingId] = await knex('trainings').insert(newTraining, 'id'); // Use 'id' to get the newly created training ID
+      res.status(200).json({ message: 'Successfully added training data', trainingId });
     } catch (error) {
       res.status(500).json({ message: 'Error adding training data', error });
     }
-    });
+  });
+  
 
-      //Endpoint updating trainings list
+// Endpoint for adding a new duty-training
+app.post('/dutyTraining/:trainingId', async (req, res) => {
+  const trainingId = req.params.trainingId;
+  const { dutyIds } = req.body;
+  if (!dutyIds || !Array.isArray(dutyIds) || dutyIds.length === 0) {
+    return res.status(400).json({ message: 'Invalid duties data provided' });
+  }
+
+  try {
+    const insertPromises = dutyIds.map((dutyId) => {
+      return knex('duty_trainings').insert({ duty_id: dutyId, training_id: trainingId });
+    });
+    await Promise.all(insertPromises);
+    res.json({ message: 'Duties updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding duty/training relations', error });
+  }
+});
+
+  // Endpoint to get all entries from the duty_trainings table
+  app.get('/dutyTrainings', async (req, res) => {
+    try {
+      const dutyTrainings = await knex('duty_trainings').select('*');
+      res.status(200).json(dutyTrainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching duty_trainings data', error });
+    }
+  });
+  
+     //Endpoint updating trainings list
   app.patch('/requiredTraining/:id', async (req, res) => {
     const trainingId = req.params.id;
     const updatedTraining = req.body
@@ -642,7 +719,7 @@ app.get('/requiredTraining/primaryTraining', async (req, res) => {
 
 
 //GET Request for assigning training to a specific duty
-app.get('/requiredTraining/dutyTrainings:id', async (req, res) => {
+app.get('/requiredTraining/dutyTrainings/:id', async (req, res) => {
   const dutyId = req.params.id;
   //
   try {
@@ -844,6 +921,26 @@ app.get('/notifications', async (req, res) => {
     res.json(allNotifications);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+});
+
+app.post('/notifications', async (req, res) => {
+  try {
+    const { user_id, comment, read_status, submission_date, completion_date, approval_date } = req.body;
+
+    // Insert the new notification into the database
+    const newNotification = await knex('training_status').insert({
+      user_id,
+      comment,
+      read_status,
+      submission_date,
+      completion_date,
+      approval_date,
+    });
+
+    res.status(201).json({ message: 'Notification sent successfully', notificationId: newNotification[0] });
+  } catch (error) {
+    res.status(500).json({ message: 'Error sending notification', error });
   }
 });
 
@@ -1228,6 +1325,9 @@ app.patch('/tickets', async (req, res) => {
     res.status(400).json({error: "Unable to close ticket"})
   }
 })
+
+
+
 
 
 app.listen(port, () => {

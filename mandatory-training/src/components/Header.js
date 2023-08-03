@@ -43,8 +43,8 @@ export default function Header() {
 
   return (
     <HeaderBar className="muiIsWeird">
-      <AppBar position="sticky" sx={{top: '0'}}>
-        <Container maxWidth="xl">
+      <AppBar id="head1" position="sticky" sx={{top: '0'}}>
+        <Container id="head" maxWidth="100%">
           <Toolbar disableGutters sx={{ py: 2 }}>
             <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
@@ -62,7 +62,7 @@ export default function Header() {
                 textDecoration: 'none',
               }}
             >
-              UTM Tool
+              <span className='logo'>UTM<span className='black'>Tool</span>.</span>
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -110,7 +110,7 @@ export default function Header() {
                 display: { xs: 'flex', md: 'none' },
                 flexGrow: 1,
                 fontFamily: 'monospace',
-                fontWeight: 700,
+                fontWeight: 400,
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
@@ -120,8 +120,10 @@ export default function Header() {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 <Button
+                  id='dash-btn'
                   onClick={() => navigate('/required-training')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
+                  disableRipple='true'
                 >
                   Dashboard
                 </Button>

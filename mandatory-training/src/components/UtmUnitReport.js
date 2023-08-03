@@ -1,4 +1,6 @@
 import React from 'react';
+import myDown from '../Icons/16px/download.png'
+import '../stylesheets/UtmUnitReadiness.css'
 
 export default function UtmUnitReport({ unitReadinessData }) {
   const handleDownloadReport = () => {
@@ -39,6 +41,8 @@ export default function UtmUnitReport({ unitReadinessData }) {
   };
 
   return (
-    <button onClick={handleDownloadReport}>Download Report</button>
+    <button id="download-btn" onClick={handleDownloadReport}>
+      <img src={myDown} alt='download button'></img>
+      </button>
   );
 };

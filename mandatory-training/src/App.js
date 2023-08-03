@@ -6,7 +6,7 @@ import {
   Training, CreateTraining, Admin, UserAccount, CreateUserAccount, TrainingDisplay, ChangePassword
 } from './components';
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
-
+import UtmPersonellTrainingDetails from './components/UtmPersonellTrainingDetails';
 export const AppContext = createContext();
 export const fetchURL = process.env.REACT_APP_FETCH ? process.env.REACT_APP_FETCH : 'http://localhost:4000';
 
@@ -52,6 +52,7 @@ const App = ()=> {
                             <Route path='/required-training/:training/*' element={<TrainingDisplay />} />
                             <Route path='/training/*' element={<Training />} />
                             <Route path='/create-training/*' element={<CreateTraining />} />
+                            <Route path="/unit-training-manager/:userId/:trainingId" element={<UtmPersonellTrainingDetails  />} />
                             <Route path='/unit-training-manager/*' element={<UTM />} />
                             <Route path='/administrator/*' element={<Admin />} />
                             <Route path='/accounts/:user/*' element={<UserAccount />} />
@@ -85,7 +86,6 @@ top: 0;
 z-index: 100;
 background-color: #ffffff;
 `
-const BodyContainer = styled.div`
-padding-top: 1%; // Adjust this to match your header height
+const BodyContainer = styled.div` // Adjust this to match your header height
 overflow-y: auto;
 `
