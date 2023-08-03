@@ -24,7 +24,7 @@ export default function RequiredTraining() {
 
     useEffect(() => {
         fetchTrainingStatus(userID);
-        fetchRequiredTraining();
+        //fetchRequiredTraining();
         fetchSubordinates();
     }, [validToken, supervisor]);
 
@@ -34,14 +34,14 @@ export default function RequiredTraining() {
 
     useEffect(() => {
         const tempCompletionDates = requiredTraining.map((training) => {
-            let filtered = trainingStatus.filter((status) => status.training_name === training.name);
+            let filtered = trainingStatus.filter((status) => status.name === training.training_name);
             let latestCompletionDate = null;
             for (const item of filtered) {
                 if (item.completion_date && (!latestCompletionDate || item.completion_date > latestCompletionDate)) {
                 latestCompletionDate = item.completion_date;
                 }
             }
-            return { name: training.name, completion_date: latestCompletionDate };
+            return { name: training.training_name, completion_date: latestCompletionDate };
         });
         setCompletionDates(tempCompletionDates);
     }, [requiredTraining, trainingStatus]);
@@ -55,25 +55,27 @@ export default function RequiredTraining() {
             const response = await fetch(`${fetchURL}/user/status/${id}`);
             const data = await response.json();
             setTrainingStatus(data);
+            setRequiredTraining(data);
         } catch (error) {
             console.error('Error fetching training statuses', error);
         }
     }
 
-    const fetchRequiredTraining = async () => {
-        try {
-            if(!userID)
-            {
-                return;
-            }
-            const response = await fetch(`${fetchURL}/requiredTraining/user/${userID}`);
-            const data = await response.json();
-            setRequiredTraining(data);
+    // const fetchRequiredTraining = async () => {
+    //     try {
+    //         if(!userID)
+    //         {
+    //             return;
+    //         }
+    //         const response = await fetch(`${fetchURL}/requiredTraining/user/${userID}`);
+    //         const data = await response.json();
 
-        } catch (error) {
-            console.error('Error fetching your required training', error);
-        }
-    };
+
+    //     } catch (error) {
+    //         console.error('Error fetching your required training', error);
+    //     }
+    // };
+
 
     const fetchSubordinates = async () =>
     {
@@ -162,11 +164,29 @@ export default function RequiredTraining() {
                         const newDueDate = new Date(today.getTime() + intervalInMilliseconds);
                         dueDate = newDueDate.toISOString().split('T')[0];
                     }
+                    let dueDateEpoch = Date.parse(dueDate)
+                    if(dueDateEpoch < Date.now())
+                    {
+                        training['due'] = true;
+                    }
+                    else
+                    {
+                        training['due'] = false;
+                    }
+
+                    const listItemStyle = {
+                        marginBottom: '20px',
+                        padding: 0,
+                        borderRadius: '5px',
+                        border: training['due'] ? '1px solid #ff6347' : '1px solid #98fb98',
+                        backgroundColor: training['due'] ? '#ffe4e1' : '#f0fff0'
+                      }
+
                     return (
+                        <div style={listItemStyle}>
                         <ListItem
                             key={index}
                             disableGutters
-                            style={{'marginBottom': '20px', padding: 0}}
                             secondaryAction={
                         <Link to={`/required-training/${training.training_id}`}>
                             <IconButton aria-label="info">
@@ -176,10 +196,12 @@ export default function RequiredTraining() {
                         }
                         >
                         <ListItemText
+
                         primary={`${training.first_name} ${training.last_name}`}
                         secondary={`${training.training_name}, Due: ${dueDate}`}
                         />
                         </ListItem>
+                        </div>
                     )
                 })
             })}
@@ -207,7 +229,7 @@ export default function RequiredTraining() {
                                     <StarIcon sx={{fontSize: 'xxx-large'}} />
                                     <ListHeader>My Mandatory Training</ListHeader>
                                 </ListTitle>
-                                <ListSubHeader>Access your mandatory training courses</ListSubHeader>
+                                <ListSubHeader className='listSub'>Access your mandatory training courses</ListSubHeader>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ListContainer>
@@ -234,7 +256,8 @@ export default function RequiredTraining() {
                                         },
                                         }}>
                                         { requiredTraining ? requiredTraining.map((training, index) => {
-                                            let found = completionDates.find((status) => status.name === training.name);
+
+                                            let found = completionDates.find((status) => status.name === training.training_name);
                                             let dueDate;
                                             let completed;
                                             if (found && found.completion_date) {
@@ -253,11 +276,29 @@ export default function RequiredTraining() {
                                                 dueDate = newDueDate.toISOString().split('T');
                                                 completed = 'Not completed'
                                             }
+                                            let dueDateEpoch = Date.parse(dueDate)
+                                            if(dueDateEpoch < Date.now())
+                                            {
+                                                training['due'] = true;
+                                            }
+                                            else
+                                            {
+                                                training['due'] = false;
+                                            }
+
+                                            const listItemStyle = {
+                                                marginBottom: '20px',
+                                                padding: 0,
+                                                borderRadius: '5px',
+                                                border: training['due'] ? '1px solid #ff6347' : '1px solid #98fb98',
+                                                backgroundColor: training['due'] ? '#ffe4e1' : '#f0fff0'
+                                            }
+
                                             return (
+                                                <div style={listItemStyle}>
                                                 <ListItem
                                                 key={index}
                                                 disableGutters
-                                                style={{'marginBottom': '20px', padding: 0}}
                                                 secondaryAction={
                                                     <Link to={`/required-training/${training.id}`}>
                                                         <IconButton aria-label="info">
@@ -266,15 +307,13 @@ export default function RequiredTraining() {
                                                     </Link>
                                                 }
                                                 >
-                                                    {console.log(training)}
                                                 <ListItemText
-
-                                                primary={training.name}
+                                                primary={training.training_name}
                                                 secondary={
                                                     `Last Completed: ${completed}, Training Interval: ${training.interval? `${training.interval} days` : 'N/A'}, Due: ${dueDate}`
-                                                }
-                                                />
+                                                }/>
                                                 </ListItem>
+                                                </div>
                                             )
                                         }) : null}
                                     </List>

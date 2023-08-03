@@ -24,8 +24,8 @@ export default function CreateUserAccount() {
     {
         //Role supervisor and unit default to 0 for now
         let userData = {first_name: first ? first : null, last_name: last ? last : null, email: email ? email : null, password: pwd,
-            dodID: id, rank_id: rank ? rank : null, role_id: null, supervisor_id: null, unit_id: null}
-
+            dodID: id, rank_id: rank ? rank : 1, role_id: null, supervisor_id: null, unit_id: null}
+        console.log(userData);
         let header = {
         method: "POST",
         headers: {
@@ -57,7 +57,6 @@ export default function CreateUserAccount() {
                 {error ? <h2>{error}</h2> : <></>}
                 <h2>Welcome to UTM Tool</h2>
                 <p>Please Create an Account</p>
-                <div className="form">
                     <label>First Name</label><input onChange={(e)=>setFirst(e.target.value)} type="textbox"></input>
                     <label>Last Name</label><input onChange={(e)=>setLast(e.target.value)} type="textbox"></input>
                     <label>Rank</label>
@@ -74,7 +73,6 @@ export default function CreateUserAccount() {
                     <label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input>
                     <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>
                     <button onClick={HandleSubmit}className="button">Create Account</button>
-                </div>
             </section>
         </div>
     </section>

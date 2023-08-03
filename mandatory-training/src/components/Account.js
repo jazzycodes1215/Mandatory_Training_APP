@@ -177,7 +177,7 @@ export default function Account() {
         return fetch(`${fetchURL}/duties/${userID}`,{
             method:"PUT",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({duty_ids: selectedDuties}), 
+            body: JSON.stringify({duty_ids: selectedDuties}),
         })
         .then(res => {
             if (res.ok) {
@@ -220,7 +220,7 @@ export default function Account() {
         <Row>
             <Column>
                 <Label for="inputEmail">Email:</Label>
-                <InputAccountInfo onChange={(e)=>{setFirst(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setEmail(e.target.value)}} id="inputEmail" type="text" value={email ?? account.email} required></InputAccountInfo>
             </Column>
             <Column>
                 <Label for="inputPassword">Enter Current Password to Confirm Changes:</Label>

@@ -178,7 +178,6 @@ export default function Admin() {
                 <RightDiv>
                 <Accordion expanded={true} sx={{width: '85vw', marginRight: "5vw"}}>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -280,25 +279,15 @@ const FlexItem = styled.div `
 width: 40%;`
 
 const ButtonTraining = styled.button`
-    background-color: MidnightBlue;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 2px solid #007BFF;
-    border-radius: 3px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: white;
-        color: #007BFF;
-    }
-
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3; // Darker blue border
-    }
+color: white;
+font-size: .75em;
+margin: 30px 1em 0 1em;
+padding: 0.4em 1em;
+border: none;
+border-radius: 3px;
+cursor: pointer;
 `;
+
 const ListContainer = styled.div`
 flex-grow: 1;
 height:50vh;
