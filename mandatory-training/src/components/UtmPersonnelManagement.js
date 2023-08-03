@@ -113,7 +113,7 @@ export default function UtmPersonnelManagement() {
       {loading ? (
         <div>Loading...</div>
       ) : Array.isArray(myUnit) ? (
-        <div>
+        <div className="flex-div">
            <div className='subheading'>
         <h1>Personnel Management</h1>
      </div>
