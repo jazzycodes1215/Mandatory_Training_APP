@@ -40,7 +40,9 @@ export default function EditView(props) {
         interval: parseInt(intervalUpdate.current.innerHTML) !== null ? parseInt(intervalUpdate.current.innerHTML) : trainingData.interval,
         source: sourceUpdate.current.innerHTML !== null ? sourceUpdate.current.innerHTML : trainingData.interval
       };
+
       console.log(patchObject);
+
       const response = await fetch(`${fetchURL}/requiredTraining/${training}`, {
         method: 'PATCH',
         headers: {
@@ -48,10 +50,14 @@ export default function EditView(props) {
         },
         body: JSON.stringify(patchObject),
       });
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const data = await response.json();
+
+      fetchRequiredTraining();
       console.log('PATCH request successful:', data);
       // Handle the response data as needed
     } catch (error) {
@@ -112,7 +118,7 @@ export default function EditView(props) {
     //         }
     // }
 
-return (  
+return (
     <>
 <LeftDiv>
         <ListTitle>
