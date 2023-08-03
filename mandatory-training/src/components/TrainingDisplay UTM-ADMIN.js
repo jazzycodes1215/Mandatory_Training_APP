@@ -150,7 +150,7 @@ const forceUpdate = useForceUpdate();
       </LeftDiv>)}
 
       {editmode && (
-        <EditView props={trainingData}/>)}
+        <EditView props={editmode}/>)}
 
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>

@@ -12,7 +12,7 @@ import '../stylesheets/training.css'
 import ContentEditable from "react-contenteditable";
 
 
-export default function EditView() {
+export default function EditView(props) {
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState([])
   const [name, setName] = useState('')
