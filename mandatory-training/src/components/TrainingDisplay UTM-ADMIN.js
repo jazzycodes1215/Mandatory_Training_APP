@@ -49,6 +49,25 @@ const forceUpdate = useForceUpdate();
     setEditmode(!editmode);
   }
 
+  const deleteTraining = async () => {
+    try {
+      const response = await fetch(`${fetchURL}/requiredTraining/${training}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log('Training deleted successfully');
+      navigate('/unit-training-manager');
+    } catch (error) {
+      console.error('Error deleting training:', error);
+    }
+  };
 
   useEffect(()=>
   {
@@ -62,9 +81,10 @@ const forceUpdate = useForceUpdate();
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
           <div className='editTraining'>
           <button onClick={()=>(EditPage())}>
-            <p>Edit</p>
+            <p>Edit Training</p>
             <img src={mySvg} alt="(cog wheel)"></img>
             </button>
+            <button onClick={deleteTraining}>Delete Training</button>
             </div>
       </div>)}
       
@@ -75,7 +95,7 @@ const forceUpdate = useForceUpdate();
           <button onClick={()=>(
             EditPage()
             )}>
-            <p>Done</p>
+            <p>Stop Editing</p>
             <img src={mySvg} alt="(cog wheel)"></img>
             </button>
             </div>
