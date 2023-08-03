@@ -1053,11 +1053,12 @@ try {
 
 //ENDPOINT TO UPLOAD FILE
 app.post('/upload', upload.single('file'), (req, res) => {
+  console.log('watt');
   const fileContent = fs.readFileSync(req.file.path);
   const fileName = req.file.originalname;
   const fileType = req.file.mimetype;
   const userId = req.body.user_id;
-
+  console.log(userId);
   knex ('files')
   .insert({ file_name: fileName, file_content: fileContent, file_type: fileType, user_id: userId })
   .then(() => {
@@ -1085,7 +1086,7 @@ app.get('/upload', async (req, res) => {
 //downloads first file in appropriate format(.pdf, docx, txt) with name given at upload
 app.get('/upload/:userID', async (req, res) => {
   const { userID } = req.params;
-
+  console.log('watt');
   try {
     const fileData = await knex('files')
     .select('file_name', 'file_type', 'file_content')
@@ -1120,6 +1121,9 @@ app.get('/files/:userID', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 })
+
+
+
 
 
 

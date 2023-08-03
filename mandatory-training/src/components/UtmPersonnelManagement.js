@@ -28,13 +28,8 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
-  const navigate = useNavigate();
- 
-=======
   const navigate = useNavigate()
 
->>>>>>> main
 
 
   console.log('unit',unitID)
@@ -92,8 +87,9 @@ export default function UtmPersonnelManagement() {
   
       if (userId) {
         try {
+          const userInfo = clickedUser[innerIndex];
           console.log("Navigating to:", `/unit-training-manager/${userId}/${trainingId}`);
-          navigate(`/unit-training-manager/${userId}/${trainingId}`);
+          navigate(`/unit-training-manager/${userId}/${trainingId}`, { state: userInfo });
         } catch (error) {
           console.error("Error during navigation:", error);
         }
@@ -107,18 +103,14 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
-<<<<<<< HEAD
-  
-=======
 
 
-   console.log("userID in UtmPersonnelManagement:", userID);
->>>>>>> main
+ 
   return (
-    <div>
-      <Routes>
+    <div className="route">
+      {/* <Routes>
         <Route path="/unit-training-manager/:userId/:trainingId" element={<UtmPersonellTrainingDetails  />} />
-      </Routes>
+      </Routes> */}
     <div className="personnel-management-container">
       {loading ? (
         <div>Loading...</div>
