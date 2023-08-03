@@ -33,7 +33,7 @@ p {
 }
 
 button {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.505);
     color: white;
     font-size: 1em;
     margin: 1em 0;
@@ -82,14 +82,14 @@ button {
 .plus-btn {
     width: 20px;
     height: auto;
-    background-color:#000;
+    background-color:rgba(0, 0, 0, 0.505);
     border-radius: 20%;
     margin-left: 20px;
     padding: 10px;
     transition: all .3s ease;
 
     &:hover {
-        background-color: #1976d2;
+        background-color: black;
     }
 }
 
@@ -121,4 +121,8 @@ button {
     &:active {
         background-color: #1976d2;
     }
+}
+
+#toolbar {
+    padding: 20px 0;
 }

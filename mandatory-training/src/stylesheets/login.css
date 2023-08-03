@@ -52,6 +52,8 @@
 
 .login > h2 {
   margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 .login > p {
@@ -80,7 +82,7 @@ align-self: center;
     background-color: white;
     border: 1px solid #1976d2;
     color: #1976d2;
-
+    cursor: pointer;
 
   }
 }
