@@ -58,56 +58,8 @@ export default function Training() {
 
 
     const HandleTabChange = (tab, btn) => {
-        setSelectedTab(tab);
         setEndpoint(tab);
       };
-
-      const SelectedBtn = (btn) => {
-      switch (btn) {
-
-        case 1:
-        document.getElementById("btn1").classList.remove("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 2:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.remove("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 3:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.remove("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 4:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.remove("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 5:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.remove("btnDeactivated");
-        break;
-        default:
-            console.log('Error finding that button')
-      }
-    }
 
     return (
         <>
