@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
 import { AppContext, fetchURL } from '../App'
@@ -16,6 +16,8 @@ export default function CreateUserAccount() {
     const [rank, setRank] = useState('');
     const [error, setError] = useState(null);
     const {validatedUserType, validToken} = useUserCheck();
+    const navigate = useNavigate();
+
     const HandleSelect = (e) =>
     {
         console.log(e.target.value);
@@ -29,7 +31,7 @@ export default function CreateUserAccount() {
         let header = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(userData)};
         //Maybe don't go to the login login... API
@@ -37,13 +39,13 @@ export default function CreateUserAccount() {
         let status = response.status;
         let data = await response.json();
         console.log(data);
-        if(status === 201)
-        {
-          //setUserType(data.userType);
-          //setToken(data.token)
+        if(status === 201) {
+            alert('Account created successfully! Please log in with your new account.');
+            navigate('/administrator');
         }
         else
         {
+            alert('Account creation failed!');
             setError(data.message)
         }
     }
