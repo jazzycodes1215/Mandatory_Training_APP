@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext, useRef } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
@@ -19,6 +19,23 @@ export default function Training() {
     const [selectedTab, setSelectedTab] = useState('All');
     const [requiredTraining, setRequiredTraining] = useState([])
     const [endpoint, setEndpoint] = useState('')
+    const [activeButton, setActiveButton] = useState(0);
+
+
+    const handleButtonClick = (index, tab) => {
+        setActiveButton(index);
+        HandleTabChange(tab)
+      };
+
+      const buttonsData = [
+        { text: 'All', id: 0, tab: '' },
+        { text: 'Primary Training', id: 1, tab:'primaryTraining' },
+        { text: 'Auxiliary Training', id: 2, tab: 'auxTraining' },
+        { text: 'Professional Military Education', id: 3, tab: 'PME'},
+        { text: 'Additional Duty Training', id: 4, tab: 'ADT'}
+      ];
+
+
 
     const TRContainer = styled.div`
     display: grid;
@@ -58,7 +75,7 @@ export default function Training() {
     // };
 
 
-    const HandleTabChange = (tab, btn) => {
+    const HandleTabChange = (tab) => {
         setEndpoint(tab);
       };
 
@@ -75,11 +92,23 @@ export default function Training() {
             <Type className='top'>
                 <h2>Type</h2>
                 <div className='type-btns'>
-                    <button id='btn1' className='activeBtn' onClick={() => HandleTabChange('', 1)}>All</button>
-                    <button id='btn2' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('primaryTraining', 2)}>Primary Trainings</button>
-                    <button id='btn3' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('auxTraining', 3)}>Auxilary Training</button>
-                    <button id='btn4' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('PME', 4)}>Professional Military Education</button>
-                    <button id='btn5' className="deactiveBtn btnDeactivated" onClick={() => HandleTabChange('ADT', 5)}>Additional Duty Training</button>
+                    {/* <button id='btn1' innerRef={active} className='activeBtn' onClick={() => HandleTabChange('', 1)}>All</button>
+                    <button id='btn2' innerRef={active} onClick={() => HandleTabChange('primaryTraining', 2)}>Primary Trainings</button>
+                    <button id='btn3' innerRef={active} onClick={() => HandleTabChange('auxTraining', 3)}>Auxilary Training</button>
+                    <button id='btn4' innerRef={active} onClick={() => HandleTabChange('PME', 4)}>Professional Military Education</button>
+                    <button id='btn5' innerRef={active} onClick={() => HandleTabChange('ADT', 5)}>Additional Duty Training</button> */}
+{buttonsData.map((button, index, tab) => (
+        <button 
+          key={button.id}
+          className={`toggle-button ${activeButton === index ? 'highlighted' : ''}`}
+          onClick={() => handleButtonClick(index, button.tab)}
+        >
+          {button.text}
+        </button>
+      ))}
+                    <div>
+      
+    </div>
                 </div>
             </Type>
             <Trainings>
