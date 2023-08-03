@@ -29,7 +29,7 @@ exports.seed = async function (knex) {
           dodID: faker.finance.accountNumber({ length: 9 }),
           role_id: faker.number.int({ min: 1, max: 4 }),
           supervisor_id: 1,
-          unit_id: faker.number.int({min: 0, max : 3})
+          unit_id: faker.number.int({min: 1, max : 4})
       });
       }
       // Insert the fake data into the table
