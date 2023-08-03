@@ -41,7 +41,7 @@ const App = ()=> {
         // Simulate a loading delay for demonstration purposes
         setTimeout(() => {
             setIsLoading(false);
-        }, 3000); // Set the time as per your requirement
+        }, 0); // Set the time as per your requirement
     }, []);
 
     return(
