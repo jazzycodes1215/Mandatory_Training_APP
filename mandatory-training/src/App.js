@@ -7,6 +7,7 @@ import {
 } from './components';
 import TrainingDisplayUTM from './components/TrainingDisplay UTM-ADMIN';
 import UtmPersonellTrainingDetails from './components/UtmPersonellTrainingDetails';
+import LoadingScreen from './components/LoadingScreen';
 export const AppContext = createContext();
 export const fetchURL = process.env.REACT_APP_FETCH ? process.env.REACT_APP_FETCH : 'http://localhost:4000';
 
@@ -21,6 +22,7 @@ const App = ()=> {
     const [lastName, setLastName] = useState();
     const [isSupervisor, setIsSupervisor] = useState(false);
     const [registered, setRegistered] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const ContextObject = { user, setUser,
                             isVerified,  setIsVerified,
@@ -35,9 +37,18 @@ const App = ()=> {
                           }
 
     //console.log(ContextObject);
+    useEffect(() => {
+        // Simulate a loading delay for demonstration purposes
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 3000); // Set the time as per your requirement
+    }, []);
 
     return(
         <>
+        {isLoading ? (
+        <LoadingScreen />
+      ) : (
         <AppWrapper id="App">
             <AppContext.Provider value={ContextObject}>
                 <BrowserRouter>
@@ -66,6 +77,7 @@ const App = ()=> {
                 </BrowserRouter>
             </AppContext.Provider>
         </AppWrapper>
+        )}
         </>
     );
 }
