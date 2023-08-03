@@ -55,6 +55,7 @@
   };
 
   const Button = styled.button`
+      background-color: black;
       color: white;
       font-size: .75em;
       margin: 30px 1em 0 1em ;
