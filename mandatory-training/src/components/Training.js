@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import '../stylesheets/training.css'
+import myPlus from '../Icons/16px/Plus.svg'
 
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
@@ -66,7 +67,7 @@ export default function Training() {
      <div className='subheading'>
         <h1>Training</h1>
         <Link to="/create-training">
-          <Button variant="contained" color="primary">Create New Training</Button>
+          <img className='plus-btn' src={myPlus} alt="plus button"></img>
         </Link>
     </div>
 
