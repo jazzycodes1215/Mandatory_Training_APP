@@ -144,7 +144,7 @@ export default function TrainingDisplay() {
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>
-                  {`Time Requirement: ${trainingData.interval} days`}
+                  {`Time Requirement: ${trainingData.interval ? `${trainingData.interval} ${trainingData.interval ===1 ? 'Day' : 'Days'}` : "One Time"}`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid>

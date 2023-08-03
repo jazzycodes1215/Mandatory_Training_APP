@@ -196,10 +196,6 @@ export default function RequiredTraining() {
             (
                 <RequiredTrainingWrapper>
 
-                    <div id='reqSub' className='subheading'>
-                        <h1>Access Required Training</h1>
-                    </div>
-
                     <TrainingContainer>
                         <Accordion expanded={expanded==='accordion1'} onClick={()=>handleExpand('accordion1')}>
                             <AccordionSummary
@@ -330,6 +326,7 @@ justify-content: center;
 align-items: center;
 width: 100%;
 height: 100%;
+overflow-y: hidden;
 `;
 
 const ListContainer = styled.div`
