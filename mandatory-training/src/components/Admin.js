@@ -178,7 +178,6 @@ export default function Admin() {
                 <RightDiv>
                 <Accordion expanded={true} sx={{width: '85vw', marginRight: "5vw"}}>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >

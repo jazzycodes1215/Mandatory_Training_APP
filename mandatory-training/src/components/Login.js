@@ -45,7 +45,7 @@ export default function Login() {
 
     const HandleSubmit = async () =>
     {
-        let userData = {email: email, password: pwd}
+        let userData = {email: email.replace(/\s/g, ''), password: pwd.replace(/\s/g, '')}
 
         let header = {method: "POST",
         headers: {
@@ -78,7 +78,7 @@ export default function Login() {
                     {validToken ? navigate("/") : <></>}
                     <section className="title"><SchoolIcon sx={{ color: '#0F3D68' }} id='schoolIcon'/><h1>UTM Tool</h1></section>
                     <section className="login">
-                        
+
                         <h2>Welcome to the UTM Tool</h2>
                         <p>Please sign in to your account to continue</p>
                         <FormControl sx={{ml:2, mr:2, my:1}} variant="outlined">
