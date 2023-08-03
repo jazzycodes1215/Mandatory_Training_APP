@@ -75,8 +75,8 @@ exports.up = function(knex) {
     })
     .createTable('files', table => {
       table.increments('id').primary();
-      table.string('file_name').notNullable;
-      table.binary('file_content').notNullable;
+      table.string('file_name').notNullable();
+      table.binary('file_content').notNullable();
       table.string('file_type');
       table.integer('user_id').unsigned();
       table.foreign('user_id').references('users.id').onDelete('CASCADE');
