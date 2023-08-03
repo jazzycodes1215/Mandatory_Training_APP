@@ -929,6 +929,7 @@ app.post('/notifications', async (req, res) => {
     const { user_id, comment, read_status, submission_date, completion_date, approval_date } = req.body;
 
     // Insert the new notification into the database
+
     const newNotification = await knex('training_status').insert({
       user_id,
       comment,
@@ -937,7 +938,7 @@ app.post('/notifications', async (req, res) => {
       completion_date,
       approval_date,
     });
-
+console.log(newNotification)
     res.status(201).json({ message: 'Notification sent successfully', notificationId: newNotification[0] });
   } catch (error) {
     res.status(500).json({ message: 'Error sending notification', error });
