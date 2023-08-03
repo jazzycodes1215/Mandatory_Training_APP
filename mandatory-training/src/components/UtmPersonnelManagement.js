@@ -29,11 +29,7 @@ export default function UtmPersonnelManagement() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
-  const navigate = useNavigate()
-=======
   const navigate = useNavigate();
->>>>>>> main
 
 
 
@@ -108,12 +104,6 @@ export default function UtmPersonnelManagement() {
     setSelectedUser(null);
    };
 
-<<<<<<< HEAD
-
-
- 
-=======
->>>>>>> main
   return (
     <div className="route">
       {/* <Routes>
