@@ -39,11 +39,11 @@ export default function UtmUnitReadiness() {
       <div>
       <div className='subheading'>
         <h1>Unit Readiness</h1>
+        <UtmUnitReport unitReadinessData={unitReadinessData} />
      </div>
         {unitReadinessData ? (
           <>
             <UtmReadinessTable unitReadinessData={unitReadinessData} />
-            <UtmUnitReport unitReadinessData={unitReadinessData} />
           </>
         ) : error ? (
           <div>Error: {error}</div>

@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import '../stylesheets/training.css'
+import myPlus from '../Icons/16px/Plus.svg'
 
 
 import { Box, Button, List, ListItem, ListItemText, IconButton } from '@mui/material';
@@ -58,63 +59,15 @@ export default function Training() {
 
 
     const HandleTabChange = (tab, btn) => {
-        setSelectedTab(tab);
         setEndpoint(tab);
       };
-
-      const SelectedBtn = (btn) => {
-      switch (btn) {
-
-        case 1:
-        document.getElementById("btn1").classList.remove("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 2:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.remove("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 3:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.remove("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 4:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.remove("btnDeactivated");
-        document.getElementById("btn5").classList.add("btnDeactivated");
-        break;
-
-        case 5:
-        document.getElementById("btn1").classList.add("btnDeactivated");
-        document.getElementById("btn2").classList.add("btnDeactivated");
-        document.getElementById("btn3").classList.add("btnDeactivated");
-        document.getElementById("btn4").classList.add("btnDeactivated");
-        document.getElementById("btn5").classList.remove("btnDeactivated");
-        break;
-        default:
-            console.log('Error finding that button')
-      }
-    }
 
     return (
         <>
      <div className='subheading'>
         <h1>Training</h1>
         <Link to="/create-training">
-          <Button variant="contained" color="primary">Create New Training</Button>
+          <img className='plus-btn' src={myPlus} alt="plus button"></img>
         </Link>
     </div>
 

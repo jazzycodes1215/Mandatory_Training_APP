@@ -489,17 +489,67 @@ app.get('/requiredTraining/', async (req, res) => {
     res.status(500).json({ message: 'Error adding training data', error });
   }})  
 
-app.get('/requiredTraining/primaryTraining', async (req, res) => {
+  app.get('/training/', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .then(data => res.status(200).json(data))
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
 
-  try {
-    const trainings = await knex('trainings')
-      .join('type', 'trainings.type_id', 'type.id')
-      .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
-      .where('type.name', 'Primary Training')
-      .then(data => res.status(200).json(data));
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving training data', error });
-  }
+  app.get('/training/primaryTraining', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Primary Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/auxTraining', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Auxilary Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/PME', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Professional Military Education');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
+  });
+
+  app.get('/training/ADT', async (req, res) => {
+    try {
+      const trainings = await knex('trainings')
+        .join('type', 'trainings.type_id', 'type.id')
+        .select('trainings.id', 'trainings.name', 'trainings.interval', 'trainings.source', 'type.name as type_name', 'type.id as type_id')
+        .where('type.name', 'Additional Duty Training');
+
+        res.status(200).json(trainings);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving training data', error });
+    }
   });
 
 
@@ -850,6 +900,26 @@ app.get('/notifications', async (req, res) => {
     res.json(allNotifications);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+});
+
+app.post('/notifications', async (req, res) => {
+  try {
+    const { user_id, comment, read_status, submission_date, completion_date, approval_date } = req.body;
+
+    // Insert the new notification into the database
+    const newNotification = await knex('training_status').insert({
+      user_id,
+      comment,
+      read_status,
+      submission_date,
+      completion_date,
+      approval_date,
+    });
+
+    res.status(201).json({ message: 'Notification sent successfully', notificationId: newNotification[0] });
+  } catch (error) {
+    res.status(500).json({ message: 'Error sending notification', error });
   }
 });
 
@@ -1234,6 +1304,9 @@ app.patch('/tickets', async (req, res) => {
     res.status(400).json({error: "Unable to close ticket"})
   }
 })
+
+
+
 
 
 app.listen(port, () => {
