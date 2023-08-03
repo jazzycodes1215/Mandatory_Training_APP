@@ -8,7 +8,7 @@ import { Route, Routes, Link} from 'react-router-dom';
 
 export default function UtmNotifications() {
   const [notifications, setNotifications] = useState([]);
-
+  
   useEffect(() => {
     fetch(`${fetchURL}/notifications`)
     .then(res => res.json())
@@ -29,6 +29,10 @@ export default function UtmNotifications() {
       .catch((error) => console.error('Error deleting notification:', error));
     };
 
+    const sortedNotifications = [...notifications].sort((a, b) =>
+    new Date(b.submission_date) - new Date(a.submission_date)
+  );
+
   const handleMarkAsRead = (id) => {
     fetch(`${fetchURL}/notifications/${id}`, {
       method: 'PATCH',
@@ -48,31 +52,95 @@ export default function UtmNotifications() {
       .catch((error) => console.error('Error marking notification as read:', error));
   };
 
+  
+
+  const handleMarkAllAsRead = () => {
+    const updatedNotifications = notifications.map((notification) => ({
+      ...notification,
+      read_status: true,
+    }));
+
+    updateNotificationStatus(updatedNotifications);
+  };
+
+  const handleMarkAllAsUnread = () => {
+    const updatedNotifications = notifications.map((notification) => ({
+      ...notification,
+      read_status: false,
+    }));
+
+    updateNotificationStatus(updatedNotifications);
+  };
+
+  const handleMarkAsUnread = (id) => {
+    const updatedNotifications = notifications.map((notification) =>
+      notification.id === id ? { ...notification, read_status: false } : notification
+    );
+
+    updateNotificationStatus(updatedNotifications);
+  };
+
+  const updateNotificationStatus = (updatedNotifications) => {
+    // Send update requests for each notification
+    const updateRequests = updatedNotifications.map((notification) =>
+      fetch(`${fetchURL}/notifications/${notification.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ read_status: notification.read_status }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+
+    // Wait for all update requests to complete
+    Promise.all(updateRequests)
+      .then(() => {
+        setNotifications(updatedNotifications);
+      })
+      .catch((error) => console.error('Error updating notification status:', error));
+  };
+
+
   const handleSendNotification = () => {
     return <UtmNotificationSend />;
   };
 
-    return (
-      <>
-        {/* <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button> */}
-      <div className = "notification-container">
-      <div className='subheading'>
-         <h1>Notifications</h1>
-       </div>
-        {notifications.map((notification) => (
-          <div key ={notification.id} className="notification-item">
-           <p className="notification-comment">{notification.comment}</p>
-          <p className="notification-training">{notification.training_name}</p>
-          <p className="notification-date">Submission Date: {notification.submission_date}</p>
-          <p className="notification-read">Read: {notification.read_status.toString()}</p>
-          <button className="delete-button" onClick={() => handleDeleteNotification(notification.id)}>Delete</button>
-          <button className="mark-as-read-button" onClick={() => handleMarkAsRead(notification.id)}>Mark as Read</button>
+  return (
+    <>
+      {/* <button onClick={() => handleSendNotification('sendNotification')}>Notifications</button> */}
+      <div className="notification-container">
+        <div className="subheading">
+          <h1>Notifications</h1>
+        </div>
+        <div className="notification-buttons">
+          <button className="mark-all-read-button" onClick={handleMarkAllAsRead}>
+            Mark All as Read
+          </button>
+          <button className="mark-all-unread-button" onClick={handleMarkAllAsUnread}>
+            Mark All as Unread
+          </button>
+        </div>
+        {sortedNotifications.map((notification) => (
+          <div key={notification.id} className="notification-item">
+            <p className="notification-comment">{notification.comment}</p>
+            <p className="notification-training">{notification.training_name}</p>
+            <p className="notification-date">Submission Date: {notification.submission_date}</p>
+            <p className="notification-read">Read: {notification.read_status.toString()}</p>
+            <button className="delete-button" onClick={() => handleDeleteNotification(notification.id)}>
+              Delete
+            </button>
+            <button className="mark-as-read-button" onClick={() => handleMarkAsRead(notification.id)}>
+              Mark as Read
+            </button>
+            <button className="mark-as-unread-button" onClick={() => handleMarkAsUnread(notification.id)}>
+              Mark as Unread
+            </button>
           </div>
         ))}
       </div>
-      </>
-    );
-  }
+    </>
+  );
+}
 
 // const handleNotification = async () => {
   //   try {

@@ -3,16 +3,22 @@
 }
 
 .notification-container {
-    width: 80%;
-    margin: 0 auto;
-   
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 40px;
+}
   
   .notification-item {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .notification-comment {
@@ -31,30 +37,33 @@
     color: #777;
   }
 
-  .delete-button {
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-    padding: 10px 10px;
-    margin-right: 20px;
-    cursor: pointer;
-  }
-  
-  .delete-button:hover {
-    scale: 1.1;
-  }
+  .delete-button,
+.mark-as-read-button,
+.mark-as-unread-button,
+.mark-all-read-button,
+.mark-all-unread-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s, transform 0.2s;
+}
 
-  .mark-as-read-button {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px 10px;
-    cursor: pointer;
-  }
+.delete-button {
+  background-color: #e74c3c;
+}
 
-  .mark-as-read-button:hover {
-    scale: 1.1;
-  }
+.delete-button:hover,
+.mark-as-read-button:hover,
+.mark-as-unread-button:hover,
+.mark-all-read-button:hover,
+.mark-all-unread-button:hover {
+  background-color: #2c81ba;
+  transform: scale(1.05);
+}
 
   .subheading {
     display: flex;
