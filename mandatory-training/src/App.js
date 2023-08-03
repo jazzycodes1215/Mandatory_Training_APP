@@ -85,7 +85,6 @@ top: 0;
 z-index: 100;
 background-color: #ffffff;
 `
-const BodyContainer = styled.div`
-padding-top: 1%; // Adjust this to match your header height
+const BodyContainer = styled.div` // Adjust this to match your header height
 overflow-y: auto;
 `

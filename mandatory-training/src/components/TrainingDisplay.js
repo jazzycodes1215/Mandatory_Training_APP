@@ -4,7 +4,7 @@ import { AppContext, fetchURL } from '../App'
 import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 import SubmitBug from './SubmitBug'
-
+import FileUpload from './FileUpload'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 export default function TrainingDisplay() {
   const {training} = useParams();
   const [displaySubmit, setDisplaySubmit] = useState(false);
+  const [displayFileUpload, setDisplayFileUpload] = useState(false);
   const [trainingData, setTrainingData] = useState({})
   const {validatedUserType, validToken, userID, unitID} = useUserCheck();
   const [isSupe, setIsSupe] = useState(false);
@@ -89,6 +90,13 @@ export default function TrainingDisplay() {
   return (
     <>
       {displaySubmit ? <SubmitBug trainingId={training} setDisplay={setDisplaySubmit} userId={userID}/>: null}
+      {displayFileUpload ?
+      <SubmitOverlay>
+        <Form>
+          <CloseButton onClick={()=>setDisplayFileUpload(false)}>X</CloseButton>
+          <FileUpload/>
+        </Form>
+      </SubmitOverlay> : null}
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
       {trainingData ?
       <FlexDiv>
@@ -153,7 +161,7 @@ export default function TrainingDisplay() {
       <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
         <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
-        <ButtonTraining onClick={()=>navigate(-1)}>Submit Certificate</ButtonTraining>
+        <ButtonTraining onClick={()=>setDisplayFileUpload(!displayFileUpload)}>Submit Certificate</ButtonTraining>
         {subordinateData ?
         <div>
           <FlexDiv>
@@ -177,6 +185,63 @@ export default function TrainingDisplay() {
     </>
   )
 }
+
+
+const InputLabel = styled.p`
+align-self: flex-start`
+
+const Message = styled.div`
+  position: absolute;
+  top: -50px;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+`;
+
+const SubmitOverlay = styled.div`
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,0,0, 0.9);
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  color: #000;
+  cursor: pointer;
+`;
+
+const Form = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+`;
+
+const Input = styled.input`
+  margin-bottom: 1rem;
+`;
+
+const Textarea = styled.textarea`
+  margin-bottom: 1rem;
+  min-height: 100px;
+`;
 
 const FlexDiv = styled.div`
 overflow: hidden;

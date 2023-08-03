@@ -678,6 +678,27 @@ app.get('/units', async (req, res) => {
   }
 });
 
+//Endpoint for getting all users in a unit
+app.get('/units/users/:unitId', async (req, res) => {
+  const {unitId} = req.params;
+
+  try {
+    console.log(unitId);
+    const users = await knex('users')
+    .select('*')
+    .where('users.unit_id', unitId)
+    if(users) {
+      res.json(users);
+    } else {
+      res.status(404).json({ message: 'Unit not found' });
+    }
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({
+      message: 'Error creating unit', error
+  })
+}})
+
 // endpoint for adding in a new unit
 app.post('/units', async (req, res) => {
   const newUnit = req.body; // Assuming the request body contains the necessary user data
@@ -688,7 +709,7 @@ app.post('/units', async (req, res) => {
       res.status(200).json({message: successful});
     })
   } catch (error) {
-    res.status(500).json({
+      res.status(500).json({
       message: 'Error creating unit', error
     });
   }
@@ -1064,11 +1085,12 @@ try {
 
 //ENDPOINT TO UPLOAD FILE
 app.post('/upload', upload.single('file'), (req, res) => {
+  console.log('watt');
   const fileContent = fs.readFileSync(req.file.path);
   const fileName = req.file.originalname;
   const fileType = req.file.mimetype;
   const userId = req.body.user_id;
-
+  console.log(userId);
   knex ('files')
   .insert({ file_name: fileName, file_content: fileContent, file_type: fileType, user_id: userId })
   .then(() => {
@@ -1096,7 +1118,7 @@ app.get('/upload', async (req, res) => {
 //downloads first file in appropriate format(.pdf, docx, txt) with name given at upload
 app.get('/upload/:userID', async (req, res) => {
   const { userID } = req.params;
-
+  console.log('watt');
   try {
     const fileData = await knex('files')
     .select('file_name', 'file_type', 'file_content')

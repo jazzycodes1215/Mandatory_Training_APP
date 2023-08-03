@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
-import { AppContext } from '../App';
+import { AppContext, fetchURL } from '../App';
 import useUserCheck from '../hooks/useUserCheck'
 import FileList from './FileList';
 // import Button from '@mui/material/Button';
@@ -21,14 +21,12 @@ const FileUpload = () => {
   };
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-
+    event.preventDefault();
     if (selectedFile && userID) {
       // Create a new FormData object and append the selected file to it
       const formData = new FormData();
       formData.append('file', selectedFile);
       formData.append('user_id', userID);
-
       try {
         // Send the file to the backend using fetch
         const response = await fetch('http://localhost:4000/upload', {
@@ -50,7 +48,7 @@ const FileUpload = () => {
 
   return (
   <>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e)=>handleSubmit(e)}>
       <input type='file' onChange={handleFileChange} />
       <button variant="contained" type='submit'>Submit</button>
     </form>
