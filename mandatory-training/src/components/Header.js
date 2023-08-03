@@ -43,8 +43,8 @@ export default function Header() {
 
   return (
     <HeaderBar className="muiIsWeird">
-      <AppBar position="sticky" sx={{top: '0'}}>
-        <Container maxWidth="xl">
+      <AppBar id="head1" position="sticky" sx={{top: '0'}}>
+        <Container id="head" maxWidth="xl">
           <Toolbar disableGutters sx={{ py: 2 }}>
             <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
@@ -123,6 +123,7 @@ export default function Header() {
                   id='dash-btn'
                   onClick={() => navigate('/required-training')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
+                  disableRipple='true'
                 >
                   Dashboard
                 </Button>
