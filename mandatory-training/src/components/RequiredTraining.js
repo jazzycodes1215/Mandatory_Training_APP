@@ -207,7 +207,7 @@ export default function RequiredTraining() {
                                     <StarIcon sx={{fontSize: 'xxx-large'}} />
                                     <ListHeader>My Mandatory Training</ListHeader>
                                 </ListTitle>
-                                <ListSubHeader>Access your mandatory training courses</ListSubHeader>
+                                <ListSubHeader className='listSub'>Access your mandatory training courses</ListSubHeader>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ListContainer>

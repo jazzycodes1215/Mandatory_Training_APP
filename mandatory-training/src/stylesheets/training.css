@@ -123,6 +123,10 @@
 background-color: black;
 }
 
+.listSub {
+padding-right: 60px;
+}
+
 #reqSub {
     padding-top: 40px;
 }
