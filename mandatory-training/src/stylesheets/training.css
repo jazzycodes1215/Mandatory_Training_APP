@@ -1,6 +1,6 @@
 .boy {
     padding: 0 1em 0 1em;
-    height: 90vh;
+    height: 60vh;
     margin-bottom: 20px;
 
 }
@@ -28,9 +28,11 @@
 
     &:hover {
         transition: all .3s ease;
-        background-color: white;
-        color: #007BFF;
-        border: 1px solid #007BFF;
+        background-color: black
+    }
+
+    &:focus {
+        background-color: black
     }
 }
 
@@ -117,8 +119,30 @@
     padding-top: 40px;
 }
 
+.activeBtn {
+background-color: black;
+}
 
 #reqSub {
     padding-top: 40px;
 }
 
+.toggle-button {
+    color: white;
+    font-size: 1em;
+    margin: 1em 0;
+    padding: .7em 4em;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+        transition: all .3s ease;
+        background-color: black
+    }
+}
+
+.highlighted {
+    background-color: black;
+}

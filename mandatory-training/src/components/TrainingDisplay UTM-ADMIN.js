@@ -31,7 +31,7 @@ export default function TrainingDisplayUTM() {
   function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update state to force render
-    // A function that increment 👆🏻 the previous state like here 
+    // A function that increment 👆🏻 the previous state like here
     // is better than directly setting `setValue(value + 1)`
 }
 
@@ -47,8 +47,29 @@ const forceUpdate = useForceUpdate();
   const EditPage = () => {
     forceUpdate();
     setEditmode(!editmode);
+
+    fetchTraining();
   }
 
+  const deleteTraining = async () => {
+    try {
+      const response = await fetch(`${fetchURL}/requiredTraining/${training}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log('Training deleted successfully');
+      navigate('/unit-training-manager');
+    } catch (error) {
+      console.error('Error deleting training:', error);
+    }
+  };
 
   useEffect(()=>
   {
@@ -62,12 +83,13 @@ const forceUpdate = useForceUpdate();
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
           <div className='editTraining'>
           <button onClick={()=>(EditPage())}>
-            <p>Edit</p>
+            <p>Edit Training</p>
             <img src={mySvg} alt="(cog wheel)"></img>
             </button>
+            <button onClick={deleteTraining}>Delete Training</button>
             </div>
       </div>)}
-      
+
       {editmode && (
       <div className='top-menu'>
       <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
@@ -75,7 +97,7 @@ const forceUpdate = useForceUpdate();
           <button onClick={()=>(
             EditPage()
             )}>
-            <p>Done</p>
+            <p>Stop Editing</p>
             <img src={mySvg} alt="(cog wheel)"></img>
             </button>
             </div>
@@ -83,7 +105,7 @@ const forceUpdate = useForceUpdate();
 
       {trainingData ?
       <FlexDiv>
-     
+
      {!editmode && ( <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
@@ -116,7 +138,7 @@ const forceUpdate = useForceUpdate();
                 <Divider orientation="vertical" flexItem />
                 <Grid>
                 <h5>Interval</h5>
-                  {`${trainingData.interval} days`}
+                {`Time Requirement: ${trainingData.interval ? `${trainingData.interval} ${trainingData.interval ===1 ? 'Day' : 'Days'}` : "One Time"}`}
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid sx={{paddingRight: 2}}>
@@ -146,7 +168,7 @@ const forceUpdate = useForceUpdate();
           }}>
 
         </Box>
-      
+
       </LeftDiv>)}
 
       {editmode && (

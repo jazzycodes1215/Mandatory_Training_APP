@@ -96,7 +96,7 @@
   }
 
   .close-button {
-    position: fixed;
+    position: relative;
     top: 20%; 
     left: 40px; 
     transform: translateY(-50%);
@@ -106,7 +106,7 @@
     color: white;
     font-size: 1em;
     margin: 1em 0;
-    padding: .7em 2em;
+    padding: 12px 20px;
     border: 2px solid #007BFF;
     border-radius: 3px;
     cursor: pointer;
