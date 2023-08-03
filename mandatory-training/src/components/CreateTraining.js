@@ -33,26 +33,66 @@ export default function CreateTraining() {
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const formData = {
+            name: name,
+            type_id: parseInt(type),
+            interval: parseInt(interval),
+            source: alignment === 'source' ? source : `${firstName} ${lastName}, ${number}`,
+          };
+          console.log(formData)
+    
+        try {
+          const response = await fetch(`${fetchURL}/requiredTraining`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+    
+          const data = await response.json();
+          const { trainingId } = data; // Extract the newly created training ID from the response
+          console.log('POST request successful. New training ID:', trainingId);
+    
+          // Now use the trainingId to connect the training to the associated duties
+          // Perform the subsequent POST request to /dutyTraining/:trainingId endpoint
+          const dutyTrainingData = {
+            dutyIds: duties,
+          };
+          console.log(dutyTrainingData);
+    
+          const dutyTrainingResponse = await fetch(`${fetchURL}/dutyTraining/${trainingId.id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dutyTrainingData),
+          });
+    
+          if (!dutyTrainingResponse.ok) {
+            throw new Error('Network response was not ok');
+          }
+    
+          const dutyTrainingResult = await dutyTrainingResponse.json();
+          console.log('Duties updated successfully:', dutyTrainingResult);
+        } catch (error) {
+          console.error('Error making POST request:', error);
+        }
+      }; 
+
+
     const handleSelectDuties = (e) => {
         const selectedOptions = Array.from(e.target.selectedOptions);
         const selectedValues = selectedOptions.map((option) => parseInt(option.value));
         setDuties(selectedValues);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const formData = {
-            name,
-            type,
-            interval,
-            source,
-            firstName,
-            lastName,
-            number,
-            duties,
-        };
-    };
+      };
 
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
