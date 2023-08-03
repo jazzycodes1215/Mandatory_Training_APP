@@ -8,9 +8,10 @@ import FileList from './FileList';
 // import SendIcon from '@mui/icons-material/Send';
 // import Input from '@mui/material/Input';
 
-const FileUpload = () => {
+const FileUpload = ({setErrorMessageCB}) => {
   const { userID } = useUserCheck();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [updated, setUpdated] = useState(false);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -35,10 +36,11 @@ const FileUpload = () => {
         });
 
         if (response.ok) {
-          console.log('File uploaded successfully');
-          console.log(userID);
+          console.log('test');
+          setErrorMessageCB("Successfully Uploaded File")
+          setUpdated(!updated);
         } else {
-          console.error('Error uploading file');
+          setErrorMessageCB("Failed to Upload File")
         }
       } catch (error) {
         console.error('Error uploading file:', error);
@@ -46,13 +48,17 @@ const FileUpload = () => {
     }
   };
 
+  useEffect(()=>{
+    setSelectedFile(null);
+  }, [updated])
+
   return (
   <>
     <form onSubmit={(e)=>handleSubmit(e)}>
       <input type='file' onChange={handleFileChange} />
       <button variant="contained" type='submit'>Submit</button>
     </form>
-    <FileList userID={userID} onFileSelect={handleFileSelect} />
+    {/* <FileList userID={userID} onFileSelect={handleFileSelect} /> */}
   </>
   );
 };
