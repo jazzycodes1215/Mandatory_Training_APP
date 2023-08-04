@@ -85,3 +85,14 @@
 .notification-buttons {
   margin-bottom: 40px;
 }
+
+.mark-as-read-button
+{
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}

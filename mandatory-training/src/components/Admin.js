@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link , useNavigate} from 'react-router-do
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/Admin.css'
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails
 , ListItemButton, ListItemIcon, Checkbox, InputLabel, Select, MenuItem } from '@mui/material';
@@ -169,7 +170,7 @@ export default function Admin() {
             {validatedUserType === 4 ?
             <>
             <FlexContainer>
-                <LeftDiv>
+                <LeftDiv id="admin-left">
                     <ButtonTraining onClick={()=>navigate('/create-account')}>Create Account</ButtonTraining>
                     <ButtonTraining onClick={()=>HandleDeleteUser()}>Delete Account</ButtonTraining>
                     <ButtonTraining onClick={()=>HandlePromoteUser()}>Modify Role</ButtonTraining>
@@ -181,8 +182,8 @@ export default function Admin() {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <ListTitle>
-                        <StarIcon sx={{fontSize: 'xxx-large'}} />
+                    <ListTitle id="list-title">
+                        <StarIcon sx={{fontSize: 'xxx-large', mr: '10px'}} />
                         <ListHeader>{modState === 'delUser' ? "Delete User" : "Tickets"}</ListHeader>
                     </ListTitle>
                 </AccordionSummary>
@@ -230,13 +231,13 @@ export default function Admin() {
 
                             {modState == 'delUser' ?
                             <>
-                                <ButtonTraining onClick={handleDelete}>Delete User</ButtonTraining>
+                                <ButtonTraining className='update-btn' onClick={handleDelete}>Delete User</ButtonTraining>
                             </>
                              :  <>
-                                    {modState == 'promUser' ? <ButtonTraining onClick={handleProm}>Promote User</ButtonTraining>
+                                    {modState == 'promUser' ? <ButtonTraining className="update-btn" onClick={handleProm}>Update User Role</ButtonTraining>
                                     :
                                     <>
-                                    <ButtonTraining onClick={()=>handleTicket()}>Close Ticket</ButtonTraining>
+                                    <ButtonTraining className='update-btn' onClick={()=>handleTicket()}>Close Ticket</ButtonTraining>
                                     </>
                                     }
 
@@ -265,6 +266,7 @@ const LeftDiv = styled.div`
 display: flex;
 flex-direction: column;
 justify-content: flex-start;
+width: 30%;
 `
 const RightDiv = styled.div`
 display: flex;
