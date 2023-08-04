@@ -106,7 +106,7 @@ app.get('/users/:id', async (req, res) => {
     const user = await knex('users')
       .leftJoin('ranks', 'users.rank_id', 'ranks.id')
       .leftJoin('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
+      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.id as unit_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -362,7 +362,7 @@ app.post('/registration', async (req, res) => {
 app.patch('/registration/:id', async (req, res) => {
   console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id, unit_id} = req.body;
   const hashedPass = bcrypt.hashSync(newPassword, 10)
   const userAccountUpdate = {
       first_name: first_name,
@@ -371,7 +371,8 @@ app.patch('/registration/:id', async (req, res) => {
       email: email,
       password: hashedPass,
       supervisor_id: supervisor_id,
-      role_id: role_id
+      role_id: role_id,
+      unit_id: unit_id
   }
 
   try {
@@ -918,25 +919,6 @@ app.delete('/units/:id', async (req, res) => {
 //////////////////////////////////////////////////NOTIFICATION ENDPOINTS///////////////////////////////////////////////////////////////////////////
 
 //This endpoint is for getting all notifications and will be the primary endpoint
-// app.get('/notifications', async (req, res) => {
-//   try {
-//     const notifications = await knex('training_status')
-//       .select(
-//         'id',
-//         'comment',
-//         'read_status',
-//         'submission_date',
-//         'completion_date',
-//         'approval_date'
-//       )
-//       .orderBy('submission_date', 'desc');
-//     res.json(notifications);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching notifications', error });
-//   }
-// });
-
-// This endpoint is for faking notifications for testing reasons
 app.get('/notifications', async (req, res) => {
   try {
     const notifications = await knex('training_status')
@@ -953,23 +935,46 @@ app.get('/notifications', async (req, res) => {
       .leftJoin('trainings', 'training_status.training_id', 'trainings.id')
       .orderBy('submission_date', 'desc');
 
-    // Generate a random notification
-    const randomNotification = {
-      id: -1,
-      comment: 'This is a random notification!',
-      training_id: null,
-      read_status: false,
-      submission_date: new Date().toISOString(),
-      completion_date: null,
-      approval_date: null,
-      training_name: null
-    };
-    const allNotifications = [...notifications, randomNotification];
-    res.json(allNotifications);
+    res.json(notifications);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
   }
 });
+
+// This endpoint is for faking notifications for testing reasons
+// app.get('/notifications', async (req, res) => {
+//   try {
+//     const notifications = await knex('training_status')
+//       .select(
+//         'training_status.id',
+//         'training_status.comment',
+//         'training_status.training_id',
+//         'training_status.read_status',
+//         'training_status.submission_date',
+//         'training_status.completion_date',
+//         'training_status.approval_date',
+//         'trainings.name as training_name'
+//       )
+//       .leftJoin('trainings', 'training_status.training_id', 'trainings.id')
+//       .orderBy('submission_date', 'desc');
+
+//     // Generate a random notification
+//     const randomNotification = {
+//       id: -1,
+//       comment: 'This is a random notification!',
+//       training_id: null,
+//       read_status: false,
+//       submission_date: new Date().toISOString(),
+//       completion_date: null,
+//       approval_date: null,
+//       training_name: null
+//     };
+//     const allNotifications = [...notifications, randomNotification];
+//     res.json(allNotifications);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching notifications', error });
+//   }
+// });
 
 app.post('/notifications', async (req, res) => {
   try {
