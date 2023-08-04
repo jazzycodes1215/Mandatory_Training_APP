@@ -36,6 +36,7 @@ export default function Account() {
         fetchDuties();
         fetchUsers();
         fetchUnits();
+        console.log(userID);
     }, [userID, validatedUserType, updated]);
 
     useEffect(() => {
