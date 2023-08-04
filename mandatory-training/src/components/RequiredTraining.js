@@ -320,7 +320,7 @@ export default function RequiredTraining() {
                                 </ListContainer>
                             </AccordionDetails>
                         </Accordion>
-                        {/* {supervisor && */}
+                        {supervisor && ( 
                         <Accordion  expanded={ expanded ==='accordion2'} onClick={()=>handleExpand('accordion2')}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
                                 <ListTitle>
@@ -335,7 +335,7 @@ export default function RequiredTraining() {
                                 </ListContainer>
                             </AccordionDetails>
                         </Accordion>
-                        {/* } */}
+                         )} 
                     </TrainingContainer>
 
                 </RequiredTrainingWrapper>
