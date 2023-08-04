@@ -128,6 +128,7 @@ export default function TrainingDisplay() {
           submission_date: new Date().toISOString(),
           comment,
           read_status: false,
+          training_name: trainingData.name
         }),
       });
   
