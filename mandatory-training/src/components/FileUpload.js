@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App';
 import useUserCheck from '../hooks/useUserCheck'
 import FileList from './FileList';
+import '../stylesheets/training.css'
 // import Button from '@mui/material/Button';
 // import SendIcon from '@mui/icons-material/Send';
 // import Input from '@mui/material/Input';
@@ -54,9 +55,9 @@ const FileUpload = ({setErrorMessageCB}) => {
 
   return (
   <>
-    <form onSubmit={(e)=>handleSubmit(e)}>
+    <form id='upload' onSubmit={(e)=>handleSubmit(e)}>
       <input type='file' onChange={handleFileChange} />
-      <button variant="contained" type='submit'>Submit</button>
+      <button id="submit" variant="contained" type='submit'>Submit</button>
     </form>
     {/* <FileList userID={userID} onFileSelect={handleFileSelect} /> */}
   </>

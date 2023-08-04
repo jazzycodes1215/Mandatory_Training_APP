@@ -1,0 +1,32 @@
+label {
+    margin-bottom: 10px;
+}
+.clickable {
+    cursor: pointer;
+}
+
+#edit {
+    &:hover {
+        cursor: pointer;
+        color: #1976d2;
+    }
+}
+#submit {
+    background-color: black;
+    color: white;
+    font-size: .75em;
+    padding: 0.7em 4em;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .3s ease;
+
+
+    &:hover {
+        transition: all .5s ease;
+
+        background-color: white;
+        border: 1px solid #1976d2;
+        color: #1976d2;
+    }
+}
