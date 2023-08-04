@@ -45,27 +45,27 @@ export default function Login() {
 
     const HandleSubmit = async () =>
     {
-        let userData = {email: email.replace(/\s/g, ''), password: pwd.replace(/\s/g, '')}
+            let userData = {email: email.replace(/\s/g, ''), password: pwd.replace(/\s/g, '')}
 
-        let header = {method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData)};
-        let response = await fetch(`${fetchURL}/login`, header)
-        let status = response.status;
-        let data = await response.json();
-        if(status === 201)
-        {
-          console.log("Success")
-          setUserType(data.userType);
-          setToken(data.token)
-          setUser(data.user);
-        }
-        else
-        {
-          setError(data.message)
-        }
+            let header = {method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData)};
+            let response = await fetch(`${fetchURL}/login`, header)
+            let status = response.status;
+            let data = await response.json();
+            if(status === 201)
+            {
+            console.log("Success")
+            setUserType(data.userType);
+            setToken(data.token)
+            setUser(data.user);
+            }
+            else
+            {
+            setError(data.message)
+            }
     }
     return (
         <>

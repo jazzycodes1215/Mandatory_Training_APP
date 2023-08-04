@@ -973,19 +973,25 @@ app.get('/notifications', async (req, res) => {
 
 app.post('/notifications', async (req, res) => {
   try {
-    const { user_id, comment, read_status, submission_date, completion_date, approval_date } = req.body;
-
-    // Insert the new notification into the database
+    const {
+      user_id,
+      comment,
+      read_status,
+      completion_date,
+      approval_date,
+      training_id, // Make sure you have training_id in the request body
+    } = req.body;
 
     const newNotification = await knex('training_status').insert({
       user_id,
       comment,
       read_status,
-      submission_date,
+      submission_date: new Date().toISOString(), // Use current date for submission_date
       completion_date,
       approval_date,
+      training_id,
     });
-console.log(newNotification)
+
     res.status(201).json({ message: 'Notification sent successfully', notificationId: newNotification[0] });
   } catch (error) {
     res.status(500).json({ message: 'Error sending notification', error });
@@ -1009,13 +1015,16 @@ app.get('/notifications/:user_id', async (req, res) => {
 //Endpoint for marking Notifications as read
 app.patch('/notifications/:id', async (req, res) => {
   try {
-    const notificationsId = req.params.id;
+    const { id } = req.params;
+    const { read_status, completion_date, approval_date } = req.body;
+
     await knex('training_status')
-    .where({ id: notificationsId })
-    .update({ read_status: true });
-    res.json({ message: 'Notification marked as read' });
+      .where({ id })
+      .update({ read_status, completion_date, approval_date });
+
+    res.json({ message: 'Notification marked as read, completion date updated, and approval date updated' });
   } catch (error) {
-    res.status(500).json({ message: 'Error marking notification', error });
+    res.status(500).json({ message: 'Error marking notification as read and updating dates', error });
   }
 });
 
