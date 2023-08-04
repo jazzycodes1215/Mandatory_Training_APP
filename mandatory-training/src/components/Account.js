@@ -191,7 +191,7 @@ export default function Account() {
         });
     }
 
-    const handlePatch = () => {
+    const handlePatch = async () => {
         if(!password)
         {
             return;
@@ -201,8 +201,24 @@ export default function Account() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, newPassword: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
         })
-            .then(res => {
+            .then(async res => {
                 if (res.ok) {
+                    let userData = {email: email.replace(/\s/g, ''), password: password.replace(/\s/g, '')}
+
+                    let header = {method: "POST",
+                    headers: {
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(userData)};
+
+                    let response = await fetch(`${fetchURL}/login`, header)
+                    let status = response.status;
+                    let data = await response.json();
+                    if(status === 201)
+                    {
+                    console.log("Success")
+                    setToken(data.token)
+                    }
                     return res.json();
                 } else {
                     return res.json().then(data => { throw new Error(data.error) });
@@ -244,7 +260,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectSupervisor">Supervisor:</Label>
-                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ?? `${supervisorAccount.first_name} ${supervisorAccount.last_name}`} required></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ?? (supervisorAccount.first_name && supervisorAccount.last_name ? (`${supervisorAccount.first_name} ${supervisorAccount.last_name}`) : '')} required></InputAccountInfo>
                     <datalist id="supervisors">
                         {users?.map((element)=> {
                             return (
