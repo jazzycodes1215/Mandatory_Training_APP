@@ -7,7 +7,7 @@ exports.seed = async function(knex) {
   await knex('trainings').del()
   await knex('trainings').insert([
     {name: 'Cyber Awareness Training', interval: 365, source: 'https://lms-jets.cce.af.mil/moodle/course/view.php?id=12980', type_id: 2},
-    {name: 'Contilled Unclassified Information (CUI) Training', interval: 365, source: 'https://lms-jets.cce.af.mil/moodle/course/view.php?id=11998', type_id: 2},
+    {name: 'Controlled Unclassified Information (CUI) Training', interval: 365, source: 'https://lms-jets.cce.af.mil/moodle/course/view.php?id=11998', type_id: 2},
     {name: 'Antiterrorism / Force Protection', interval: 730, source: 'https://lms-jets.cce.af.mil/moodle/my/', type_id: 2},
     {name: 'Security Training', interval: 365, source: 'SEE SECURITY MANAGER', type_id: 2},
     {name: 'Comsec Training', interval: 365, source: 'SEE COMSEC RESPONSIBLE OFFICER', type_id: 2},

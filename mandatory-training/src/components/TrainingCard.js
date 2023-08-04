@@ -51,7 +51,7 @@ export default function Card(props) {
               </TrainingCardMid>
             <TrainingCardBot>
             <Link to={`/training-UTM/${training.id}`}>
-              <IconButton aria-label="info">
+              <IconButton aria-label="info" title="View this training">
               <InfoIcon />
               </IconButton>
             </Link>

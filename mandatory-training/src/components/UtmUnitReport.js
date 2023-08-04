@@ -41,7 +41,7 @@ export default function UtmUnitReport({ unitReadinessData }) {
   };
 
   return (
-    <button id="download-btn" onClick={handleDownloadReport}>
+    <button id="download-btn" onClick={handleDownloadReport} title="Download Unit Readiness Report">
       <img src={myDown} alt='download button'></img>
       </button>
   );
