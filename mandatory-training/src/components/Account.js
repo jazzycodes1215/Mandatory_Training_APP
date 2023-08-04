@@ -22,9 +22,9 @@ export default function Account() {
     const [firstname, setFirst] = useState(null);
     const [lastname, setLast] = useState(null);
     const [email, setEmail] = useState(null);
-    const [unitid, setUnit] = useState(null);
+    const [unitid, setUnit] = useState(1);
     const [password, setPassword] = useState(null);
-    const [rank, setRank] = useState(null);
+    const [rank, setRank] = useState(1);
     const [updated, setUpdated] = useState(false);
     const [userDuties, setUserDuties] = useState([]);
     const [duties, setDuties] = useState([]);
@@ -151,6 +151,7 @@ export default function Account() {
 
     const handleEditModeOn = () => {
         setEditMode(true);
+        fetchAccount();
     }
 
     const handleCancelEdit = () => {
@@ -160,9 +161,7 @@ export default function Account() {
 
     const handleSubmitDetails = () => {
         setEditMode(false);
-        setUpdated(!updated);
         handlePatch();
-        handlePut();
     }
 
     const handleSelectDutiesChange = (e) => {
@@ -202,7 +201,7 @@ export default function Account() {
         return fetch(`${fetchURL}/registration/${userID}`,{
             method:"PATCH",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, newPassword: password, rank_id: rank, email: email, supervisor_id: supervisorId, role_id: role === 1 ? 2 : role})
+            body: JSON.stringify({first_name: firstname, last_name: lastname, password: password, newPassword: password, rank_id: rank, email: email, supervisor_id: supervisorId ? supervisorId : supervisorAccount.id, unit_id: unitid, role_id: role === 1 ? 2 : role})
         })
             .then(async res => {
                 if (res.ok) {
@@ -229,6 +228,8 @@ export default function Account() {
             })
             .then(data=>{
                 setUpdated(!updated);
+                handlePut();
+                fetchAccount();
             })
             .catch(err => {
                 window.alert(err.message);
@@ -258,8 +259,14 @@ export default function Account() {
         </Row>
         <Row>
             <Column>
-                <Label for="unit">Unit:</Label>
-                <AccountInfo id="unit">{account.unit_name}</AccountInfo>
+                <Label for="selectSupervisor">Unit:</Label>
+                <SelectAccountInfo onChange={(e)=>{setUnit(e.target.value)}} id="selectUnit" defaultValue={account.unit_id} required>
+                    {units?.map((element)=> {
+                        return (
+                            <option value={element.id}>{element.name}</option>
+                        )
+                    })}
+                </SelectAccountInfo>
             </Column>
             <Column>
                 <Label for="selectSupervisor">Supervisor:</Label>
@@ -379,6 +386,7 @@ flex-direction: row;
 justify-content: space-between;
 align-items: center;
 padding: 10px;
+margin-top: 20px;
 `
 const AccountInfoContainer = styled.div`
 display: flex;

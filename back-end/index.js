@@ -106,7 +106,7 @@ app.get('/users/:id', async (req, res) => {
     const user = await knex('users')
       .leftJoin('ranks', 'users.rank_id', 'ranks.id')
       .leftJoin('units', 'users.unit_id', 'units.id')
-      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
+      .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.id as unit_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
     if (user) {
@@ -362,7 +362,7 @@ app.post('/registration', async (req, res) => {
 app.patch('/registration/:id', async (req, res) => {
   console.log(req.body)
   const userId = req.params.id
-  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id} = req.body;
+  const {first_name, last_name, rank_id, email, password, newPassword, supervisor_id, role_id, unit_id} = req.body;
   const hashedPass = bcrypt.hashSync(newPassword, 10)
   const userAccountUpdate = {
       first_name: first_name,
@@ -371,7 +371,8 @@ app.patch('/registration/:id', async (req, res) => {
       email: email,
       password: hashedPass,
       supervisor_id: supervisor_id,
-      role_id: role_id
+      role_id: role_id,
+      unit_id: unit_id
   }
 
   try {
