@@ -135,6 +135,7 @@ const forceUpdate = useForceUpdate();
             <IconButton onClick={()=>(EditPage())}>
               <EditIcon/>
             </IconButton>
+            
             <IconButton onClick={deleteTraining}>
               <DeleteIcon/>
             </IconButton>

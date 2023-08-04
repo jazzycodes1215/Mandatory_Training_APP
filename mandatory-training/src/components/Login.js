@@ -22,10 +22,18 @@ export default function Login() {
     const [pwd, setpwd] = useState("");
     const[error, setError] = useState(null);
     const navigate = useNavigate();
-
-    const vidRef = useRef();
+    const [firstTimeUser, setFirstTimeUser] = useState(false);
 
     useEffect(()=> {
+
+    const isFirstTime = localStorage.getItem('firstTimeUser') === null;
+
+    if (isFirstTime) {
+      // Set the firstTimeUser state to true and update local storage
+      setFirstTimeUser(true);
+      localStorage.setItem('firstTimeUser', 'false');
+      navigate('/Splash')
+    }
         console.log(validToken);
         if(validToken)
         {
@@ -69,7 +77,7 @@ export default function Login() {
     }
     return (
         <>
-       <video id="background-video" ref={ vidRef } autoPlay loop muted>
+       <video id="background-video" autoPlay loop muted>
             <source src={vid} type="video/mp4" />
             Your browser does not support the video tag.
          </video>
