@@ -144,7 +144,7 @@ export default function UtmNotifications() {
               Delete
             </button>
             <button className="mark-as-read-button" onClick={() => handleMarkAsRead(notification.id)}>
-              Mark as Read
+              Mark as Read/Complete
             </button>
             <button className="mark-as-unread-button" onClick={() => handleMarkAsUnread(notification.id)}>
               Mark as Unread
