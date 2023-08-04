@@ -160,6 +160,7 @@ export default function Account() {
 
     const handleSubmitDetails = () => {
         setEditMode(false);
+        setUpdated(!updated);
         handlePatch();
         handlePut();
     }
@@ -246,7 +247,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectSupervisor">Supervisor:</Label>
-                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ?? `${supervisorAccount.first_name} ${supervisorAccount.last_name}`} required></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ? `${supervisorAccount.first_name} ${supervisorAccount.last_name}` : ''} required></InputAccountInfo>
                     <datalist id="supervisors">
                         {users?.map((element)=> {
                             return (
