@@ -56,7 +56,6 @@ export default function RequiredTraining() {
             const data = await response.json();
             setTrainingStatus(data);
             setRequiredTraining(data);
-            console.log(data);
         } catch (error) {
             console.error('Error fetching training statuses', error);
         }
@@ -153,34 +152,26 @@ export default function RequiredTraining() {
                 }
                 return subordinate.map((training, index)=> {
                     let dueDate = null;
+                    let complete;
                     if (training.most_recent_completion_date) {
                         const completionDate = new Date(training.most_recent_completion_date);
                         const completed = completionDate.toISOString().split('T')[0];
                         const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
                         const newDueDate = new Date(completionDate.getTime() + intervalInMilliseconds);
                         dueDate = newDueDate.toISOString().split('T')[0];
+                        complete = 'Completed'
                     } else {
-                        const today = new Date();
-                        const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
-                        const newDueDate = new Date(today.getTime() + intervalInMilliseconds);
-                        dueDate = newDueDate.toISOString().split('T')[0];
+                        dueDate = "Overdue"
+                        complete = 'Not Completed'
                     }
                     let dueDateEpoch = Date.parse(dueDate)
-                    if(dueDateEpoch < Date.now())
-                    {
-                        training['due'] = true;
-                    }
-                    else
-                    {
-                        training['due'] = false;
-                    }
 
                     const listItemStyle = {
                         marginBottom: '20px',
                         padding: 0,
                         borderRadius: '5px',
-                        border: training['due'] ? '1px solid #ff6347' : '1px solid #98fb98',
-                        backgroundColor: training['due'] ? '#ffe4e1' : '#f0fff0'
+                        border: complete === 'Not Completed' ? '1px solid #ff6347' : '1px solid #98fb98',
+                        backgroundColor: complete === !'Not Completed' ? '#ffe4e1' : '#f0fff0'
                       }
 
                     return (
@@ -203,8 +194,7 @@ export default function RequiredTraining() {
                         />
                         </ListItem>
                         </div>
-                    )
-                })
+                    )})
             })}
         </List>
     )
@@ -256,26 +246,20 @@ export default function RequiredTraining() {
                                             background: '#555',
                                         },
                                         }}>
-                                        { requiredTraining ? requiredTraining.map((training, index) => {
+                                        { requiredTraining ? requiredTraining.map((training, index)=> {
 
-                                            let found = completionDates.find((status) => status.name === training.training_name);
-                                            let dueDate;
-                                            let completed;
-                                            if (found && found.completion_date) {
-                                                const completionDate = new Date(found.completion_date);
-                                                completed = completionDate.toISOString().split('T')[0];
+                                            let dueDate = null;
+                                            let complete;
+                                            if (training.most_recent_completion_date) {
+                                                const completionDate = new Date(training.most_recent_completion_date);
+                                                const completed = completionDate.toISOString().split('T')[0];
                                                 const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
                                                 const newDueDate = new Date(completionDate.getTime() + intervalInMilliseconds);
-                                                dueDate = newDueDate.toISOString().split('T');
+                                                dueDate = newDueDate.toISOString().split('T')[0];
+                                                complete = 'Completed'
                                             } else {
-                                                const today = new Date();
-                                                if(!training.interval) {
-                                                    training.interval = 0;
-                                                }
-                                                const intervalInMilliseconds = training.interval * 24 * 60 * 60 * 1000;
-                                                const newDueDate = new Date(today.getTime() + intervalInMilliseconds);
-                                                dueDate = newDueDate.toISOString().split('T');
-                                                completed = 'Not completed'
+                                                dueDate = "Overdue"
+                                                complete = 'Not Completed'
                                             }
                                             let dueDateEpoch = Date.parse(dueDate)
                                             if(dueDateEpoch < Date.now())
@@ -291,32 +275,31 @@ export default function RequiredTraining() {
                                                 marginBottom: '20px',
                                                 padding: 0,
                                                 borderRadius: '5px',
-                                                border: training['due'] ? '1px solid #ff6347' : '1px solid #98fb98',
-                                                backgroundColor: training['due'] ? '#ffe4e1' : '#f0fff0'
+                                                border: complete === 'Not Completed' ? '1px solid #ff6347' : '1px solid #98fb98',
+                                                backgroundColor: complete === !'Not Completed' ? '#ffe4e1' : '#f0fff0'
                                             }
 
                                             return (
                                                 <div style={listItemStyle}>
                                                 <ListItem
-                                                key={index}
-                                                disableGutters
-                                                secondaryAction={
-                                                    <Link to={`/required-training/${training.training_id}`}>
-                                                        <IconButton aria-label="info">
-                                                        <InfoIcon />
-                                                        </IconButton>
-                                                    </Link>
+                                                    key={index}
+                                                    disableGutters
+                                                    secondaryAction={
+                                                <Link to={`/required-training/${training.training_id}`}>
+                                                    <IconButton aria-label="info">
+                                                    <InfoIcon />
+                                                    </IconButton>
+                                                </Link>
                                                 }
                                                 >
                                                 <ListItemText
-                                                primary={training.training_name}
-                                                secondary={
-                                                    `Last Completed: ${completed}, Training Interval: ${training.interval? `${training.interval} days` : 'N/A'}, Due: ${dueDate}`
-                                                }/>
+
+                                                primary={`${training.training_name}`}
+                                                secondary={`Completed: ${complete} Due: ${dueDate}`}
+                                                />
                                                 </ListItem>
                                                 </div>
-                                            )
-                                        }) : null}
+                                            )}) : null}
                                     </List>
                                 </ListContainer>
                             </AccordionDetails>
