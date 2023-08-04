@@ -33,9 +33,15 @@ p {
 }
 
 button {
-    background-color: #007BFF;
-    padding: 10px 116px;
-}
+    background-color: rgba(0, 0, 0, 0.503);
+    color: white;
+    font-size: .75em;
+    padding: 0.7em 4em;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .3s ease;
+
 
     &:hover {
         transition: all .5s ease;
@@ -44,7 +50,7 @@ button {
         border: 1px solid #1976d2;
         color: #1976d2;
     }
-
+}
 
 .errorLogin {
     color: red;

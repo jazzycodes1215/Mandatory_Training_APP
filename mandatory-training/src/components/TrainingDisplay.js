@@ -6,6 +6,11 @@ import useUserCheck from '../hooks/useUserCheck'
 import SubmitBug from './SubmitBug'
 import FileUpload from './FileUpload'
 import FadeAwayMessage from './FadeAwayMessage'
+import TrainingDisplayUTM from  './TrainingDisplay UTM-ADMIN';
+import '../stylesheets/training.css'
+import chevron from '../Icons/16px/chevron.svg'
+
+import { boxStyle, gridStyle } from './TrainingDisplay UTM-ADMIN';
 
 import { Box, Button, List, ListItem, ListItemText, IconButton, Accordion, AccordionSummary, AccordionDetails, Grid, Divider  } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -13,7 +18,7 @@ import StarIcon from '@mui/icons-material/Star';
 import PeopleIcon from '@mui/icons-material/People';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function TrainingDisplay() {
+export default function TrainingDisplay(props) {
   const {training} = useParams();
   const [displaySubmit, setDisplaySubmit] = useState(false);
   const [displayFileUpload, setDisplayFileUpload] = useState(false);
@@ -32,8 +37,9 @@ export default function TrainingDisplay() {
     const data = await response.json();
     setTrainingData(data);
   }
-
+  console.log('props:', props.supervisor)
   const fetchSubordinates = async () => {
+
 
     if(!unitID)
     {
@@ -128,6 +134,7 @@ export default function TrainingDisplay() {
           submission_date: new Date().toISOString(),
           comment,
           read_status: false,
+          training_name: trainingData.name
         }),
       });
   
@@ -154,15 +161,18 @@ console.log(userID)
       {displaySubmit ? <SubmitBug trainingId={training} setDisplay={setDisplaySubmit} userId={userID}/>: null}
       {displayFileUpload ?
       <SubmitOverlay>
-        <Form>
-          <div>
-            <CloseButton onClick={()=>setDisplayFileUpload(false)}>X</CloseButton>
-            <p>{errorMessage ? <FadeAwayMessage message={errorMessage} duration={10000}/> : null}</p>
-          </div>
+        <Form  id="file-upload">
+        <h2>Submit Certificate</h2>
           <FileUpload setErrorMessageCB={setErrorMessage}/>
+          <CloseButton onClick={()=>setDisplayFileUpload(false)}>close</CloseButton>
+          <p>{errorMessage ? <FadeAwayMessage message={errorMessage} duration={10000}/> : null}</p>
         </Form>
       </SubmitOverlay> : null}
-      <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+      <div className='top-div2'>
+        <h1>My Training</h1>
+     </div>
+      <ButtonTraining id="back-btn" onClick={()=>navigate(-1)}>
+        <img src={chevron} alt="left back button"></img></ButtonTraining>
       {trainingData ?
       <FlexDiv>
       <LeftDiv>
@@ -172,63 +182,45 @@ console.log(userID)
         </ListTitle>
         <SubDiv>
           <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: 'fit-content',
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              borderRadius: 1,
-              bgcolor: 'background.paper',
-              color: 'text.secondary',
-              '& svg': {
-                m: 1.5,
-              },
-              '& hr': {
-                mx: 2,
-              },
-            }}
-          >
-                <Grid>
-                  {trainingData.type_name}
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid>
-                  {`Time Requirement: ${trainingData.interval ? `${trainingData.interval} ${trainingData.interval ===1 ? 'Day' : 'Days'}` : "One Time"}`}
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid>
-                  {`Source: ${trainingData.source}`}
-                </Grid>
-              </Box>
-          </SubDiv>
-        <Box
-          sx={{
-            display: 'flex',
+            sx={{display: 'flex',
             alignItems: 'center',
-            width: '95%',
-            height: '80%',
-            border: (theme) => `3px solid ${theme.palette.divider}`,
+            fontSize: "x-large",
+            width: '100%',
+            margin: "20px",
+            border: (theme) => `1px solid ${theme.palette.divider}`,
             borderRadius: 1,
             bgcolor: 'background.paper',
             color: 'text.secondary',
-            marginTop: '1vh',
-            marginLeft: '1vw',
             '& svg': {
               m: 1.5,
             },
             '& hr': {
-              mx: 0.5,
-            },
-          }}>
-
-        </Box>
+              mx: 2,
+            }}}
+          >
+                <Grid
+                sx={{gridStyle}}>
+                  {trainingData.type_name}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid
+                sx={{gridStyle}}>
+                  {`Time Requirement: ${trainingData.interval ? `${trainingData.interval} ${trainingData.interval ===1 ? 'Day' : 'Days'}` : "One Time"}`}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid 
+                sx={{gridStyle}}>
+                  {`Source: ${trainingData.source}`}
+                </Grid>
+              </Box>
+          </SubDiv>
       </LeftDiv>
       <Divider sx={{height: '75vh'}} orientation="vertical" flexItem />
       <RightDiv>
-        <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining>
+        {/* <ButtonTraining onClick={()=>navigate(`/training-UTM/${training}`)}>Go To Training</ButtonTraining> */}
         <ButtonTraining onClick={()=>setDisplayFileUpload(!displayFileUpload)}>Submit Certificate</ButtonTraining>
-        <ButtonTraining onClick={handleSubmitTraining}>Submit Training</ButtonTraining>
-        <div>
+        <ButtonTraining onClick={handleSubmitTraining}>Mark Complete</ButtonTraining>
+        <div className='inner-right'>
   {submissionFeedback.message && (
     <FeedbackMessage success={submissionFeedback.success}>
       {submissionFeedback.message}
@@ -236,7 +228,8 @@ console.log(userID)
   )}
 </div>
         {subordinateData ?
-        <div>
+        <div className='inner-right2'>
+          <div className='stats'>
            <h3>Subordinate Completion Status</h3>
             <Box>
               Overdue: {Number.parseFloat((1 - overduePercentage) * 100).toFixed(2)} %
@@ -248,6 +241,7 @@ console.log(userID)
             <Box>
               {overdue ? overdue?.map(element=><p>{element}</p>) : null}
             </Box>
+            </div>
           <ButtonTraining onClick={()=>setDisplaySubmit(!displaySubmit)}>Submit Bug</ButtonTraining>
         </div>
         : fetchTraining()}
@@ -292,13 +286,16 @@ const SubmitOverlay = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: -10px;
-  left: 10px;
-  font-size: 24px;
+  right: 41.3%;
+  bottom: 15px;
+  font-size: 10px;
+  padding: 5px 20px;
   background: transparent;
   border: none;
-  color: #000;
+  color: white;
   cursor: pointer;
+  background-color: red;
+  
 `;
 
 const Form = styled.div`
@@ -325,9 +322,11 @@ overflow: hidden;
 display: flex;`
 
 const LeftDiv = styled.div`
-width: 75vw;
-overflow: hidden;
-align-items: center;
+display: flex;
+    flex-direction: column;
+    width: 75vw;
+    overflow: hidden;
+    justify-content: center;
 `
 
 const RightDiv = styled.div`
@@ -335,32 +334,30 @@ width: 25vw;
 overflow: hidden;
 display: flex;
 flex-direction: column;
+align-items: center;
+justify-content: space-between
 
 `
 
 const SubDiv = styled.div`
-overflow: hidden;
-margin-left: 3vw;`
+display: flex;
+align-items: flex-start;
+height: 50%;`
 
 const ButtonTraining = styled.button`
-    background-color: MidnightBlue;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    margin-top: 4vh;
-    border: 2px solid #007BFF;
-    border-radius: 3px;
-    cursor: pointer;
-
+background-color: black;
+color: white;
+font-size: 1.5em;
+padding: 0.7em 4em;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: all .3s ease;
+margin-bottom: 30px;
     &:hover {
         background-color: white;
         color: #007BFF;
-    }
-
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3; // Darker blue border
+        border: 1px solid #007BFF
     }
 `;
 
@@ -368,11 +365,16 @@ const ListTitle = styled.div`
 display: flex;
 flex-direction: row;
 width: 100%;
+align-items: center;
 `;
 const ListHeader = styled.span`
+display: flex;
+flex-direction: row;
+align-items: center;
 font-size: xxx-large;
 font-weight: 700;
 `;
+
 const ListSubHeader = styled.span`
 font-size: x-large;
 `;

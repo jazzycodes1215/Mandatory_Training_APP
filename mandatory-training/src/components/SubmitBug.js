@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {fetchURL} from '../App'
 import styled from 'styled-components';
+import '../stylesheets/training.css'
 
 export default function SubmitBug({ trainingId, setDisplay, userId }) {
   const [description, setDescription] = useState("");
@@ -28,16 +29,16 @@ export default function SubmitBug({ trainingId, setDisplay, userId }) {
   return (
     <SubmitOverlay>
       {message && <Message>{message}</Message>}
-      <Form onSubmit={handleSubmit}>
-      <CloseButton onClick={()=>setDisplay(false)}>X</CloseButton>
-        <h1>Report a Bug</h1>
+      <Form id="bug-form" onSubmit={handleSubmit}>
+      <CloseButton onClick={()=>setDisplay(false)}>Close</CloseButton>
+        <h2>Report a Bug</h2>
         <InputLabel>Training ID (Auto-filled)</InputLabel>
         <Input
           type="number"
           value={trainingId}
           readOnly
         />
-
+        <InputLabel>Bug Description</InputLabel>
         <Textarea
           placeholder="Describe the bug..."
           value={description}
@@ -45,7 +46,7 @@ export default function SubmitBug({ trainingId, setDisplay, userId }) {
           required
         />
 
-        <Button type="submit">Submit</Button>
+        <Button id="sub-bug" type="submit">Submit</Button>
       </Form>
     </SubmitOverlay>
   );
@@ -78,14 +79,16 @@ const SubmitOverlay = styled.div`
 `;
 
 const CloseButton = styled.button`
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  font-size: 24px;
-  background: transparent;
-  border: none;
-  color: #000;
-  cursor: pointer;
+position: absolute;
+right: 41.3%;
+bottom: 15px;
+font-size: 10px;
+padding: 5px 20px;
+background: transparent;
+border: none;
+color: white;
+cursor: pointer;
+background-color: red;
 `;
 
 const Form = styled.form`
@@ -96,6 +99,7 @@ const Form = styled.form`
   padding: 2rem;
   border-radius: 8px;
   width: 300px;
+  height: 35%;
 `;
 
 const Input = styled.input`

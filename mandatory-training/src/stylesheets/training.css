@@ -17,7 +17,6 @@
 }
 
 .type-btns > button {
-    
     color: white;
     font-size: 1em;
     margin: 1em 0;
@@ -57,23 +56,31 @@
     ;
 }
 
+.mid > a {
+    text-decoration: none;
+    color: #1976d2;
+}
+
 .editTraining {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 52%;
+    justify-content: space-around;
+    width: 7%;
 }
 
 
 .editTraining > button {
-    display: flex;
     color: #3478b2;
     background-color: white;
     border: 1px solid #3478b2;
-    justify-content: center;
+    border-radius: 20%;
+    align-self: center;
     font-size: 30px;
+    transition: all .1;
     
+    &:hover {
+        border: 2px solid rgba(25, 118, 210);
+    }
 }
 
 .editTraining > button > p {
@@ -81,7 +88,7 @@
 }
 
 .editTraining > button > img {
-    width: 25px;
+    width: 30px;
     height: auto;
 }
 
@@ -91,6 +98,16 @@
     justify-content: center;
     height: 40%;
 
+}
+
+.black {
+    margin-top: 30px;
+    color: #fff;
+    background-color: black;
+}
+
+.blacky {
+    color: black;
 }
 
 .personnel-overdue {
@@ -106,7 +123,7 @@
 }
 
 .changeMe {
-    color: #007BFF;
+    color: #1976d2;
 }
 
 .subheading {
@@ -150,6 +167,194 @@ padding-right: 60px;
     }
 }
 
+/* styles.css */
+.large-link {
+  font-size: 175%;
+}
+
+.top-div {
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+text-transform: uppercase;
+width: 95%;
+margin: 40px 0 40px 40px;
+}
+
+.top-div > h1 {
+    padding-left: 100px;
+}
+
+.bot-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: 1px grey solid;
+    width: 80%;
+    border-radius: 30px;
+    height: 40%;
+}
+
+.bot-div > h2 {
+    color: grey;
+}
+
+.top-div2 {
+display: flex;
+flex-direction: row;
+justify-content: center;
+padding-top: 40px;
+text-transform: uppercase;
+width: 100%;
+
+}
+
+.inner-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inner-right2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 60%;
+    justify-content: space-between;
+}
+
+.inner-right2 > button {
+   padding: 10px 20px;
+   font-size: 10px;
+   background-color: red;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50%; 
+}
+
+#file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 20%;
+    text-transform: uppercase;
+}
+
+#upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+  
+}
+
+#upload > input {
+    width: 70%;
+    padding-top: 50px;
+    padding-left: 50px;
+
+    &::file-selector-button {
+        background-color: black;
+        color: white;
+        font-size: .75em;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all .3s ease;
+        margin-bottom: 30px;
+    }
+
+    &::file-selector-text {
+
+    }
+}
+
+#upload > button {
+    margin-bottom: 20px;
+}
+
+
+#back-btn {
+    position: relative;
+    top: 75px;
+    background-color: white;
+    border-radius: 20%;
+    border: 1px solid rgba(25, 118, 210);
+    padding: 6px 5px 0 5px ;
+    left: 10px;
+    transition: all .1s ease;
+
+    &:hover {
+        border: 2px solid rgba(25, 118, 210);
+    }
+}
+
+#back-btn > img {
+   width: 30px;
+   height: auto;
+}
+
+   #back-btn2 {
+    align-self: flex-start;
+    justify-self: flex-start;
+    background-color: white;
+    border-radius: 20%;
+    border: 1px solid rgba(25, 118, 210);
+    padding: 6px 5px 0 5px ;
+    transition: all .1s ease;
+
+    &:hover {
+        border: 2px solid rgba(25, 118, 210);
+    }
+   }    
+
+#back-btn2 > img {
+   width: 30px;
+   height: auto;
+}
+
+#bug-form {
+    justify-content: space-evenly;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#training-head {
+    padding-left: 170px;
+}
+
+#sub-bug {
+    background-color: black;
+}
+
+#createSub {
+    background-color: black;
+    color: white;
+    font-size: .75em;
+    padding: 0.7em 4em;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .3s ease;
+
+
+    &:hover {
+        transition: all .5s ease;
+
+        background-color: white;
+        border: 1px solid #1976d2;
+        color: #1976d2;
+    }
+}
 .highlighted {
     background-color: black;
 }

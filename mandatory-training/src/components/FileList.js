@@ -45,7 +45,7 @@ const FileList = ({ userID, onFileSelect }) => {
           </li>
         ))}
       </ul>
-      {selectedFile && <FileView file={selectedFile} />}
+      {selectedFile && <FileView userID={userID} file={selectedFile} />}
     </div>
   );
 };
