@@ -167,6 +167,9 @@ console.log(userID)
           <p>{errorMessage ? <FadeAwayMessage message={errorMessage} duration={10000}/> : null}</p>
         </Form>
       </SubmitOverlay> : null}
+      <div className='top-div2'>
+        <h1>My Training</h1>
+     </div>
       <ButtonTraining id="back-btn" onClick={()=>navigate(-1)}>
         <img src={chevron} alt="left back button"></img></ButtonTraining>
       {trainingData ?

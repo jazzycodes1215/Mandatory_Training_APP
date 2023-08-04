@@ -112,7 +112,7 @@ export default function CreateTraining() {
           </Column>
           <Column>
             <Label for="selectType">Training Type</Label>
-              <SelectTrainingInfo onChange={(e)=>{setType(e.target.value)}} id="selectType" required>
+              <SelectTrainingInfo className="clickable" onChange={(e)=>{setType(e.target.value)}} id="selectType" required>
                 <option value="null">Select a training type</option>
                 <option value="1">Primary Training</option>
                 <option value="2">Auxilary Training</option>
@@ -159,7 +159,7 @@ export default function CreateTraining() {
         <Row>
           <Column>
             <Label for="selectDuties">Training Duties:</Label>
-            <SelectTrainingInfo onChange={handleSelectDuties} id="selectDuties" multiple required>
+            <SelectTrainingInfo className='clickable' onChange={handleSelectDuties} id="selectDuties" multiple required>
               {dutyOptions?.map((element)=> {
                 return (
                   <option value={element.id}>{element.title}</option>
@@ -174,7 +174,7 @@ export default function CreateTraining() {
         </Row>
       </TrainingInputContainer>
       <ButtonContainer>
-        <Button variant="contained" onClick={handleSubmit} sx={{backgroundColor: 'MidnightBlue'}}>Submit Training</Button>
+        <Button id="createSub" variant="contained" onClick={handleSubmit}>Submit Training</Button>
       </ButtonContainer>
     </CreateTrainingWrapper>
   )

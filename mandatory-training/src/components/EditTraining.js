@@ -97,7 +97,7 @@ return (
           <Box sx={boxStyle}>
                 <Grid sx={gridStyle}>
                   <h5>Type:</h5>
-                  <Select
+                  <Select className="changeMe"
                     value={updatedType !== null ? updatedType : trainingData.type_id}
                     onChange={(e) => setUpdatedType(parseInt(e.target.value))}
                   >
@@ -120,7 +120,7 @@ return (
               </Box>
           </SubDiv>
           <ButtonContainer>
-            <button onClick={()=>(handleUpdates())}> Save Changes </button>
+            <button className="black" onClick={()=>(handleUpdates())}> Save Changes </button>
           </ButtonContainer>
       </LeftDiv>
       </>
