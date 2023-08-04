@@ -161,6 +161,7 @@ console.log(userID)
       {displayFileUpload ?
       <SubmitOverlay>
         <Form  id="file-upload">
+        <h2>Submit Certificate</h2>
           <FileUpload setErrorMessageCB={setErrorMessage}/>
           <CloseButton onClick={()=>setDisplayFileUpload(false)}>close</CloseButton>
           <p>{errorMessage ? <FadeAwayMessage message={errorMessage} duration={10000}/> : null}</p>
