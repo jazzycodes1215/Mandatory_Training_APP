@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import SchoolIcon from '@mui/icons-material/School';
 import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/Admin.css'
+import vid from '../videos/vid.mp4'
 
 export default function CreateUserAccount() {
 
@@ -52,32 +54,25 @@ export default function CreateUserAccount() {
     return (
         <>
         {validatedUserType === 3 || validatedUserType === 4 ?
+        
+       <> <video id="background-video" autoPlay loop muted>
+            <source src={vid} type="video/mp4" />
+            Your browser does not support the video tag.
+         </video>
         <section className="body">
         <div className="container">
             <section className="title"><SchoolIcon /><h1>UTM Tool</h1></section>
-            <section className="login">
+            <section className="login2">
                 {error ? <h2>{error}</h2> : <></>}
                 <h2>Welcome to UTM Tool</h2>
                 <p>Please Create an Account</p>
-                    {/* <label>First Name</label><input onChange={(e)=>setFirst(e.target.value)} type="textbox"></input>
-                    <label>Last Name</label><input onChange={(e)=>setLast(e.target.value)} type="textbox"></input>
-                    <label>Rank</label>
-                        <select onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
-                            <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
-                            <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
-                            <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
-                            <option value="10">O-1</option><option value="11">O-2</option><option value="12">O-3</option>
-                            <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
-                            <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
-                            <option value="19">O-10</option>
-                        </select> */}
-                    <label>Email</label><input onChange={(e)=>setEmail(e.target.value)} type="textbox"></input>
-                    <label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input>
-                    <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>
-                    <button onClick={HandleSubmit}className="button">Create Account</button>
+                   <div className='col'> <label>Email</label><input onChange={(e)=>setEmail(e.target.value)} type="textbox"></input></div>
+                    <div className='col'><label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input></div>
+                    <div className='col'><label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input></div>
+                    <button onClick={HandleSubmit} id="login2-btn">Create Account</button>
             </section>
         </div>
-    </section>
+    </section></>
     : <p>You must be an administrator or UTM Training Manager to access this page!</p> }
     </>
     )
