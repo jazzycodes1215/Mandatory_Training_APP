@@ -267,7 +267,7 @@ export default function Account() {
                     <datalist id="supervisors">
                         {users?.map((element)=> {
                             return (
-                                <option value={`${element.first_name} ${element.last_name}`}>{element.name}</option>
+                                <option value={`${element.first_name} ${element.last_name}`}>{element.unit_name}</option>
                             )
                         })}
                     </datalist>
