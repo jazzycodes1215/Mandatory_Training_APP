@@ -59,12 +59,25 @@ app.get('/', (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await knex('users')
-    .join('units', 'users.unit_id', 'units.id')
-    .select('users.id', 'email', 'dodID', 'first_name', 'last_name', 'units.name', 'password', 'rank_id', 'role_id', 'supervisor_id', 'unit_id')
-    .then(data => res.status(200).json(data));
+      .leftJoin('units', 'users.unit_id', 'units.id')
+      .select(
+        'users.id',
+        'email',
+        'dodID',
+        'first_name',
+        'last_name',
+        'units.name as unit_name', // Rename units.name to unit_name to avoid ambiguity
+        'password',
+        'rank_id',
+        'role_id',
+        'supervisor_id',
+        'unit_id'
+      )
+      .then(data => res.status(200).json(data));
   } catch (error) {
     res.status(500).json({
-      message: 'Error retrieving users', error
+      message: 'Error retrieving users',
+      error
     });
   }
 });
@@ -91,8 +104,8 @@ app.get('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await knex('users')
-      .join('ranks', 'users.rank_id', 'ranks.id')
-      .join('units', 'users.unit_id', 'units.id')
+      .leftJoin('ranks', 'users.rank_id', 'ranks.id')
+      .leftJoin('units', 'users.unit_id', 'units.id')
       .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
