@@ -59,12 +59,25 @@ app.get('/', (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await knex('users')
-    .join('units', 'users.unit_id', 'units.id')
-    .select('users.id', 'email', 'dodID', 'first_name', 'last_name', 'units.name', 'password', 'rank_id', 'role_id', 'supervisor_id', 'unit_id')
-    .then(data => res.status(200).json(data));
+      .leftJoin('units', 'users.unit_id', 'units.id')
+      .select(
+        'users.id',
+        'email',
+        'dodID',
+        'first_name',
+        'last_name',
+        'units.name as unit_name', // Rename units.name to unit_name to avoid ambiguity
+        'password',
+        'rank_id',
+        'role_id',
+        'supervisor_id',
+        'unit_id'
+      )
+      .then(data => res.status(200).json(data));
   } catch (error) {
     res.status(500).json({
-      message: 'Error retrieving users', error
+      message: 'Error retrieving users',
+      error
     });
   }
 });
@@ -91,8 +104,8 @@ app.get('/users/:id', async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await knex('users')
-      .join('ranks', 'users.rank_id', 'ranks.id')
-      .join('units', 'users.unit_id', 'units.id')
+      .leftJoin('ranks', 'users.rank_id', 'ranks.id')
+      .leftJoin('units', 'users.unit_id', 'units.id')
       .select('users.id', 'users.role_id', 'users.first_name', 'users.last_name', 'users.email', 'users.supervisor_id', 'units.name as unit_name', 'ranks.name as rank_name', 'ranks.id as rank_id')
       .where('users.id', userId)
       .first()
@@ -251,37 +264,71 @@ app.delete('/users/:id', async (req, res) => {
 
 //////////////////////////////////////////////////ACCOUNT CREATION PROCESS///////////////////////////////////////////////////////////////////////////
 //endpoint that allows UTM/admin to create an account
-app.post('/createAccount', async (req, res) => {
-  const {first_name, last_name, rank_id, email, dodID, role_id, supervisor_id, unit_id, password} = req.body
+// app.post('/createAccount', async (req, res) => {
+//   const {first_name, last_name, rank_id, email, dodID, password} = req.body
+//   const hashedPass = bcrypt.hashSync(password, 10)
+//   try {
+//     const newUser = {
+//       //id: id,
+//       first_name: first_name,
+//       last_name: last_name,
+//       rank_id: Number(rank_id),
+//       email: email,
+//       password: hashedPass,
+//       dodID: Number(dodID),
+//       role_id: 1,
+//       //supervisor_id: Number(supervisor_id),
+//       //unit_id: unit_id
+//     }
+//     console.log(newUser)
+//     let addedUser = await knex('users')
+//     .insert(newUser)
+//     .returning('*');
+
+//     addedUser = addedUser.map(user => {
+//       delete user/*.password*/;
+//       return user;
+//     })
+//       res.status(201).json({message: "Account creation Success", addedUser});
+//   } catch  (error) {
+//     console.error('Registration error:', error)
+//     res.status(500).json({ message: 'Error: account creation failed' });
+//   }
+// })
+
+app.post('/createAccount', function(req, res) {
+  const { email, dodID, password } = req.body;
   const hashedPass = bcrypt.hashSync(password, 10)
   try {
     const newUser = {
-      //id: id,
-      first_name: first_name,
-      last_name: last_name,
-      rank_id: Number(rank_id),
       email: email,
       password: hashedPass,
       dodID: Number(dodID),
       role_id: 1,
-      //supervisor_id: Number(supervisor_id),
-      //unit_id: unit_id
     }
     console.log(newUser)
-    let addedUser = await knex('users')
-    .insert(newUser)
-    .returning('*');
-
-    addedUser = addedUser.map(user => {
-      delete user/*.password*/;
-      return user;
-    })
-      res.status(201).json({message: "Account creation Success", addedUser});
-  } catch  (error) {
-    console.error('Registration error:', error)
-    res.status(500).json({ message: 'Error: account creation failed' });
-  }
-})
+    knex('users')
+      .select('id')
+      .where('dodID', dodID)
+      .then((existingUsers) => {
+          if (existingUsers.length > 0) {
+              return res.status(409).json({ error: 'User already exists' });
+          }
+          return knex('users')
+              .insert(newUser)
+              .returning('id')
+              .then((ids) =>
+                  res.status(201).json({
+                      message: 'Account created successfully',
+                      user_account_id: ids[0]
+                  })
+              );
+      })
+    } catch  (error) {
+      console.error('Registration error:', error)
+      res.status(500).json({ message: 'Error: account creation failed' });
+    }
+});
 
 // Endpoint for a user to register their account with a password provided by the Admin
 app.post('/registration', async (req, res) => {

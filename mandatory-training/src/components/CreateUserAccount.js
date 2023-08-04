@@ -8,12 +8,12 @@ import useUserCheck from '../hooks/useUserCheck'
 export default function CreateUserAccount() {
 
     const { testStr } = useContext(AppContext);
-    const [first, setFirst] = useState('');
-    const [last, setLast] = useState('');
+    // const [first, setFirst] = useState('');
+    // const [last, setLast] = useState('');
     const [id, setID] = useState(0);
     const [email, setEmail] = useState('');
     const [pwd, setpwd] = useState("");
-    const [rank, setRank] = useState('');
+    // const [rank, setRank] = useState('');
     const [error, setError] = useState(null);
     const {validatedUserType, validToken} = useUserCheck();
     const navigate = useNavigate();
@@ -25,8 +25,8 @@ export default function CreateUserAccount() {
     const HandleSubmit = async () =>
     {
         //Role supervisor and unit default to 0 for now
-        let userData = {first_name: first ? first : null, last_name: last ? last : null, email: email ? email : null, password: pwd,
-            dodID: id, rank_id: rank ? rank : 1, role_id: null, supervisor_id: null, unit_id: null}
+        let userData = { email: email, password: pwd,
+            dodID: id }
         console.log(userData);
         let header = {
         method: "POST",
@@ -40,7 +40,7 @@ export default function CreateUserAccount() {
         let data = await response.json();
         console.log(data);
         if(status === 201) {
-            alert('Account created successfully! Please log in with your new account.');
+            alert('Account created successfully!');
             navigate('/administrator');
         }
         else
@@ -59,7 +59,7 @@ export default function CreateUserAccount() {
                 {error ? <h2>{error}</h2> : <></>}
                 <h2>Welcome to UTM Tool</h2>
                 <p>Please Create an Account</p>
-                    <label>First Name</label><input onChange={(e)=>setFirst(e.target.value)} type="textbox"></input>
+                    {/* <label>First Name</label><input onChange={(e)=>setFirst(e.target.value)} type="textbox"></input>
                     <label>Last Name</label><input onChange={(e)=>setLast(e.target.value)} type="textbox"></input>
                     <label>Rank</label>
                         <select onChange={(e)=>{setRank(e.target.value)}} defaultValue="1" name="rank" id="agnosticRank">
@@ -70,7 +70,7 @@ export default function CreateUserAccount() {
                             <option value="13">O-4</option><option value="14">O-5</option><option value="15">O-6</option>
                             <option value="16">O-7</option><option value="17">O-8</option><option value="18">O-9</option>
                             <option value="19">O-10</option>
-                        </select>
+                        </select> */}
                     <label>Email</label><input onChange={(e)=>setEmail(e.target.value)} type="textbox"></input>
                     <label>DOD Id Number</label><input onChange={(e)=>setID(e.target.value)} type="textbox"></input>
                     <label>Password</label><input onChange={(e)=>setpwd(e.target.value)} type="password"></input>

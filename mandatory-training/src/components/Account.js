@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { AppContext, fetchURL } from '../App'
 import useUserCheck from '../hooks/useUserCheck'
+import '../stylesheets/Account.css'
 
 import { Button } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,6 +36,7 @@ export default function Account() {
         fetchDuties();
         fetchUsers();
         fetchUnits();
+        console.log(userID);
     }, [userID, validatedUserType, updated]);
 
     useEffect(() => {
@@ -158,6 +160,7 @@ export default function Account() {
 
     const handleSubmitDetails = () => {
         setEditMode(false);
+        setUpdated(!updated);
         handlePatch();
         handlePut();
     }
@@ -244,7 +247,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectSupervisor">Supervisor:</Label>
-                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ?? `${supervisorAccount.first_name} ${supervisorAccount.last_name}`} required></InputAccountInfo>
+                <InputAccountInfo onChange={(e)=>{setSupervisor(e.target.value)}} id="selectSupervisor" list="supervisors" value={supervisor ? `${supervisorAccount.first_name} ${supervisorAccount.last_name}` : ''} required></InputAccountInfo>
                     <datalist id="supervisors">
                         {users?.map((element)=> {
                             return (
@@ -257,7 +260,7 @@ export default function Account() {
         <Row>
             <Column>
                 <Label>Rank: </Label>
-                    <SelectAccountInfo onChange={(e)=>{setRank(e.target.value)}} defaultValue={account.rank_id} name="rank" id="agnosticRank">
+                    <SelectAccountInfo className='clickable' onChange={(e)=>{setRank(e.target.value)}} defaultValue={account.rank_id} name="rank" id="agnosticRank">
                         <option value="1">E-1</option><option value="2">E-2</option><option value="3">E-3</option>
                         <option value="4">E-4</option><option value="5">E-5</option><option value="6">E-6</option>
                         <option value="7">E-7</option><option value="8">E-8</option><option value="9">E-9</option>
@@ -269,7 +272,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="selectDuties">Duties:</Label>
-                <SelectAccountInfo onChange={handleSelectDutiesChange} id="selectDuties" multiple required>
+                <SelectAccountInfo className='clickable' onChange={handleSelectDutiesChange} id="selectDuties" multiple required>
                     {duties?.map((element)=> {
                         return (
                             <option value={element.id}>{element.title}</option>
@@ -308,7 +311,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="supervisor">Supervisor:</Label>
-                <AccountInfo id="supervisor">{`${supervisorAccount.first_name} ${supervisorAccount.last_name}`}</AccountInfo>
+                <AccountInfo id="supervisor">{supervisorAccount ? `${supervisorAccount.first_name} ${supervisorAccount.last_name}` : ''}</AccountInfo>
             </Column>
         </Row>
         <Row>
@@ -333,10 +336,10 @@ export default function Account() {
                     :
                     editMode ?
                         <div>
-                            <CancelIcon onClick={handleCancelEdit}/>
+                            <CancelIcon className='clickable' onClick={handleCancelEdit}/>
                         </div>
                         :
-                        <EditIcon onClick={handleEditModeOn}/>
+                        <EditIcon id="edit" onClick={handleEditModeOn}/>
                 }
             </AccountHeader>
             {editMode || validatedUserType === 1 ? EditDisplay : AccountDisplay}
@@ -345,7 +348,7 @@ export default function Account() {
             <p>Please login to view this page</p>}
             {validToken && (validatedUserType === 1 || editMode) ?
                 <ButtonContainer>
-                    <Button variant="contained" onClick={handleSubmitDetails} sx={{backgroundColor: 'MidnightBlue'}}>Submit Account Details</Button>
+                    <Button id="submit" variant="contained" onClick={handleSubmitDetails}>Submit Account Details</Button>
                 </ButtonContainer>
                 :
                 <></>

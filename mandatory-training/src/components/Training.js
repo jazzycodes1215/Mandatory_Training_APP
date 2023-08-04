@@ -81,7 +81,7 @@ export default function Training() {
 
     return (
         <>
-     <div className='subheading'>
+     <div id='training-head' className='subheading'>
         <h1>Training</h1>
         <Link to="/create-training">
           <img className='plus-btn' src={myPlus} alt="plus button"></img>
@@ -92,11 +92,6 @@ export default function Training() {
             <Type className='top'>
                 <h2>Type</h2>
                 <div className='type-btns'>
-                    {/* <button id='btn1' innerRef={active} className='activeBtn' onClick={() => HandleTabChange('', 1)}>All</button>
-                    <button id='btn2' innerRef={active} onClick={() => HandleTabChange('primaryTraining', 2)}>Primary Trainings</button>
-                    <button id='btn3' innerRef={active} onClick={() => HandleTabChange('auxTraining', 3)}>Auxilary Training</button>
-                    <button id='btn4' innerRef={active} onClick={() => HandleTabChange('PME', 4)}>Professional Military Education</button>
-                    <button id='btn5' innerRef={active} onClick={() => HandleTabChange('ADT', 5)}>Additional Duty Training</button> */}
 {buttonsData.map((button, index, tab) => (
         <button 
           key={button.id}

@@ -87,3 +87,23 @@
   height: auto;
   width: 40px;
 }
+
+.green {
+  background-color: #018501;
+  color: white;
+}
+
+.yellow {
+  background-color: #a7aa00;
+  color: white;
+}
+
+.orange {
+  background-color: #e28102;
+  color: white;
+}
+
+.red {
+  background-color: #ff0000;
+  color: white;
+}

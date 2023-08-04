@@ -1,7 +1,6 @@
 .personnel-management-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
     height: 90%;
     overflow-y: auto; /* Enable vertical scrolling when content overflows */
   }
@@ -87,12 +86,12 @@
    
     border-color: #ff6347; /* Red border for due training */
     background-color: #ffe4e1; /* Red background for due training */
-    font-weight: bold; /* Additional style to indicate due training */
+    font-weight: 500; /* Additional style to indicate due training */
   }
   
   .training-card.not-due {
     /* Add styles for the training card when it's not due */
-    border-color: #98fb98; /* Green border for not due training */
+    border-color: hsl(120, 82%, 61%); /* Green border for not due training */
     background-color: #f0fff0; /* Green background for not due training */
   }
 
@@ -110,8 +109,9 @@
     margin-bottom: 30px;
 
     &:hover {
-
       background-color: red;
+      border: white 1px solid;
+      color: white
     }
   }
 

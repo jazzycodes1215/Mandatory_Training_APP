@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import {fetchURL} from '../App'
 
-const FileView = ({ file }) => {
+const FileView = ({ userID, file }) => {
   const [fileData, setFileData] = useState(null);
   const [fileContent, setFileContent] = useState(null);
 
   const handleDownloadFile = async () => {
     try {
-      // Get the response headers to determine the file name and type
+      // Get the file name and type from the file object
       const fileType = file.file_type;
       const fileName = file.file_name;
 
-      // Create a Blob object from the file content
-      const fileBlob = new Blob([file.file_content], { type: fileType });
+      // Fetch the file content from the server
+      const response = await fetch(`${fetchURL}/upload/${userID}`);
+      const fileContent = await response.blob();
 
       // Create a URL for the Blob object
-      const fileURL = URL.createObjectURL(fileBlob);
+      const fileURL = URL.createObjectURL(fileContent);
 
       // Save the file data in state
       setFileData({

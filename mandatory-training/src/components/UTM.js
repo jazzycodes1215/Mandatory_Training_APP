@@ -23,16 +23,22 @@
 
     return (
       <>
-        {/* Buttons for notifications, unit readiness, and manage training */}
         <Button onClick={() => handleTabChange('notifications')}>Notifications</Button>
+        <Button onClick={() => handleTabChange('viewUploads')}>View Uploaded Certificates</Button>
+        <Button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</Button>
         <Button onClick={() => handleTabChange('unitReadiness')}>Unit Readiness</Button>
         <Button onClick={() => handleTabChange('manageTraining')}>Manage Training</Button>
-        <Button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</Button>
-        <Button onClick={() => handleTabChange('viewUploads')}>View Uploaded Certificates</Button>
 
-        {/* Conditional rendering based on the selected tab */}
         {selectedTab === 'notifications' && (
         <UtmNotifications />
+        )}
+
+        {selectedTab === 'viewUploads' && (
+        <UtmUploadView />
+        )}
+
+        {selectedTab === 'managePersonnel' && (
+        <UtmPersonnelManagement />
         )}
 
         {selectedTab === 'unitReadiness' && (
@@ -41,14 +47,6 @@
 
         {selectedTab === 'manageTraining' && (
         <Training />
-        )}
-
-        {selectedTab === 'managePersonnel' && (
-        <UtmPersonnelManagement />
-        )}
-
-        {selectedTab === 'viewUploads' && (
-        <UtmUploadView />
         )}
       </>
     );

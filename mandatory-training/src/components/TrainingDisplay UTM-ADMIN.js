@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
 import ContentEditable from 'react-contenteditable';
 import EditView from './EditTraining';
+import chevron from '../Icons/16px/chevron.svg'
 
 import { Box, IconButton, Grid, Divider  } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
@@ -59,10 +60,10 @@ const forceUpdate = useForceUpdate();
         throw new Error('Network response was not ok');
       }
 
-      console.log('Training deleted successfully');
+      alert('Training deleted successfully!');
       navigate('/unit-training-manager');
     } catch (error) {
-      console.error('Error deleting training:', error);
+      alert('Training deletion failed!');
     }
   };
 
@@ -73,10 +74,13 @@ const forceUpdate = useForceUpdate();
 
   return (
     <>
-    {!editmode && (
-      <div className='top-menu'>
-      <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+    {!editmode && (<>
+    <div className='top-div'>
+        <ButtonTraining id="back-btn2" onClick={()=>navigate(-1)}>
+        <img src={chevron} alt="left back button"></img></ButtonTraining>
+        <h1>View Training</h1>
           <div className='editTraining'>
+        
             <IconButton onClick={()=>(EditPage())}>
               <EditIcon/>
             </IconButton>
@@ -84,22 +88,33 @@ const forceUpdate = useForceUpdate();
               <DeleteIcon/>
             </IconButton>
           </div>
-      </div>)}
+     </div>
+      <div className='top-menu'>
+        
+    
+      </div></>)}
 
       {editmode && (
-      <div className='top-menu'>
-      <ButtonTraining onClick={()=>navigate(-1)}>Go Back</ButtonTraining>
+      <>
+    <div className='top-div'>
+        <ButtonTraining id="back-btn2" onClick={()=>navigate(-1)}>
+        <img src={chevron} alt="left back button"></img></ButtonTraining>
+        <h1>Edit Training</h1>
           <div className='editTraining'>
-            <IconButton onClick={()=>(EditPage())}>
-              <CancelIcon/>
-            </IconButton>
+          <IconButton onClick={()=>(EditPage())}>
+         <CancelIcon/>
+        </IconButton>
           </div>
-      </div>)}
+     </div>
+      <div className='top-menu'>
+        
+    
+      </div></>)}
 
       {trainingData ?
       <FlexDiv>
 
-     {!editmode && ( <LeftDiv>
+    {!editmode && (<> <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
           <ListHeader>{trainingData.name}</ListHeader>
@@ -122,13 +137,21 @@ const forceUpdate = useForceUpdate();
                 </Grid>
               </Box>
           </SubDiv>
-      </LeftDiv>)}
-      {editmode && (
-        <EditView editmode={editmode} setEditmode={setEditmode}/>)}
-      <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
-      <RightDiv>
-        <h2>Training Statistics</h2>
-      </RightDiv>
+      </LeftDiv>
+      
+      <div className='bot-div'>
+        <h2>Training Analytics Coming Soon!</h2>
+      </div>
+      
+      </>)}
+
+      {editmode && (<>
+        <EditView editmode={editmode} setEditmode={setEditmode}/>
+        
+        <div className='bot-div'>
+        <h2>Training Analytics Coming Soon!</h2>
+      </div></>)}
+      
       </FlexDiv>
       : null}
     </>
@@ -159,14 +182,20 @@ export const gridStyle = {
 
 export const FlexDiv = styled.div`
 overflow: hidden;
-display: flex;`
+display: flex;
+flex-direction: column;
+align-items: center;
+height: 90vh;`
+
 
 export const LeftDiv = styled.div`
 display: flex;
 flex-direction: column;
-width: 75vw;
 overflow: hidden;
 justify-content: center;
+
+height 30%;
+margin-bottom: 50px;
 `
 
 export const RightDiv = styled.div`
@@ -183,24 +212,7 @@ height: 50%;
 `
 
 export const ButtonTraining = styled.button`
-    background-color: MidnightBlue;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 2px solid #007BFF;
-    border-radius: 3px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: white;
-        color: #007BFF;
-    }
-
-    &:focus {
-        outline: none;
-        border: 2px solid #0056b3; // Darker blue border
-    }
+padding: 0.4em 1em;
 `;
 
 export const ListTitle = styled.div`
@@ -208,6 +220,8 @@ display: flex;
 flex-direction: row;
 width: 100%;
 align-items: center;
+justify-content: center;
+margin-bottom: 30px
 `;
 export const ListHeader = styled.span`
 display: flex;

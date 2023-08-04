@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState} from "react";
 import { useCallback } from "react";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchURL } from "../App";
 import { LeftDiv, ListHeader, ListTitle, SubDiv, gridStyle, boxStyle } from "./TrainingDisplay UTM-ADMIN";
 import { Box, Grid, Divider  } from '@mui/material';
@@ -26,14 +26,13 @@ export default function EditView({editmode, setEditmode}) {
   const [updatedType, setUpdatedType] = useState(trainingData.type_id || null);
   const [updatedDuty, setUpdatedDuty] = useState(trainingData.duty_id || null);
   const [updatedTrainingData, setUpdatedTrainingData] = useState({})
-
+  const navigate = useNavigate();
 
   const handleUpdates = () => {
     handleUpdateTraining();
     setEditmode(!editmode);
   }
 
-  
   const handleUpdateTraining = async () => {
     try {
       const patchObject = {
@@ -60,11 +59,10 @@ export default function EditView({editmode, setEditmode}) {
       const data = await response.json();
 
       fetchRequiredTraining();
-      console.log('PATCH request successful:', data);
-      // Handle the response data as needed
+      alert('Training updated successfully!');
+      navigate('/unit-training-manager');
     } catch (error) {
-      console.error('Error making PATCH request:', error);
-      // Handle errors
+      alert('Training update failed!');
     }
   }
 
@@ -86,40 +84,6 @@ export default function EditView({editmode, setEditmode}) {
       }
   };
 
-
-
-
-
-
-    //update unchanged fields to their previous data
-
-
-
-    // const HandleSubmit = async () => {
-    //     let header = {
-    //         let patchObject = {name: name ? name : trainingData.name, interval: interval ? interval : trainingData.interval, source: source ? source : trainingData.source, type_id: type ? type : trainingData.type_id}
-
-    //         method: "PATCH",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(patchObject)};
-    //         //Maybe don't go to the login login... API
-    //         let response = await fetch(`${fetchURL}/createAccount`, header)
-    //         let status = response.status;
-    //         let data = await response.json();
-    //         console.log(data);
-    //         if(status === 201)
-    //         {
-    //           //setUserType(data.userType);
-    //           //setToken(data.token)
-    //         }
-    //         else
-    //         {
-    //             setError(data.message)
-    //         }
-    // }
-
 return (
     <>
 <LeftDiv>
@@ -133,7 +97,7 @@ return (
           <Box sx={boxStyle}>
                 <Grid sx={gridStyle}>
                   <h5>Type:</h5>
-                  <Select
+                  <Select className="changeMe"
                     value={updatedType !== null ? updatedType : trainingData.type_id}
                     onChange={(e) => setUpdatedType(parseInt(e.target.value))}
                   >
@@ -156,7 +120,7 @@ return (
               </Box>
           </SubDiv>
           <ButtonContainer>
-            <button onClick={()=>(handleUpdates())}> Save Changes </button>
+            <button className="black" onClick={()=>(handleUpdates())}> Save Changes </button>
           </ButtonContainer>
       </LeftDiv>
       </>
