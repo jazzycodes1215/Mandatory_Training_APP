@@ -62,7 +62,7 @@ export default function Header() {
                 textDecoration: 'none',
               }}
             >
-              <span className='logo'>UTM<span className='black'>Tool</span>.</span>
+              <span className='logo'>UTM<span className='blacky'>Tool</span>.</span>
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

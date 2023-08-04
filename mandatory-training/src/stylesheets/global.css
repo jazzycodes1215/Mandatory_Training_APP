@@ -33,7 +33,7 @@ p {
 }
 
 button {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.503);
     color: white;
     font-size: .75em;
     padding: 0.7em 4em;

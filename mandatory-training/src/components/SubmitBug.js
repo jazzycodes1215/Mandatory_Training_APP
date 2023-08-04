@@ -46,7 +46,7 @@ export default function SubmitBug({ trainingId, setDisplay, userId }) {
           required
         />
 
-        <Button type="submit">Submit</Button>
+        <Button id="sub-bug" type="submit">Submit</Button>
       </Form>
     </SubmitOverlay>
   );

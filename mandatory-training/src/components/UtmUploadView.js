@@ -26,7 +26,10 @@ export default function UtmUploadView() {
   useEffect(()=> {
     fetchUnitData();
   }, [unitID])
-  return (
+  return (<>
+    <div className='subheading'>
+        <h1>Uploaded Documents</h1>
+    </div>
     <GridContainer>
       {unitData ? unitData.map((element, index)=> {
         return (
@@ -39,7 +42,7 @@ export default function UtmUploadView() {
         );
       }) : null}
     </GridContainer>
-  );
+  </>);
 };
 
 const GridContainer = styled.div`
