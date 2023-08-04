@@ -23,11 +23,11 @@
 
     return (
       <>
-        <Button onClick={() => handleTabChange('notifications')}>Notifications</Button>
-        <Button onClick={() => handleTabChange('viewUploads')}>View Uploaded Certificates</Button>
-        <Button onClick={() => handleTabChange('managePersonnel')}>Manage Personnel</Button>
-        <Button onClick={() => handleTabChange('unitReadiness')}>Unit Readiness</Button>
-        <Button onClick={() => handleTabChange('manageTraining')}>Manage Training</Button>
+        <Button onClick={() => handleTabChange('notifications')} title="View and process notifications">Notifications</Button>
+        <Button onClick={() => handleTabChange('viewUploads')} title="View and download certificates">Certificates</Button>
+        <Button onClick={() => handleTabChange('managePersonnel')} title="View an individual's training status">Individual Reports</Button>
+        <Button onClick={() => handleTabChange('unitReadiness')} title="View your Unit's Readiness Report">Unit Report</Button>
+        <Button onClick={() => handleTabChange('manageTraining')} title="Manage training details">Training</Button>
 
         {selectedTab === 'notifications' && (
         <UtmNotifications />

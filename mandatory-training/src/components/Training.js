@@ -84,7 +84,7 @@ export default function Training() {
      <div id='training-head' className='subheading'>
         <h1>Training</h1>
         <Link to="/create-training">
-          <img className='plus-btn' src={myPlus} alt="plus button"></img>
+          <img className='plus-btn' src={myPlus} alt="plus button" title="Create new Training"></img>
         </Link>
     </div>
 
@@ -97,6 +97,7 @@ export default function Training() {
           key={button.id}
           className={`toggle-button ${activeButton === index ? 'highlighted' : ''}`}
           onClick={() => handleButtonClick(index, button.tab)}
+          title="Filter for this kind of training"
         >
           {button.text}
         </button>
