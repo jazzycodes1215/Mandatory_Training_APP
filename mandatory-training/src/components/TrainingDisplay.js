@@ -201,27 +201,6 @@ console.log(userID)
                 </Grid>
               </Box>
           </SubDiv>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '95%',
-            height: '80%',
-            border: (theme) => `3px solid ${theme.palette.divider}`,
-            borderRadius: 1,
-            bgcolor: 'background.paper',
-            color: 'text.secondary',
-            marginTop: '1vh',
-            marginLeft: '1vw',
-            '& svg': {
-              m: 1.5,
-            },
-            '& hr': {
-              mx: 0.5,
-            },
-          }}>
-
-        </Box>
       </LeftDiv>
       <Divider sx={{height: '75vh'}} orientation="vertical" flexItem />
       <RightDiv>
@@ -325,9 +304,11 @@ overflow: hidden;
 display: flex;`
 
 const LeftDiv = styled.div`
-width: 75vw;
-overflow: hidden;
-align-items: center;
+display: flex;
+    flex-direction: column;
+    width: 75vw;
+    overflow: hidden;
+    justify-content: center;
 `
 
 const RightDiv = styled.div`
@@ -339,20 +320,20 @@ flex-direction: column;
 `
 
 const SubDiv = styled.div`
-overflow: hidden;
-margin-left: 3vw;`
+display: flex;
+align-items: flex-start;
+height: 50%;`
 
 const ButtonTraining = styled.button`
-    background-color: MidnightBlue;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    margin-top: 4vh;
-    border: 2px solid #007BFF;
-    border-radius: 3px;
-    cursor: pointer;
-
+background-color: black;
+color: white;
+font-size: .75em;
+padding: 0.7em 4em;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: all .3s ease;
+margin-bottom: 30px;
     &:hover {
         background-color: white;
         color: #007BFF;
@@ -368,11 +349,16 @@ const ListTitle = styled.div`
 display: flex;
 flex-direction: row;
 width: 100%;
+align-items: center;
 `;
 const ListHeader = styled.span`
+display: flex;
+flex-direction: row;
+align-items: center;
 font-size: xxx-large;
 font-weight: 700;
 `;
+
 const ListSubHeader = styled.span`
 font-size: x-large;
 `;
