@@ -134,6 +134,7 @@ export default function TrainingDisplay(props) {
           submission_date: new Date().toISOString(),
           comment,
           read_status: false,
+          training_name: trainingData.name
         }),
       });
   

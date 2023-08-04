@@ -34,21 +34,35 @@ export default function UtmNotifications() {
   );
 
   const handleMarkAsRead = (id) => {
+    const currentDate = new Date().toISOString(); // Get current date in ISO format
+  
     fetch(`${fetchURL}/notifications/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ read_status: true }),
+      body: JSON.stringify({
+        read_status: true,
+        completion_date: currentDate,
+        approval_date: currentDate, // Add approval_date
+      }),
       headers: {
         'Content-Type': 'application/json',
-       },
-     })
+      },
+    })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setNotifications((prevNotifications) =>
           prevNotifications.map((notification) =>
-            notification.id === id ? { ...notification, read_status: true } : notification
-           )
+            notification.id === id
+              ? {
+                  ...notification,
+                  read_status: true,
+                  completion_date: currentDate,
+                  approval_date: currentDate, // Update approval_date
+                }
+              : notification
+          )
         );
-       })
+        console.log('Notification marked as read, completion date updated, and approval date updated');
+      })
       .catch((error) => console.error('Error marking notification as read:', error));
   };
 
