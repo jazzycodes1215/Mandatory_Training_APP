@@ -30,6 +30,21 @@ export default function UtmTableDataRow({ userData, uniqueTrainingIds }) {
     }
   };
   
+  const completionDatesMap = {};
+  userData.forEach((training) => {
+    if (training.most_recent_completion_date) {
+      completionDatesMap[training.training_id] = new Date(training.most_recent_completion_date).toLocaleDateString(
+        'en-US',
+        {
+          month: '2-digit',
+          day: '2-digit',
+          year: '2-digit',
+        }
+      );
+    } else {
+      completionDatesMap[training.training_id] = 'Required';
+    }
+  });
 
   return (
     <tr>
@@ -40,18 +55,7 @@ export default function UtmTableDataRow({ userData, uniqueTrainingIds }) {
         const cellClassName = getCellClassName(trainingId);
         return (
           <td key={trainingId} className={`training-status ${cellClassName}`}>
-            {userData.some((training) => training.training_id === trainingId)
-              ? userData.find((training) => training.training_id === trainingId).most_recent_completion_date
-                ? new Date(userData.find((training) => training.training_id === trainingId).most_recent_completion_date).toLocaleDateString(
-                    'en-US',
-                    {
-                      month: '2-digit',
-                      day: '2-digit',
-                      year: '2-digit',
-                    }
-                  )
-                : 'Required'
-              : 'N/A'}
+            {completionDatesMap[trainingId] || 'N/A'}
           </td>
         );
       })}
