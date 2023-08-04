@@ -311,7 +311,7 @@ export default function Account() {
             </Column>
             <Column>
                 <Label for="supervisor">Supervisor:</Label>
-                <AccountInfo id="supervisor">{`${supervisorAccount.first_name} ${supervisorAccount.last_name}`}</AccountInfo>
+                <AccountInfo id="supervisor">{supervisorAccount ? `${supervisorAccount.first_name} ${supervisorAccount.last_name}` : ''}</AccountInfo>
             </Column>
         </Row>
         <Row>
