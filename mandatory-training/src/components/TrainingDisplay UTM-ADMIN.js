@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext, createElement, useRef} from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom'
 import { AppContext, fetchURL } from '../App'
-import styled from 'styled-components';
 import useUserCheck from '../hooks/useUserCheck'
+import styled from 'styled-components';
 import ContentEditable from 'react-contenteditable';
 import EditView from './EditTraining';
 import chevron from '../Icons/16px/chevron.svg'
@@ -15,11 +15,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import '../stylesheets/training.css'
 
 export default function TrainingDisplayUTM() {
+
+  const {validatedUserType, validToken, unitID} = useUserCheck();
   const {training} = useParams();
   const [trainingData, setTrainingData] = useState({})
   const navigate = useNavigate();
   const [editmode, setEditmode] = useState(false)
-
+  const [overduePercent, setOverDuePercent] = useState(NaN)
 
   const [source, setSource] = useState('')
 
@@ -37,7 +39,6 @@ const forceUpdate = useForceUpdate();
     const response = await fetch(`${fetchURL}/requiredTraining/${training}`)
     const data = await response.json();
     setTrainingData(data);
-    console.log(data)
   }
 
   const EditPage = () => {
@@ -67,10 +68,60 @@ const forceUpdate = useForceUpdate();
     }
   };
 
+  const fetchUnitStatus = async () => {
+    try {
+      if(!unitID) {
+        return;
+      }
+      const response = await fetch(`${fetchURL}/unit/status/${unitID}`)
+      const data = await response.json();
+      let subordinate = [];
+      let overdueSubordinates = [];
+      let trainingStats = {totalSubordinates: 0};
+      trainingStats['totalSubordinates'] = data.length;
+      trainingStats[training] = 0;
+      data?.forEach(element=>{
+          let addUser = false;
+          element.forEach((element)=>{
+            console.log(element);
+            let dueDate;
+            if(element.training_id !== training) {
+              return;
+            }
+            if(element.most_recent_completion_date)
+            {
+              dueDate = Date.parse(element.most_recent_completion_date) + (element.interval * 24 * 60 * 60 * 1000);
+              if(dueDate < Date.now())
+              {
+                addUser = true;
+              }
+              else {
+                trainingStats[training] += 1;
+              }
+            }
+            else
+            {
+              addUser = true;
+            }
+            subordinate.push(element)
+          })
+          if(addUser)
+          {
+            overdueSubordinates.push(`${element[0].first_name} ${element[0].last_name}`)
+          }
+        })
+      console.log(trainingStats)
+      setOverDuePercent(trainingStats[training]/trainingStats['totalSubordinates'])
+    } catch (error) {
+
+    }
+  }
+
   useEffect(()=>
   {
     fetchTraining();
-  }, [training, editmode])
+    //fetchUnitStatus();
+  }, [training, editmode, unitID])
 
   return (
     <>
@@ -80,7 +131,7 @@ const forceUpdate = useForceUpdate();
         <img src={chevron} alt="left back button"></img></ButtonTraining>
         <h1>View Training</h1>
           <div className='editTraining'>
-        
+
             <IconButton onClick={()=>(EditPage())}>
               <EditIcon/>
             </IconButton>
@@ -90,8 +141,8 @@ const forceUpdate = useForceUpdate();
           </div>
      </div>
       <div className='top-menu'>
-        
-    
+
+
       </div></>)}
 
       {editmode && (
@@ -107,8 +158,8 @@ const forceUpdate = useForceUpdate();
           </div>
      </div>
       <div className='top-menu'>
-        
-    
+
+
       </div></>)}
 
       {trainingData ?
@@ -138,20 +189,20 @@ const forceUpdate = useForceUpdate();
               </Box>
           </SubDiv>
       </LeftDiv>
-      
+
       <div className='bot-div'>
         <h2>Training Analytics Coming Soon!</h2>
       </div>
-      
+
       </>)}
 
       {editmode && (<>
         <EditView editmode={editmode} setEditmode={setEditmode}/>
-        
+
         <div className='bot-div'>
         <h2>Training Analytics Coming Soon!</h2>
       </div></>)}
-      
+
       </FlexDiv>
       : null}
     </>

@@ -56,6 +56,7 @@ export default function RequiredTraining() {
             const data = await response.json();
             setTrainingStatus(data);
             setRequiredTraining(data);
+            console.log(data);
         } catch (error) {
             console.error('Error fetching training statuses', error);
         }
@@ -300,7 +301,7 @@ export default function RequiredTraining() {
                                                 key={index}
                                                 disableGutters
                                                 secondaryAction={
-                                                    <Link to={`/required-training/${training.id}`}>
+                                                    <Link to={`/required-training/${training.training_id}`}>
                                                         <IconButton aria-label="info">
                                                         <InfoIcon />
                                                         </IconButton>
@@ -320,7 +321,7 @@ export default function RequiredTraining() {
                                 </ListContainer>
                             </AccordionDetails>
                         </Accordion>
-                        {supervisor && ( 
+                        {supervisor && (
                         <Accordion  expanded={ expanded ==='accordion2'} onClick={()=>handleExpand('accordion2')}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
                                 <ListTitle>
@@ -335,7 +336,7 @@ export default function RequiredTraining() {
                                 </ListContainer>
                             </AccordionDetails>
                         </Accordion>
-                         )} 
+                         )}
                     </TrainingContainer>
 
                 </RequiredTrainingWrapper>
