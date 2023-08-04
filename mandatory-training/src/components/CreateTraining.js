@@ -101,6 +101,10 @@ export default function CreateTraining() {
     setAlignment(newAlignment);
   };
 
+  const handleCancel = () => {
+    navigate('/unit-training-manager');
+  };
+
   return (
     <CreateTrainingWrapper>
       <h1>Create New Training</h1>
@@ -127,7 +131,7 @@ export default function CreateTraining() {
             <InputTrainingInfo onChange={(e)=>{setInterval(e.target.value)}} id="inputInterval" type="number" required></InputTrainingInfo>
           </Column>
           <Column>
-            <Label for="source-poc">Training Source/POC:
+          <Label for="source-poc">Training Information Source:
             <ToggleButtonGroup
             color="primary"
             value={alignment}
@@ -135,13 +139,13 @@ export default function CreateTraining() {
             onChange={handleChange}
             id="source-poc"
             >
-            <ToggleButton value="source">Source</ToggleButton>
-            <ToggleButton value="poc">POC</ToggleButton>
+            <ToggleButton value="source" title="Provide a URL">URL</ToggleButton>
+            <ToggleButton value="poc" title="Provide a POC">POC</ToggleButton>
             </ToggleButtonGroup>
             </Label>
             { alignment === 'source' ?
               <>
-                <label for="inputSource">Training Source URL: </label>
+                <label for="inputSource">Training URL: </label>
                 <InputTrainingInfo onChange={(e)=>{setSource(e.target.value)}} id="inputSource" type="url" required></InputTrainingInfo>
               </>
               :
@@ -174,7 +178,8 @@ export default function CreateTraining() {
         </Row>
       </TrainingInputContainer>
       <ButtonContainer>
-        <Button id="createSub" variant="contained" onClick={handleSubmit}>Submit Training</Button>
+        <Button id="createSub" variant="contained" onClick={handleSubmit}>Create Training</Button>
+        <Button variant="contained" onClick={handleCancel}>Cancel</Button>
       </ButtonContainer>
     </CreateTrainingWrapper>
   )

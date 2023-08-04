@@ -49,6 +49,14 @@ const forceUpdate = useForceUpdate();
   }
 
   const deleteTraining = async () => {
+    // Show the confirmation prompt
+    const confirmed = window.confirm('Warning! This will permanently delete this training/training requirement for all users!');
+  
+    if (!confirmed) {
+      // If the user clicks Cancel, do nothing
+      return;
+    }
+  
     try {
       const response = await fetch(`${fetchURL}/requiredTraining/${training}`, {
         method: 'DELETE',
@@ -56,17 +64,18 @@ const forceUpdate = useForceUpdate();
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+  
       alert('Training deleted successfully!');
       navigate('/unit-training-manager');
     } catch (error) {
       alert('Training deletion failed!');
     }
   };
+  
 
   const fetchUnitStatus = async () => {
     try {
@@ -132,10 +141,10 @@ const forceUpdate = useForceUpdate();
         <h1>View Training</h1>
           <div className='editTraining'>
 
-            <IconButton onClick={()=>(EditPage())}>
+            <IconButton onClick={()=>(EditPage())} title="Toggle Edit Mode">
               <EditIcon/>
             </IconButton>
-            <IconButton onClick={deleteTraining}>
+            <IconButton onClick={deleteTraining} title="Delete training">
               <DeleteIcon/>
             </IconButton>
           </div>
