@@ -59,10 +59,10 @@ const forceUpdate = useForceUpdate();
         throw new Error('Network response was not ok');
       }
 
-      console.log('Training deleted successfully');
+      alert('Training deleted successfully!');
       navigate('/unit-training-manager');
     } catch (error) {
-      console.error('Error deleting training:', error);
+      alert('Training deletion failed!');
     }
   };
 
@@ -99,7 +99,7 @@ const forceUpdate = useForceUpdate();
       {trainingData ?
       <FlexDiv>
 
-     {!editmode && ( <LeftDiv>
+    {!editmode && ( <LeftDiv>
         <ListTitle>
           <StarIcon sx={{fontSize: 'xxx-large'}} />
           <ListHeader>{trainingData.name}</ListHeader>
@@ -125,10 +125,10 @@ const forceUpdate = useForceUpdate();
       </LeftDiv>)}
       {editmode && (
         <EditView editmode={editmode} setEditmode={setEditmode}/>)}
-      <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
+      {/* <Divider sx={{height: '75vh'}}orientation="vertical" flexItem />
       <RightDiv>
         <h2>Training Statistics</h2>
-      </RightDiv>
+      </RightDiv> */}
       </FlexDiv>
       : null}
     </>

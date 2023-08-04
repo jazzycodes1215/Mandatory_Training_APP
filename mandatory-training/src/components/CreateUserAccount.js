@@ -40,7 +40,7 @@ export default function CreateUserAccount() {
         let data = await response.json();
         console.log(data);
         if(status === 201) {
-            alert('Account created successfully! Please log in with your new account.');
+            alert('Account created successfully!');
             navigate('/administrator');
         }
         else

@@ -153,3 +153,9 @@ padding-right: 60px;
 .highlighted {
     background-color: black;
 }
+
+/* styles.css */
+.large-link {
+  font-size: 175%;
+}
+
